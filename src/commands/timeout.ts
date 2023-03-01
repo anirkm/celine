@@ -81,7 +81,6 @@ const command: Command = {
         ":rage: - **the duration you specified is invalid**"
       );
 
-
     user
       .timeout(Number(ms(duration)), `${message.member?.user.tag} - ${reason}`)
       .then(async (user) => {

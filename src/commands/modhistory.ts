@@ -145,8 +145,8 @@ const command: Command = {
     await sendPagination(message, embeds);
   },
   cooldown: 10,
-aliases: [],
-permissions: [PermissionFlagsBits.KickMembers],
+  aliases: [],
+  permissions: [PermissionFlagsBits.KickMembers],
 };
 
 export default command;

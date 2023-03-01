@@ -5,9 +5,7 @@ import SanctionModel from "../schemas/Sanction";
 
 const command: Command = {
   name: "sdfsdfdsfsd",
-  execute: async (client, message, args) => {
-    
-  },
+  execute: async (client, message, args) => {},
   cooldown: 10,
   aliases: [],
   permissions: [PermissionFlagsBits.KickMembers],
