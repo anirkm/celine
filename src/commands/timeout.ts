@@ -76,7 +76,7 @@ const command: Command = {
 
     if (!user) return message.reply(":triumph: - **unknown user, try again.**");
 
-    if (ms(duration) == null)
+    if (ms(duration) === null)
       return message.reply(
         ":rage: - **the duration you specified is invalid**"
       );
