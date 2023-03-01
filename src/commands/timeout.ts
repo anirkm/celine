@@ -32,7 +32,7 @@ const command: Command = {
       return user
         .timeout(null, `${message.member?.user.tag} - timeout end`)
         .then(async (user) => {
-          message.reply("endtimed out");
+          message.reply(`${user} ended tm`);
         })
         .catch((e) => {
           switch (e.message) {
