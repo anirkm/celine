@@ -2,10 +2,3 @@ version = 1
 
 [[analyzers]]
 name = "javascript"
-
-[[transformers]]
-name = "prettier"
-
-[[analyzers.meta]]
-module_system = "es-modules"
-dialect = "typescript"
