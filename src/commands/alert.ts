@@ -39,7 +39,7 @@ const command: Command = {
         `${emoji.error} | The maximum allowed attachements limit is 3.`
       );
     }
-    let id = genId(6)
+    let id = genId(6);
     let msgEmbed = new EmbedBuilder()
       .setAuthor({
         name: `In: ${message.guild?.name || "Failed to fetch guild name"}`,
