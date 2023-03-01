@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose";
+import { model, Schema } from "mongoose";
 import { IGuild } from "../types";
 
 const GuildSchema = new Schema<IGuild>({

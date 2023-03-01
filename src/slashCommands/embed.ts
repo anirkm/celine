@@ -1,10 +1,8 @@
 import {
-  SlashCommandBuilder,
-  ChannelType,
-  TextChannel,
-  EmbedBuilder,
   ColorResolvable,
-  ApplicationCommandChoicesData,
+  EmbedBuilder,
+  SlashCommandBuilder,
+  TextChannel,
 } from "discord.js";
 import { SlashCommand } from "../types";
 

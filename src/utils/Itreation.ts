@@ -1,5 +1,5 @@
+import { Client, GuildMember } from "discord.js";
 import { Redis } from "ioredis";
-import { Client, Guild, GuildMember, User } from "discord.js";
 import GuildModel from "../schemas/Guild";
 
 module.exports = async (client: Client, redis: Redis) => {
@@ -75,7 +75,7 @@ module.exports = async (client: Client, redis: Redis) => {
                   .catch(() => {});
 
                 if (resotredRoles && resotredRoles.length > 0) {
-                  resotredRoles.map(async (role) => {
+                  resotredRoles.forEach(async (role) => {
                     await user.roles
                       .add(role, `Jail restore roles`)
                       .then(() => {

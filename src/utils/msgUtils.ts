@@ -1,10 +1,10 @@
 import {
+  Client,
   Embed,
   EmbedBuilder,
-  Message,
-  Client,
   Guild,
   GuildMember,
+  Message,
 } from "discord.js";
 
 export const textEmbed = async (

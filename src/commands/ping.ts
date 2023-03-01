@@ -1,10 +1,9 @@
-import { EmbedBuilder, PermissionFlagsBits } from "discord.js";
-import { Command } from "../types";
-import GuildModel from "../schemas/Guild";
-import { Redis } from "ioredis";
+import { EmbedBuilder } from "discord.js";
 import { ms } from "enhanced-ms";
-import { RtextEmbed, textEmbed } from "../utils/msgUtils";
 import emoji from "../data/emojies.json";
+import GuildModel from "../schemas/Guild";
+import { Command } from "../types";
+import { RtextEmbed, textEmbed } from "../utils/msgUtils";
 
 const command: Command = {
   name: "ping",

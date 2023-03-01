@@ -1,6 +1,6 @@
 import { PermissionFlagsBits } from "discord.js";
-import { Command } from "../types";
 import GuildModel from "../schemas/Guild";
+import { Command } from "../types";
 
 const command: Command = {
   name: "protect",

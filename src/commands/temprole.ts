@@ -1,10 +1,9 @@
-import { PermissionFlagsBits, Collection, EmbedBuilder } from "discord.js";
-import { Command } from "../types";
+import { Collection, EmbedBuilder, PermissionFlagsBits } from "discord.js";
 import ms from "enhanced-ms";
-import { getGuildRole } from "../functions";
-import { missingArgs } from "../utils/msgUtils";
 import emoji from "../data/emojies.json";
-import { textEmbed, RtextEmbed } from "../utils/msgUtils";
+import { getGuildRole } from "../functions";
+import { Command } from "../types";
+import { missingArgs, textEmbed } from "../utils/msgUtils";
 
 const command: Command = {
   name: "temprole",

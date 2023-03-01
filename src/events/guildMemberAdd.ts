@@ -1,7 +1,7 @@
-import { GuildMember, Client } from "discord.js";
+import { Client, GuildMember } from "discord.js";
+import GuildMemberModel from "../schemas/GuildMember";
 import { BotEvent, IGuildMember } from "../types";
 import { logJoin } from "../utils/userUtils";
-import GuildMemberModel from "../schemas/GuildMember";
 
 const event: BotEvent = {
   name: "guildMemberAdd",

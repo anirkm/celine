@@ -1,10 +1,7 @@
 import { Message, PermissionFlagsBits, TextChannel } from "discord.js";
-import { Command } from "../types";
-import { channel } from "diagnostics_channel";
-import { Collection } from "mongoose";
-import { textEmbed, RtextEmbed } from "../utils/msgUtils";
 import emoji from "../data/emojies.json";
-import { missingArgs } from "../utils/msgUtils";
+import { Command } from "../types";
+import { missingArgs, RtextEmbed, textEmbed } from "../utils/msgUtils";
 
 const command: Command = {
   name: "clear",
@@ -115,16 +112,12 @@ const command: Command = {
                     ),
                   ],
                 })
-                .then((m) =>
-                  setTimeout(async () => m.delete().catch(() => {}), 5000)
-                )
+                .then((m) => setTimeout(() => m.delete().catch(() => {}), 5000))
             : textEmbed(
                 message,
                 `${emoji.yay} | Successfully deleted **${messages.size}** messages from ${user}`,
                 false
-              ).then((m) =>
-                setTimeout(async () => m.delete().catch(() => {}), 5000)
-              );
+              ).then((m) => setTimeout(() => m.delete().catch(() => {}), 5000));
         })
         .catch(async (e) => {
           console.log(e);
@@ -137,9 +130,7 @@ const command: Command = {
                     ),
                   ],
                 })
-                .then((m) =>
-                  setTimeout(async () => m.delete().catch(() => {}), 5000)
-                )
+                .then((m) => setTimeout(() => m.delete().catch(() => {}), 5000))
             : textEmbed(
                 message,
                 `${emoji.yay} | Failed to deleted **${messages.size}** messages from ${user}`,
@@ -162,16 +153,12 @@ const command: Command = {
                   ),
                 ],
               })
-              .then((m) =>
-                setTimeout(async () => m.delete().catch(() => {}), 5000)
-              )
+              .then((m) => setTimeout(() => m.delete().catch(() => {}), 5000))
           : textEmbed(
               message,
               `${emoji.yay} | Successfully deleted **${messages.size}** messages.`,
               false
-            ).then((m) =>
-              setTimeout(async () => m.delete().catch(() => {}), 5000)
-            );
+            ).then((m) => setTimeout(() => m.delete().catch(() => {}), 5000));
       })
       .catch(async (e) => {
         console.log("normal err");

@@ -1,26 +1,22 @@
+import {
+  pagination,
+  StylesButton,
+  TypesButtons,
+} from "@devraelfreeze/discordjs-pagination";
 import chalk from "chalk";
 import {
   Collection,
+  Embed,
   Guild,
   GuildMember,
   Message,
   PermissionFlagsBits,
   PermissionResolvable,
-  PermissionsBitField,
-  Role,
-  Embed,
   TextChannel,
-  User,
 } from "discord.js";
-import GuildDB from "./schemas/Guild";
-import { GuildOption } from "./types";
 import mongoose from "mongoose";
-import GuildModel from "./schemas/Guild";
-import {
-  pagination,
-  TypesButtons,
-  StylesButton,
-} from "@devraelfreeze/discordjs-pagination";
+import { default as GuildDB, default as GuildModel } from "./schemas/Guild";
+import { GuildOption } from "./types";
 
 type colorType = "text" | "variable" | "error";
 
@@ -97,10 +93,10 @@ export const getGuildOption = async (guild: Guild, option: GuildOption) => {
 };
 
 export const genId = (length: number): string => {
-  var result = "";
-  var characters = "0123456789";
-  var charactersLength = characters.length;
-  for (var i = 0; i < length; i++) {
+  let result = "";
+  let characters = "0123456789";
+  let charactersLength = characters.length;
+  for (let i = 0; i < length; i++) {
     result += characters.charAt(Math.floor(Math.random() * charactersLength));
   }
   return result;

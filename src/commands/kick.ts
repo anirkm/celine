@@ -1,6 +1,6 @@
 import { PermissionFlagsBits } from "discord.js";
-import { Command } from "../types";
 import SanctionModel from "../schemas/Sanction";
+import { Command } from "../types";
 
 const command: Command = {
   name: "kick",

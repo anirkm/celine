@@ -1,7 +1,7 @@
-import { PermissionFlagsBits, StageChannel, TextChannel } from "discord.js";
+import { StageChannel, TextChannel } from "discord.js";
+import emoji from "../data/emojies.json";
 import { Command } from "../types";
 import { textEmbed } from "../utils/msgUtils";
-import emoji from "../data/emojies.json";
 
 const command: Command = {
   name: "locate",

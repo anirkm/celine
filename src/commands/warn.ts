@@ -1,10 +1,9 @@
 import { PermissionFlagsBits } from "discord.js";
-import { Command } from "../types";
-import WarnModel from "../schemas/Warn";
-import { genId } from "../functions";
-import { missingArgs } from "../utils/msgUtils";
-import { textEmbed, RtextEmbed } from "../utils/msgUtils";
 import emoji from "../data/emojies.json";
+import { genId } from "../functions";
+import WarnModel from "../schemas/Warn";
+import { Command } from "../types";
+import { missingArgs, RtextEmbed, textEmbed } from "../utils/msgUtils";
 
 const command: Command = {
   name: "warn",

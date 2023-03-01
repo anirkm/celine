@@ -1,10 +1,9 @@
-import { Embed, EmbedBuilder, PermissionFlagsBits } from "discord.js";
-import { Command } from "../types";
+import { EmbedBuilder, PermissionFlagsBits } from "discord.js";
+import emoji from "../data/emojies.json";
 import { sendPagination } from "../functions";
 import WarnModel from "../schemas/Warn";
-import { missingArgs } from "../utils/msgUtils";
-import { textEmbed, RtextEmbed } from "../utils/msgUtils";
-import emoji from "../data/emojies.json";
+import { Command } from "../types";
+import { missingArgs, textEmbed } from "../utils/msgUtils";
 
 const command: Command = {
   name: "modwarns",

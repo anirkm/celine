@@ -1,5 +1,5 @@
-import Redis from "ioredis";
 import { Client } from "discord.js";
+import Redis from "ioredis";
 import { color } from "../functions";
 
 module.exports = (client: Client) => {

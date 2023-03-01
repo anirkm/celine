@@ -1,6 +1,6 @@
-import { PermissionFlagsBits, Snowflake } from "discord.js";
-import { Command } from "../types";
+import { PermissionFlagsBits } from "discord.js";
 import SanctionQueueModel from "../schemas/SanctionQueue";
+import { Command } from "../types";
 
 const command: Command = {
   name: "unban",

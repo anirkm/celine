@@ -1,6 +1,6 @@
+import { Client } from "discord.js";
 import mongoose from "mongoose";
 import { color } from "../functions";
-import { Client } from "discord.js";
 
 module.exports = (client: Client) => {
   const MONGO_URI =

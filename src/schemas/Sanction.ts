@@ -1,4 +1,4 @@
-import { Schema, model } from "mongoose";
+import { model, Schema } from "mongoose";
 import { ISanction } from "../types";
 
 const SanctionSchema = new Schema<ISanction>({

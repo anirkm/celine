@@ -1,9 +1,8 @@
-import { Command } from "../types";
-import { missingArgs } from "../utils/msgUtils";
-import { textEmbed } from "../utils/msgUtils";
-import emoji from "../data/emojies.json";
 import { EmbedBuilder } from "discord.js";
+import emoji from "../data/emojies.json";
 import { genId } from "../functions";
+import { Command } from "../types";
+import { missingArgs, textEmbed } from "../utils/msgUtils";
 
 const command: Command = {
   name: "alert",

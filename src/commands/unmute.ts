@@ -1,18 +1,15 @@
 import {
-  Embed,
-  EmbedBuilder,
-  PermissionFlagsBits,
-  ComponentType,
-  ButtonStyle,
-  Message,
   ButtonInteraction,
+  ButtonStyle,
+  ComponentType,
+  Message,
+  PermissionFlagsBits,
 } from "discord.js";
 import { CollectorUtils } from "discord.js-collector-utils";
-import { Command } from "../types";
-import GuildModel from "../schemas/Guild";
-import { missingArgs } from "../utils/msgUtils";
-import { textEmbed, RtextEmbed } from "../utils/msgUtils";
 import emoji from "../data/emojies.json";
+import GuildModel from "../schemas/Guild";
+import { Command } from "../types";
+import { missingArgs, RtextEmbed, textEmbed } from "../utils/msgUtils";
 
 const command: Command = {
   name: "unmute",

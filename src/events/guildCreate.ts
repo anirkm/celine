@@ -1,4 +1,4 @@
-import { Guild, Client } from "discord.js";
+import { Client, Guild } from "discord.js";
 import GuildModel from "../schemas/Guild";
 import { BotEvent } from "../types";
 

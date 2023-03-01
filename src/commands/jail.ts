@@ -1,20 +1,17 @@
 import {
-  Embed,
-  EmbedBuilder,
-  PermissionFlagsBits,
-  ComponentType,
-  ButtonStyle,
-  Message,
   ButtonInteraction,
+  ButtonStyle,
+  ComponentType,
+  Message,
+  PermissionFlagsBits,
 } from "discord.js";
-import { Command } from "../types";
-import ms from "enhanced-ms";
-import SanctionModel from "../schemas/Sanction";
-import GuildModel from "../schemas/Guild";
-import { missingArgs } from "../utils/msgUtils";
-import emoji from "../data/emojies.json";
-import { textEmbed, RtextEmbed } from "../utils/msgUtils";
 import { CollectorUtils } from "discord.js-collector-utils";
+import ms from "enhanced-ms";
+import emoji from "../data/emojies.json";
+import GuildModel from "../schemas/Guild";
+import SanctionModel from "../schemas/Sanction";
+import { Command } from "../types";
+import { missingArgs, RtextEmbed, textEmbed } from "../utils/msgUtils";
 
 const command: Command = {
   name: "jail",

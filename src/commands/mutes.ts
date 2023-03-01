@@ -1,9 +1,9 @@
-import { EmbedBuilder, GuildMember } from "discord.js";
-import { Command } from "../types";
-import { RtextEmbed, textEmbed } from "../utils/msgUtils";
+import { EmbedBuilder } from "discord.js";
+import ms from "enhanced-ms";
 import emoji from "../data/emojies.json";
 import { sendPagination } from "../functions";
-import ms from "enhanced-ms";
+import { Command } from "../types";
+import { RtextEmbed, textEmbed } from "../utils/msgUtils";
 
 const command: Command = {
   name: "mutes",
@@ -78,7 +78,7 @@ const command: Command = {
 
       for (let k = 0; k < dataPerPage; k++) {
         if (mutes[i + k]) {
-          await desc.push(
+          desc.push(
             [
               `<@${mutes[i + k].member.id}> (${mutes[i + k].member.id})`,
               `**Expires in:** ${ms(

@@ -1,18 +1,16 @@
 import {
-  Embed,
-  EmbedBuilder,
-  PermissionFlagsBits,
-  ComponentType,
-  ButtonStyle,
-  Message,
   ButtonInteraction,
+  ButtonStyle,
+  ComponentType,
+  EmbedBuilder,
+  Message,
 } from "discord.js";
 import { CollectorUtils } from "discord.js-collector-utils";
-import { Command } from "../types";
-import { RtextEmbed, textEmbed } from "../utils/msgUtils";
+import ms from "enhanced-ms";
 import emoji from "../data/emojies.json";
 import { sendPagination } from "../functions";
-import ms from "enhanced-ms";
+import { Command } from "../types";
+import { RtextEmbed, textEmbed } from "../utils/msgUtils";
 
 const command: Command = {
   name: "tempbans",
@@ -225,7 +223,7 @@ const command: Command = {
 
       for (let k = 0; k < dataPerPage; k++) {
         if (bans[i + k]) {
-          await desc.push(
+          desc.push(
             [
               `<@${bans[i + k].member.id}> (${bans[i + k].member.id})`,
               `**Expires in:** ${ms(

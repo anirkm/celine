@@ -1,19 +1,17 @@
 import {
-  Embed,
-  EmbedBuilder,
-  PermissionFlagsBits,
-  ComponentType,
-  ButtonStyle,
-  Message,
   ButtonInteraction,
+  ButtonStyle,
+  ComponentType,
+  EmbedBuilder,
+  Message,
+  PermissionFlagsBits,
 } from "discord.js";
-import { Command } from "../types";
 import { CollectorUtils } from "discord.js-collector-utils";
+import emoji from "../data/emojies.json";
 import { sendPagination } from "../functions";
 import WarnModel from "../schemas/Warn";
-import { missingArgs } from "../utils/msgUtils";
-import { textEmbed, RtextEmbed } from "../utils/msgUtils";
-import emoji from "../data/emojies.json";
+import { Command } from "../types";
+import { missingArgs, RtextEmbed, textEmbed } from "../utils/msgUtils";
 
 const command: Command = {
   name: "warnings",

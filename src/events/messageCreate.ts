@@ -1,11 +1,11 @@
-import { ChannelType, Message, PermissionFlagsBits, Client } from "discord.js";
+import { ChannelType, Client, Message, PermissionFlagsBits } from "discord.js";
+import mongoose from "mongoose";
 import {
   checkPermissions,
   getGuildOption,
   sendTimedMessage,
 } from "../functions";
 import { BotEvent } from "../types";
-import mongoose from "mongoose";
 import { countMsg, setLastMsgTimestamp } from "../utils/msgUtils";
 
 const event: BotEvent = {

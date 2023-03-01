@@ -1,9 +1,8 @@
-import { EmbedBuilder, Invite, PermissionFlagsBits } from "discord.js";
-import { Command } from "../types";
-import { missingArgs } from "../utils/msgUtils";
-import { textEmbed, RtextEmbed } from "../utils/msgUtils";
+import { EmbedBuilder, PermissionFlagsBits } from "discord.js";
 import emoji from "../data/emojies.json";
 import { sendPagination } from "../functions";
+import { Command } from "../types";
+import { missingArgs, RtextEmbed, textEmbed } from "../utils/msgUtils";
 
 const command: Command = {
   name: "activeinvites",
@@ -102,7 +101,7 @@ const command: Command = {
 
               for (let k = 0; k < dataPerPage; k++) {
                 if (invitesArray[i + k]) {
-                  await desc.push(
+                  desc.push(
                     [
                       `Invite code: \`${invitesArray[i + k].code}\` uses ${
                         invitesArray[i + k].uses
@@ -113,9 +112,7 @@ const command: Command = {
                   );
                 }
 
-                await embed.setDescription(
-                  desc.filter((v) => v != "").join("\n")
-                );
+                embed.setDescription(desc.filter((v) => v != "").join("\n"));
               }
 
               embeds.push(embed);

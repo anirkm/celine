@@ -1,9 +1,9 @@
-import { EmbedBuilder, PermissionFlagsBits, User } from "discord.js";
-import { Command, IGuildJoin } from "../types";
-import GuildJoinModel from "../schemas/GuildJoin";
-import { RtextEmbed, textEmbed } from "../utils/msgUtils";
+import { EmbedBuilder } from "discord.js";
 import emoji from "../data/emojies.json";
 import { sendPagination } from "../functions";
+import GuildJoinModel from "../schemas/GuildJoin";
+import { Command, IGuildJoin } from "../types";
+import { RtextEmbed, textEmbed } from "../utils/msgUtils";
 
 const command: Command = {
   name: "joins",
@@ -67,7 +67,7 @@ const command: Command = {
 
     let inviters = new Map();
 
-    userJoins.map(async (join: IGuildJoin) => {
+    userJoins.forEach(async (join: IGuildJoin) => {
       if (!join.invitedBy) return;
       if (inviters.get(join.invitedBy)) {
         inviters.set(join.invitedBy, inviters.get(join.invitedBy) + 1);

@@ -1,11 +1,10 @@
-import { PermissionFlagsBits, Role } from "discord.js";
-import { Command } from "../types";
+import { PermissionFlagsBits } from "discord.js";
 import ms from "enhanced-ms";
-import SanctionModel from "../schemas/Sanction";
-import GuildModel from "../schemas/Guild";
-import { missingArgs } from "../utils/msgUtils";
-import { textEmbed, RtextEmbed } from "../utils/msgUtils";
 import emoji from "../data/emojies.json";
+import GuildModel from "../schemas/Guild";
+import SanctionModel from "../schemas/Sanction";
+import { Command } from "../types";
+import { missingArgs, RtextEmbed, textEmbed } from "../utils/msgUtils";
 
 const command: Command = {
   name: "mute",
