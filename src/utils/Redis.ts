@@ -21,7 +21,7 @@ module.exports = (client: Client) => {
     );
     client.redis = redis;
 
-    while (true) {
+    while ((await client.redis.ping().catch(() => {})) === "PONG") {
       await require("../utils/Itreation")(client, redis);
       await new Promise((f) => setTimeout(f, 1000));
     }
