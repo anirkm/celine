@@ -51,7 +51,7 @@ const command: Command = {
 
     role instanceof Collection ? (role = role.toJSON()[0]) : (role = role);
 
-    if (ms(args[3]) == null)
+    if (ms(args[3]) === null)
       return textEmbed(
         message,
         `${emoji.error} | The duration you've specified is invalid.`

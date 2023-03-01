@@ -263,7 +263,7 @@ const command: Command = {
 
     args.length === 4 ? (duration = args[2]) : (duration = "lifetime");
 
-    if (args.length === 4 && ms(args[2]) == null) {
+    if (args.length === 4 && ms(args[2]) === null) {
       return textEmbed(
         message,
         `${emoji.error} | The duration you've specified is invalid.`
