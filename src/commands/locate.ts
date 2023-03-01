@@ -38,7 +38,7 @@ const command: Command = {
           } other members.**`
         );
       })
-      .catch((e) => {
+      .catch(() => {
         textEmbed(
           message,
           `${emoji.error} | An error occurred while fetching the channel, try again`

@@ -25,7 +25,6 @@ const command: Command = {
           `${emoji.loading} | Fetching guild invites please wait.`
         );
 
-        let totalInvites = 0;
         let user =
           message.mentions.members?.first() ||
           (await message.guild?.members

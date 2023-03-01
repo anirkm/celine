@@ -84,7 +84,7 @@ const command: Command = {
     user
       .timeout(Number(ms(duration)), `${message.member?.user.tag} - ${reason}`)
       .then(async (user) => {
-        message.reply("timed out");
+        message.reply(`${user} timedout`);
 
         const newTimeout = new SanctionModel({
           guildID: message.guild?.id,

@@ -39,7 +39,7 @@ const command: Command = {
       let warn = await WarnModel.findOne({
         guildID: message.guild?.id,
         warnID: args[2],
-      }).catch(async (e) => {
+      }).catch(async () => {
         return msg.edit({
           embeds: [
             await RtextEmbed(

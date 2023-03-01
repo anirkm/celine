@@ -37,7 +37,7 @@ module.exports = (client: Client) => {
         });
       }
 
-      let join = await guildJoin.save().catch((e) => {
+      await guildJoin.save().catch((e) => {
         console.log("couldn't save new join", e);
       });
     }
