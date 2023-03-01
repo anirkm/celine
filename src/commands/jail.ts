@@ -133,7 +133,7 @@ const command: Command = {
             if (collectorResult) {
               switch (collectorResult.value) {
                 case "approveRestore":
-                  let success: number = 0;
+                  let success = 0;
 
                   collectorPrompt.edit({
                     embeds: [
