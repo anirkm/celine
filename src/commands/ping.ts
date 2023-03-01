@@ -11,8 +11,8 @@ const command: Command = {
   execute: async (client, message, args) => {
     let discordIncidents: string[] = [];
 
-    let redisLatency: number = 0;
-    let mongoLatency: number = 0;
+    let redisLatency = 0;
+    let mongoLatency = 0;
     let apiLatency = client.ws.ping;
 
     let msg = await textEmbed(

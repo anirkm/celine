@@ -26,7 +26,7 @@ const command: Command = {
           `${emoji.loading} | Fetching guild invites please wait.`
         );
 
-        let totalInvites: number = 0;
+        let totalInvites = 0;
         let user =
           message.mentions.members?.first() ||
           (await message.guild?.members
@@ -172,9 +172,9 @@ const command: Command = {
       `${emoji.loading} | Fetching guild invites please wait.`
     );
 
-    let totalInvites: number = 0;
-    let totalUsersInvited: number = 0;
-    let maxInvite: string = "";
+    let totalInvites = 0;
+    let totalUsersInvited = 0;
+    let maxInvite = "";
     let maxInviteCount = 0;
 
     await message.guild?.invites
