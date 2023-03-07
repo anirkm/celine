@@ -17,7 +17,7 @@ const command: Command = {
   name: "menu",
   execute: async (client, message, args) => {
     let permissionsArr: Array<any> = [];
-    let type: string = "unknown";
+    let type = "unknown";
 
     if (!args[1]) return message.reply("please specify a role or user");
 
@@ -48,7 +48,7 @@ const command: Command = {
     if (!guild) return message.reply("guild not found");
 
     permissions.forEach((perm) => {
-      let isDefault: boolean = false;
+      let isDefault = false;
       if (target instanceof GuildMember) {
         type = "member";
         isDefault = guild.userPermissions
