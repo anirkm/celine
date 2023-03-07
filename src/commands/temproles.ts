@@ -3,7 +3,9 @@ import {
   ButtonStyle,
   ComponentType,
   EmbedBuilder,
+  GuildMember,
   Message,
+  Role,
 } from "discord.js";
 import { CollectorUtils } from "discord.js-collector-utils";
 import ms from "enhanced-ms";
@@ -13,38 +15,38 @@ import { Command } from "../types";
 import { RtextEmbed, textEmbed } from "../utils/msgUtils";
 
 const command: Command = {
-  name: "tempbans",
+  name: "temproles",
   execute: async (client, message, args) => {
     let cursor = "0";
-    let bans: any[] = [];
+    let temproles: any[] = [];
 
     if (args[1] == "clear") {
       let cursor = "0";
-      let banKeys: string[] = [];
+      let trKeys: string[] = [];
       let success = 0;
+      let failed = 0;
 
       do {
         const [nextCursor, keys] = await client.redis.scan(
           cursor,
           "MATCH",
-          `banqueue_${message.guild?.id}_*`
+          `tr_${message.guild?.id}_*`
         );
         cursor = nextCursor;
         for await (const key of keys) {
-          console.log(key);
-          banKeys.push(key);
+          trKeys.push(key);
         }
       } while (cursor !== "0");
 
-      if (!banKeys || banKeys.length === 0)
+      if (!trKeys || trKeys.length === 0)
         return textEmbed(
           message,
-          `${emoji.error} | There are no users to unban.`
+          `${emoji.error} | There are no users with temporary roles with your query.`
         );
       let collectorPrompt = await message.reply({
         embeds: [
           await RtextEmbed(
-            `${emoji.question} |  Are you sure you want to cancel ${banKeys.length} tempbans, this action is irreversible! (reply within 30 seconds)`
+            `${emoji.question} |  Are you sure you want to cancel ${trKeys.length} temporary roles, this action is irreversible and will remove the roles from the users! (reply within 30 seconds)`
           ),
         ],
         components: [
@@ -53,13 +55,13 @@ const command: Command = {
             components: [
               {
                 type: ComponentType.Button,
-                customId: "acceptUnbanAll",
+                customId: "acceptCancelTrAll",
                 emoji: `${emoji.approve}`,
                 style: ButtonStyle.Success,
               },
               {
                 type: ComponentType.Button,
-                customId: "cancelUnbanAll",
+                customId: "cancelCancelTrAll",
                 emoji: `${emoji.decline}`,
                 style: ButtonStyle.Danger,
               },
@@ -68,15 +70,15 @@ const command: Command = {
         ],
       });
 
-      if (banKeys && banKeys.length !== 0) {
+      if (trKeys && trKeys.length !== 0) {
         let collectorResult = await CollectorUtils.collectByButton(
           collectorPrompt,
           async (buttonInteraction: ButtonInteraction) => {
             switch (buttonInteraction.customId) {
-              case "acceptUnbanAll":
-                return { intr: buttonInteraction, value: "acceptUnbanAll" };
-              case "cancelUnbanAll":
-                return { intr: buttonInteraction, value: "cancelUnbanAll" };
+              case "acceptCancelTrAll":
+                return { intr: buttonInteraction, value: "acceptCancelTrAll" };
+              case "cancelCancelTrAll":
+                return { intr: buttonInteraction, value: "cancelCancelTrAll" };
               default:
                 return;
             }
@@ -102,46 +104,52 @@ const command: Command = {
 
         if (collectorResult) {
           switch (collectorResult.value) {
-            case "acceptUnbanAll":
+            case "acceptCancelTrAll":
               collectorPrompt.edit({
                 embeds: [
                   await RtextEmbed(
-                    `${emoji.loading} | Wait a moment while I unban all users...`
+                    `${emoji.loading} | Wait a moment while I remove the roles from users...`
                   ),
                 ],
                 components: [],
               });
 
-              for await (const key of banKeys) {
-                const user = await client.users.fetch(key.split("_")[2]);
-                if (user) {
-                  await message.guild?.members
-                    .unban(user, `tempban clear`)
-                    .then(() => {
-                      success++;
-                    })
-                    .catch(() => {});
-                }
+              for await (const key of trKeys) {
+                const user = await message.guild?.members.fetch(
+                  key.split("_")[2]
+                );
+                const role = await message.guild?.roles
+                  .fetch(key.split("_")[3])
+                  .catch(() => {});
+
+                if (!user || !role) continue;
+
+                await user.roles
+                  .remove(role, `temproles clear`)
+                  .then(() => {
+                    success++;
+                  })
+                  .catch(() => {});
               }
-              await client.redis.del(banKeys).catch((e) => {
-                console.log("tempban all clear error redis", e);
+              await client.redis.del(trKeys).catch((e) => {
+                console.log("temproles all clear error redis", e);
               });
 
               collectorPrompt.edit({
                 embeds: [
                   await RtextEmbed(
-                    `${emoji.approve} | ${success} users were successfully unbanned.`
+                    `${emoji.approve} | ${success} temporary roles were successfully canceled.`
                   ),
                 ],
                 components: [],
               });
 
               break;
-            case "cancelUnbanAll":
+            case "cancelCancelTrAll":
               collectorPrompt.edit({
                 embeds: [
                   await RtextEmbed(
-                    `${emoji.decline} | **Action cancelled**, no users were unbanned.`
+                    `${emoji.decline} | **Action cancelled**, no temporary roles were canceled.`
                   ),
                 ],
                 components: [],
@@ -156,60 +164,87 @@ const command: Command = {
       return;
     }
 
-    let user =
+    let arg =
       message.mentions.members?.first() ||
+      message.mentions.roles?.first() ||
       (await message.guild?.members
         .fetch({ user: args[1], force: true })
-        .catch(() => {}));
+        .catch(() => {})) ||
+      (await message.guild?.roles.fetch(args[1]).catch(() => {}));
 
     let msg = await textEmbed(
       message,
-      `${emoji.loading} | Fetching active tempbans..`
+      `${emoji.loading} | Fetching active temporary roles..`
     );
 
     do {
       const [nextCursor, keys] = await client.redis.scan(
         cursor,
         "MATCH",
-        `banqueue_${message.guild?.id}_${user?.id || "*"}`
+        `tr_${message.guild?.id}_${arg instanceof GuildMember ? arg.id : `*`}_${
+          arg instanceof Role ? arg.id : `*`
+        }`
       );
       cursor = nextCursor;
       for await (const key of keys) {
-        let bandUser = await client.users
+        const trUser = await message.guild?.members
           .fetch(key.split("_")[2])
           .catch(() => {});
-        let expireTime = (await client.redis.get(key)) || 0;
-        console.log(key);
+        const expireTime = (await client.redis.get(key)) || 0;
+        const role = await message.guild?.roles
+          .fetch(key.split("_")[3])
+          .catch(() => {});
 
-        if (bandUser && Number(expireTime) > 0) {
-          bans.push({ member: bandUser, expireTime: expireTime });
+        if (!role || !trUser) {
+          await client.redis.del(key).catch();
+          continue;
+        }
+
+        if (trUser && Number(expireTime) > 0 && role) {
+          console.log({
+            member: trUser.id,
+            expireTime: expireTime,
+            role: role.id,
+          });
+
+          temproles.push({
+            member: trUser,
+            expireTime: expireTime,
+            role: role,
+          });
         }
       }
     } while (cursor !== "0");
 
-    if (!bans || bans.length <= 0)
+    if (!temproles || temproles.length <= 0)
       return msg.edit({
         embeds: [
-          await RtextEmbed(`${emoji.error} | **No tempbans were found**.`),
+          await RtextEmbed(
+            `${emoji.error} | **No temporary roles were found with your query**.`
+          ),
         ],
       });
 
-    console.log(bans.length);
+    console.log(temproles.length);
 
     let dataPerPage = 7;
-    let totalEmbeds = Math.ceil(bans.length / dataPerPage);
+    let totalEmbeds = Math.ceil(temproles.length / dataPerPage);
 
     let i = 0;
     let embeds: EmbedBuilder[] = [];
 
     for (let j = 0; j < totalEmbeds; j++) {
       let desc: string[] = [
-        `${emoji.pepoban} | There is ${bans.length} active bans\n`,
+        `${emoji.pepoban} | **${
+          arg instanceof GuildMember ? `${arg} got` : `There is`
+        } ${temproles.length} temporary roles ${
+          arg instanceof Role ? `of ${arg}` : ``
+        }\n**`,
       ];
 
       let embed = new EmbedBuilder()
         .setAuthor({
-          name: `${message.guild?.name || "Unknown"} Bans`,
+          name: `${message.guild?.name || "Unknown"} temporary roles`,
           iconURL:
             message.guild?.iconURL({ size: 4096 }) ||
             "https://cdn.discordapp.com/embed/avatars/5.png",
@@ -222,12 +257,18 @@ const command: Command = {
         });
 
       for (let k = 0; k < dataPerPage; k++) {
-        if (bans[i + k]) {
+        if (temproles[i + k]) {
+          console.log("push");
           desc.push(
             [
-              `<@${bans[i + k].member.id}> (${bans[i + k].member.id})`,
+              `**User**: <@${temproles[i + k].member.id}> (${
+                temproles[i + k].member.id
+              })`,
+              `**Roles:** ${temproles[i + k].role} (${
+                temproles[i + k].role.id
+              })`,
               `**Expires in:** ${ms(
-                Number(bans[i + k].expireTime) - new Date().getTime()
+                Number(temproles[i + k].expireTime) - new Date().getTime()
               )} \n`,
             ]
               .filter((v) => v != "")
@@ -236,7 +277,6 @@ const command: Command = {
         }
 
         embed.setDescription(desc.filter((v) => v != "").join("\n"));
-        i++;
       }
 
       embeds.push(embed);
@@ -252,7 +292,7 @@ const command: Command = {
       });
   },
   cooldown: 10,
-  aliases: [],
+  aliases: ["trs"],
   permissions: [],
 };
 

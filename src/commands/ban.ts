@@ -36,25 +36,33 @@ const command: Command = {
         .fetch({ user: args[1], force: true })
         .catch(() => {}));
 
-    let reason: String;
-    let duration: String;
+    let reason: string;
+    let duration: string;
 
-    args.length === 4
-      ? (reason = args.slice(3).join(" "))
-      : (reason = args.slice(2).join(" ") || "no reason specified");
-
-    args.length === 4 ? (duration = args[2]) : (duration = "lifetime");
-
-    if (args.length === 4 && ms(args[2]) === null) {
-      return textEmbed(
-        message,
-        `${emoji.huh} | The duration you've specified is invalid`
-      );
+    if (args.length >= 4 && ms(args[2]) !== null) {
+      if (ms(args[2]) < ms("10m") || ms(args[2]) > ms("1y")) {
+        return textEmbed(
+          message,
+          `${emoji.error} | The duration should be between 10 minutes and 1 year.`
+        );
+      }
     }
+    args.length >= 4 && ms(args[2]) !== null
+      ? ((reason = args.slice(3).join(" ")), (duration = ms(args[2])))
+      : ((reason = args.slice(2).join(" ")), (duration = "lifetime"));
 
-    if (args.length === 4 && ms(args[2]) !== null) {
+    if (
+      args.length === 3 &&
+      ms(args[2]) !== null &&
+      ms(args[2]) >= ms("10m") &&
+      ms(args[2]) <= ms("1y")
+    ) {
+      console.log("d");
       duration = ms(args[2]);
+      reason = "no reason specified";
     }
+
+    message.reply(`duration: ${duration} reason: ${reason}`);
 
     if (userToBan && !userToBan.bannable) {
       return textEmbed(
@@ -102,11 +110,12 @@ const command: Command = {
         reason: `${message.member?.user.tag} - ${reason}`,
       })
       .then(async (banned) => {
-        let buser = await client.users.fetch(banned).catch(() => {});
         message.reply({
           embeds: [
             await RtextEmbed(
-              `**${emoji.ban} | s/o ${buser} for getting banned${
+              `**${emoji.ban} | ${
+                typeof banned === "string" ? `@<${banned}>` : `${banned}`
+              } has been banned${
                 duration !== "lifetime" && duration
                   ? ` during the next ${ms(Number(duration), {
                       roundUp: true,
@@ -159,20 +168,13 @@ const command: Command = {
             .save()
             .then(async () => {
               await client.redis
-                .keys(
+                .del(
                   `banqueue_${message.guild?.id}_${
                     userToBan ? userToBan.id : args[1]
                   }`
                 )
-                .then((keys) => {
-                  if (keys.length !== 0) {
-                    client.redis.del(keys).catch((e) => {
-                      console.log("redis delete ban keys err", e);
-                    });
-                  }
-                })
                 .catch((e) => {
-                  console.log("redis get ban keys err", e);
+                  console.log("redis delete ban keys err", e);
                 });
             })
             .catch((e) => {
@@ -183,7 +185,10 @@ const command: Command = {
       .catch((e) => {
         switch (e.message) {
           case "Unknown User":
-            textEmbed(message, `${emoji.error} | Invalid user, Try again.`);
+            textEmbed(
+              message,
+              `${emoji.error} » Specified user is invalid, try again.`
+            );
             break;
           case "Invalid Form Body":
             textEmbed(

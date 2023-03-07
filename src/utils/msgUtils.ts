@@ -14,7 +14,7 @@ export const textEmbed = async (
 ) => {
   let embed = {
     color: 10181046,
-    description: `**${data}**`,
+    description: `**${data.replace("|", "»")}**`,
   };
 
   return reply
@@ -23,7 +23,9 @@ export const textEmbed = async (
 };
 
 export const RtextEmbed = async (data: string) => {
-  let embed = new EmbedBuilder().setColor("Purple").setDescription(data);
+  let embed = new EmbedBuilder()
+    .setColor("Purple")
+    .setDescription(data.replace("|", "»"));
   return embed;
 };
 

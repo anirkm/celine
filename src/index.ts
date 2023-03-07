@@ -1,13 +1,28 @@
-import { Client, GatewayIntentBits, Collection } from "discord.js";
-const { Guilds, MessageContent, GuildMessages, GuildMembers } =
-  GatewayIntentBits;
-const client = new Client({
-  intents: [Guilds, MessageContent, GuildMessages, GuildMembers],
-});
-import { Command, SlashCommand } from "./types";
+import { Client, Collection, GatewayIntentBits } from "discord.js";
 import { config } from "dotenv";
 import { readdirSync } from "fs";
 import { join } from "path";
+import { Command, SlashCommand } from "./types";
+const {
+  Guilds,
+  MessageContent,
+  GuildMessages,
+  GuildMembers,
+  GuildVoiceStates,
+  GuildInvites,
+  GuildModeration,
+} = GatewayIntentBits;
+const client = new Client({
+  intents: [
+    Guilds,
+    MessageContent,
+    GuildMessages,
+    GuildMembers,
+    GuildVoiceStates,
+    GuildInvites,
+    GuildModeration,
+  ],
+});
 config();
 
 client.slashCommands = new Collection<string, SlashCommand>();

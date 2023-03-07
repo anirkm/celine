@@ -3,7 +3,7 @@ import ms from "enhanced-ms";
 import emoji from "../data/emojies.json";
 import { getGuildRole } from "../functions";
 import { Command } from "../types";
-import { missingArgs, textEmbed } from "../utils/msgUtils";
+import { missingArgs, RtextEmbed, textEmbed } from "../utils/msgUtils";
 
 const command: Command = {
   name: "temprole",
@@ -56,10 +56,16 @@ const command: Command = {
         `${emoji.error} | The duration you've specified is invalid.`
       );
 
+    if (ms(args[3]) < ms("1m"))
+      return textEmbed(
+        message,
+        `${emoji.huh} | Minimum duration of 1 minute is not reached.`
+      );
+
     if (ms(args[3]) > ms("30d"))
       return textEmbed(
         message,
-        `${emoji.huh} | Maximum duration of 30 days execed.`
+        `${emoji.huh} | Maximum duration of 30 days is execed.`
       );
 
     let duration = ms(args[3]);
@@ -71,7 +77,7 @@ const command: Command = {
       );
     }
 
-    user.roles
+    await user.roles
       .add(role, `${message.member?.user.tag} - temprole`)
       .then((member) => {
         let trEmbed = new EmbedBuilder()
@@ -87,7 +93,6 @@ const command: Command = {
           .setFooter({ text: `Executed by ${message.member?.user.tag}` })
           .setTimestamp();
 
-        message.reply({ embeds: [trEmbed] });
         client.redis
           .set(
             `tr_${message.guild?.id}_${member.id}_${
@@ -97,8 +102,21 @@ const command: Command = {
             }`,
             new Date().getTime() + duration
           )
-          .catch((e) => {
-            console.log("setting temprole redis", e);
+          .then(async () => {
+            await message.reply({ embeds: [trEmbed] });
+          })
+          .catch(async (e) => {
+            await member.roles.remove(role!, `temprole error`).catch((e) => {
+              console.log("tr error correction role", e);
+            });
+            await message.reply({
+              embeds: [
+                await RtextEmbed(
+                  `${emoji.error} | An error occurred while trying to execute this command, try again.. (Code: Redis)`
+                ),
+              ],
+            });
+            return console.log("setting temprole redis", e);
           });
       })
       .catch((e) => {
@@ -134,3 +152,4 @@ const command: Command = {
 };
 
 export default command;
+

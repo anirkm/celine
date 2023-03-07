@@ -42,6 +42,15 @@ const command: Command = {
       );
     }
 
+    if (ms(args[2]) !== null) {
+      if (ms(args[2]) < ms("10s") || ms(args[2]) > ms("1month")) {
+        return textEmbed(
+          message,
+          `${emoji.error} | The duration should be between 10 seconds and 1 month.`
+        );
+      }
+    }
+
     let duration: number = ms(args[2]);
 
     let guild = await GuildModel.findOne({ guildID: message.guild?.id });
@@ -68,10 +77,11 @@ const command: Command = {
     user.roles
       .add(muteRole, `${message.member?.user.tag} - ${reason}`)
       .then(async (user) => {
-        message.reply(
-          `${emoji.muted} - ** ${user} muted for ${ms(duration, {
-            roundUp: true,
-          })}**`
+        textEmbed(
+          message,
+          `${emoji.muted} | ${user} has been muted for ${ms(duration, {
+            roundUp: false,
+          })}.`
         );
 
         await user

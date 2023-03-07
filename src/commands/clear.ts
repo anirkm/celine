@@ -86,12 +86,14 @@ const command: Command = {
 
       console.log(amount);
 
-      await messages.map((msg) => {
-        if (msg.author.id === user!.id && amount > i) {
-          filtered.push(msg);
-          i++;
-        }
-      });
+      await Promise.all(
+        messages.map((msg) => {
+          if (msg.author.id === user!.id && amount > i) {
+            filtered.push(msg);
+            i++;
+          }
+        })
+      );
 
       if (!filtered || filtered.length === 0) {
         return textEmbed(
@@ -112,12 +114,12 @@ const command: Command = {
                     ),
                   ],
                 })
-                .then((m) => setTimeout(() => m.delete().catch(() => {}), 5000))
+                .then((m) => setTimeout(() => m.delete().catch(() => {}), 3000))
             : textEmbed(
                 message,
                 `${emoji.yay} | Successfully deleted **${messages.size}** messages from ${user}`,
                 false
-              ).then((m) => setTimeout(() => m.delete().catch(() => {}), 5000));
+              ).then((m) => setTimeout(() => m.delete().catch(() => {}), 3000));
         })
         .catch(async (e) => {
           console.log(e);
@@ -126,7 +128,7 @@ const command: Command = {
                 .edit({
                   embeds: [
                     await RtextEmbed(
-                      `${emoji.yay} | Successfully deleted **${messages.size}** messages from ${user}`
+                      `${emoji.yay} | Failed to delete **${messages.size}** messages from ${user}`
                     ),
                   ],
                 })
@@ -153,12 +155,12 @@ const command: Command = {
                   ),
                 ],
               })
-              .then((m) => setTimeout(() => m.delete().catch(() => {}), 5000))
+              .then((m) => setTimeout(() => m.delete().catch(() => {}), 3000))
           : textEmbed(
               message,
               `${emoji.yay} | Successfully deleted **${messages.size}** messages.`,
               false
-            ).then((m) => setTimeout(() => m.delete().catch(() => {}), 5000));
+            ).then((m) => setTimeout(() => m.delete().catch(() => {}), 3000));
       })
       .catch(async (e) => {
         console.log("normal err");

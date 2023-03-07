@@ -1,15 +1,15 @@
 import {
-  SlashCommandBuilder,
-  CommandInteraction,
-  Collection,
-  PermissionResolvable,
-  Message,
   AutocompleteInteraction,
   Client,
+  Collection,
+  CommandInteraction,
+  Message,
+  PermissionResolvable,
+  SlashCommandBuilder,
 } from "discord.js";
-import mongoose, { Mongoose } from "mongoose";
 import { Redis } from "ioredis";
-import { type } from "os";
+import mongoose, { Mongoose } from "mongoose";
+import { Queue } from "bullmq";
 
 export interface SlashCommand {
   command: SlashCommandBuilder | any;
@@ -33,10 +33,23 @@ interface GuildOptions {
   jailRole: string;
 }
 
+interface UserPermissions {
+  userId: string;
+  permissions: Array<string>;
+}
+
+interface RolePermissions {
+  roleId: string;
+  permissions: Array<string>;
+}
+
 export interface IGuild extends mongoose.Document {
   guildID: string;
   options: GuildOptions;
   protected: Array<string>;
+  userPermissions: Array<UserPermissions>;
+  rolePermissions: Array<RolePermissions>;
+  rolePersist: Array<string>;
 }
 
 export interface ISanction extends mongoose.Document {
@@ -101,12 +114,18 @@ declare global {
   }
 }
 
+interface ClientQueues {
+  [name: string] : Queue
+}
+
 declare module "discord.js" {
   export interface Client {
     slashCommands: Collection<string, SlashCommand>;
     commands: Collection<string, Command>;
     cooldowns: Collection<string, number>;
+    timeouts: Collection<string, Array<t>>;
     redis: Redis;
     mongo: Mongoose;
+    queues: ClientQueues
   }
 }

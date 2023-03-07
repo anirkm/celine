@@ -23,8 +23,10 @@ const command: Command = {
       [
         `${message.member}`,
         `${message.member} reason`,
+        `${message.member} 10d`,
         `${message.member} 1337d reason`,
         `remove ${message.member}`,
+        `restore ${message.member}`,
       ]
     );
 
@@ -32,7 +34,98 @@ const command: Command = {
       return message.reply({ embeds: [argsEmbed] });
     }
 
+    if (args[1].toLocaleLowerCase() === "restore") {
+      let success = 0;
+      let failed = 0;
+      if (!args[2]) {
+        return textEmbed(
+          message,
+          `${emoji.error} | You have to specify an user.`
+        );
+      }
+      let user =
+        message.mentions.members?.first() ||
+        (await message.guild?.members
+          .fetch({ user: args[2], force: true })
+          .catch(() => {}));
+      if (!user)
+        return textEmbed(
+          message,
+          `${emoji.error} | The user you've specified was not found.`
+        );
+      let resotredRoles = await client.redis
+        .lrange(`jr_${message.guild?.id}_${user.id}`, 0, -1)
+        .catch(() => {});
+      if (!resotredRoles || resotredRoles.length == 0)
+        return textEmbed(
+          message,
+          `${emoji.error} | All roles have been previously restored.`
+        );
+
+      let msg = await message.reply({
+        embeds: [
+          await RtextEmbed(
+            `${emoji.loading} | Wait while restoring ${resotredRoles.length} of ${user} roles... (${success}/${resotredRoles.length} - ${failed} failed)`
+          ),
+        ],
+      });
+      let restoreRole = async () => {
+        return Promise.all(
+          resotredRoles!.map(async (role) => {
+            await user!.roles
+              .add(role, `Jail restore roles`)
+              .then(async () => {
+                success++;
+                await msg.edit({
+                  embeds: [
+                    await RtextEmbed(
+                      `${emoji.loading} | Wait while restoring ${resotredRoles?.length} of ${user} roles... (${success}/${resotredRoles?.length} - ${failed} failed)`
+                    ),
+                  ],
+                  components: [],
+                });
+              })
+              .catch(async () => {
+                failed++;
+                await msg.edit({
+                  embeds: [
+                    await RtextEmbed(
+                      `${emoji.loading} | Wait while restoring ${resotredRoles?.length} of ${user} roles... (${success}/${resotredRoles?.length} - ${failed} failed)`
+                    ),
+                  ],
+                  components: [],
+                });
+              });
+          })
+        );
+      };
+
+      await restoreRole().then(async () => {
+        await client.redis
+          .del(`jr_${message.guild?.id}_${user?.id}`)
+          .catch(() => {});
+        msg.edit({
+          embeds: [
+            await RtextEmbed(
+              `${emoji.approve} | ${success}/${
+                resotredRoles!.length
+              } roles has been restored and ${failed} failed.`
+            ),
+          ],
+          components: [],
+        });
+      });
+
+      return;
+    }
+
     if (["remove", "delete"].includes(args[1].toLocaleLowerCase())) {
+      if (!args[2]) {
+        return textEmbed(
+          message,
+          `${emoji.error} | You have to specify an user.`
+        );
+      }
       let user =
         message.mentions.members?.first() ||
         (await message.guild?.members
@@ -131,6 +224,7 @@ const command: Command = {
               switch (collectorResult.value) {
                 case "approveRestore":
                   let success = 0;
+                  let failed = 0;
 
                   collectorPrompt.edit({
                     embeds: [
@@ -144,27 +238,45 @@ const command: Command = {
                   let restoreRole = async () => {
                     return Promise.all(
                       resotredRoles!.map(async (role) => {
-                        await user.roles
+                        await user!.roles
                           .add(role, `Jail restore roles`)
-                          .then(() => {
-                            console.log("success");
+                          .then(async () => {
                             success++;
                             console.log(success);
+                            await collectorPrompt.edit({
+                              embeds: [
+                                await RtextEmbed(
+                                  `${emoji.loading} | Wait while restoring ${resotredRoles?.length} of ${user} roles... (${success}/${resotredRoles?.length} - ${failed} failed)`
+                                ),
+                              ],
+                              components: [],
+                            });
                           })
-                          .catch(() => {});
+                          .catch(async () => {
+                            failed++;
+                            await collectorPrompt.edit({
+                              embeds: [
+                                await RtextEmbed(
+                                  `${emoji.loading} | Wait while restoring ${resotredRoles?.length} of ${user} roles... (${success}/${resotredRoles?.length} - ${failed} failed)`
+                                ),
+                              ],
+                              components: [],
+                            });
+                          });
                       })
                     );
                   };
 
                   await restoreRole().then(async () => {
+                    await client.redis
+                      .del(`jr_${message.guild?.id}_${user?.id}`)
+                      .catch(() => {});
                     collectorPrompt.edit({
                       embeds: [
                         await RtextEmbed(
-                          `${
-                            emoji.approve
-                          } | ${user} Jail removed with success. ${success}/${
+                          `${emoji.approve} | ${success}/${
                             resotredRoles!.length
-                          } roles has been restored.`
+                          } roles has been restored and ${failed} failed.`
                         ),
                       ],
                       components: [],
@@ -250,26 +362,46 @@ const command: Command = {
         `${emoji.error} | The user you've specified was not found.`
       );
 
-    let reason: String;
-    let duration: String;
+    let reason: String = "no reason specified";
+    let duration: String = "lifetime";
     let jailRole;
 
-    args.length === 4
-      ? (reason = args.slice(3).join(" "))
-      : (reason = args.slice(2).join(" ") || "no reason specified");
-
-    args.length === 4 ? (duration = args[2]) : (duration = "lifetime");
-
-    if (args.length === 4 && ms(args[2]) === null) {
-      return textEmbed(
-        message,
-        `${emoji.error} | The duration you've specified is invalid.`
-      );
+    if (args.length >= 4 && ms(args[2]) !== null) {
+      if (ms(args[2]) < ms("1s") || ms(args[2]) > ms("1y")) {
+        return textEmbed(
+          message,
+          `${emoji.error} | The duration should be between 10 minutes and 1 year.`
+        );
+      }
     }
 
-    if (args.length === 4 && ms(args[2]) !== null) {
+    if (args.length >= 4 && ms(args[2]) !== null) {
+      reason = args.slice(3).join(" ");
       duration = ms(args[2]);
+    } else if (args.length >= 4 && ms(args[2]) === null) {
+      reason = args.slice(2).join(" ");
+      duration = "lifetime";
     }
+
+    if (
+      args.length === 3 &&
+      ms(args[2]) !== null &&
+      ms(args[2]) >= ms("10m") &&
+      ms(args[2]) <= ms("1y")
+    ) {
+      console.log("d");
+      duration = ms(args[2]);
+      reason = "no reason specified";
+    } else if (args.length === 3 && ms(args[2]) == null) {
+      reason = args[2];
+    }
+
+    if (args.length === 2) {
+      duration = "lifetime";
+      reason = "no reason specified";
+    }
+
+    if (reason.trim().length == 0) reason = "no reason specified";
 
     let guild = await GuildModel.findOne({ guildID: message.guild?.id });
 
@@ -311,7 +443,7 @@ const command: Command = {
 
     let msg = await textEmbed(
       message,
-      `${emoji.loading} | Wait while saving current ${user} roles...`
+      `${emoji.loading} | Wait while saving current ${user} roles... (high permission roles will be ignored)`
     );
 
     const deleteSaveRoles = async () => {
@@ -320,7 +452,15 @@ const command: Command = {
           await user!.roles
             .remove(r, `${message.member?.user.tag} - jail`)
             .then(() => {
-              userRoles.push(r.id);
+              if (
+                !r.permissions.any([
+                  PermissionFlagsBits.Administrator,
+                  PermissionFlagsBits.ManageGuild,
+                  PermissionFlagsBits.ManageRoles,
+                ])
+              ) {
+                userRoles.push(r.id);
+              }
             })
             .catch(() => {});
         })
@@ -375,6 +515,8 @@ const command: Command = {
             })
             .catch(() => {});
         }
+
+        console.log(duration, reason);
 
         let newJail = new SanctionModel({
           guildID: message.guild?.id,

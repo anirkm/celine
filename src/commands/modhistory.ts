@@ -27,7 +27,7 @@ const command: Command = {
       .catch(() => {});
 
     let mod = await client.users
-      .fetch(message.mentions.users.first()?.id || args[1], {
+      .fetch(message.mentions.users.first()?.id || args[1] || message.author, {
         cache: true,
       })
       .catch(() => {});
@@ -71,6 +71,18 @@ const command: Command = {
           user
             ? `★ ${mod.username} executed a total of ${modSanctions.length} sanctions on <@${user.id}>\n`
             : `★ ${mod.username} executed a total of ${modSanctions.length} sanctions\n`,
+          `★ Total bans: ${modSanctions
+            .filter((o) => o.type == "Ban")
+            .length.toString()}`,
+          `★ Total mutes: ${modSanctions
+            .filter((o) => o.type == "Mute")
+            .length.toString()}`,
+          `★ Total jails: ${modSanctions
+            .filter((o) => o.type == "Jail")
+            .length.toString()}`,
+          `★ Total timeouts: ${modSanctions
+            .filter((o) => o.type == "Timeout")
+            .length.toString()}\n`,
           modSanctions[i] ? `↱ **Type :: __${modSanctions[i].type}__**` : "",
           modSanctions[i] ? `↳ **Member** :: <@${modSanctions[i].userID}>` : "",
           modSanctions[i] && modSanctions[i].duration

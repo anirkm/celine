@@ -79,7 +79,9 @@ const command: Command = {
               "https://cdn.discordapp.com/embed/avatars/5.png",
           })
           .setTimestamp();
-        msg.edit({ embeds: [embed] });
+        setTimeout(() => {
+          msg.edit({ embeds: [embed] });
+        }, 200);
       });
   },
   cooldown: 10,

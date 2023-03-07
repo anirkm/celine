@@ -26,7 +26,7 @@ const command: Command = {
       .catch(() => {});
 
     let mod = await client.users
-      .fetch(message.mentions.users.first()?.id || args[1], {
+      .fetch(message.mentions.users.first()?.id || args[1] || message.author, {
         cache: true,
       })
       .catch(() => {});

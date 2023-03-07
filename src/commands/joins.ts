@@ -125,7 +125,7 @@ const command: Command = {
           }
           desc.push(
             [
-              `${i + k + 1}) At \`${new Date(
+              `**${i + k + 1})** At \`${new Date(
                 userJoins[i + k].timestamp
               ).toLocaleDateString("fr-FR")} ${new Date(
                 userJoins[i + k].timestamp

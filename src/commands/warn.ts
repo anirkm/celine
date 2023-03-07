@@ -67,7 +67,7 @@ const command: Command = {
             return msg.edit({
               embeds: [
                 await RtextEmbed(
-                  `${emoji.approve} | **Warn (#${args[2]}) has been deleted.**`
+                  `${emoji.approve} | **Warn (\`#${args[2]}\`) has been deleted.**`
                 ),
               ],
             });
@@ -140,14 +140,14 @@ const command: Command = {
           .then(() => {
             return textEmbed(
               message,
-              `${emoji.warning} | \`#${doc.warnID}\` ${user} has been warned for ${reason}.`
+              `${emoji.warning} | \`#${doc.warnID}\` ${user} has been warned.`
             );
           })
           .catch((e) => {
             if (e.code === 50007) {
               return textEmbed(
                 message,
-                `${emoji.warning} | \`#${doc.warnID}\` ${user} has been warned for ${reason} but i couldn't DM him the warn.`
+                `${emoji.warning} | \`#${doc.warnID}\` ${user} has been warned but i couldn't DM him the warn.`
               );
             }
           });

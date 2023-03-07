@@ -90,7 +90,7 @@ const command: Command = {
           );
         }
 
-        await embed.setDescription(desc.filter((v) => v != "").join("\n"));
+        embed.setDescription(desc.filter((v) => v != "").join("\n"));
       }
 
       embeds.push(embed);

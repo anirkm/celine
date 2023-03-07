@@ -9,6 +9,9 @@ const GuildSchema = new Schema<IGuild>({
     jailRole: { type: String },
   },
   protected: { type: [], default: [] },
+  userPermissions: { type: [], default: [] },
+  rolePermissions: { type: [], default: [] },
+  rolePersist: { type: [], default: [] },
 });
 
 const GuildModel = model("guild", GuildSchema);

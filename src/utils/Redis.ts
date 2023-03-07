@@ -2,7 +2,7 @@ import { Client } from "discord.js";
 import Redis from "ioredis";
 import { color } from "../functions";
 
-module.exports = (client: Client) => {
+module.exports = async (client: Client) => {
   const REDIS_HOST = process.env.REDIS_HOST;
   const REDIS_PW = process.env.REDIS_PW;
 
@@ -10,16 +10,20 @@ module.exports = (client: Client) => {
     port: 6379, // Redis port
     host: REDIS_HOST, // Redis host
     password: REDIS_PW,
+    maxRetriesPerRequest: null,
   });
 
   redis.on("connect", async () => {
+    redis.setMaxListeners(1337);
     console.log(
       color(
         "text",
-        `🔴 MongoDB connection has been ${color("variable", "established.")}`
+        `🔴 Redis connection has been ${color("variable", "established.")}`
       )
     );
     client.redis = redis;
+
+    require("../utils/loadCache")(client);
 
     while ((await client.redis.ping().catch(() => {})) === "PONG") {
       await require("../utils/Itreation")(client, redis);
