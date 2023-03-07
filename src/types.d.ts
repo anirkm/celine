@@ -115,7 +115,7 @@ declare global {
 }
 
 interface ClientQueues {
-  [name: string] : Queue
+  [name: string]: Queue;
 }
 
 declare module "discord.js" {
@@ -126,6 +126,6 @@ declare module "discord.js" {
     timeouts: Collection<string, Array<t>>;
     redis: Redis;
     mongo: Mongoose;
-    queues: ClientQueues
+    queues: ClientQueues;
   }
 }
