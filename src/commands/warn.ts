@@ -9,7 +9,6 @@ import { hasPermission } from "../functions";
 const command: Command = {
   name: "warn",
   execute: async (client, message, args) => {
-
     if (
       !(await hasPermission(client, message.member!, "use_warn")) &&
       !message.member!.permissions.has(PermissionFlagsBits.Administrator)

@@ -10,8 +10,11 @@ import { hasPermission } from "../functions";
 const command: Command = {
   name: "history",
   execute: async (client, message, args) => {
-
-    if(!(await hasPermission(client, message.member!, "show_userhistory")) && !message.member!.permissions.has(PermissionFlagsBits.Administrator)) return
+    if (
+      !(await hasPermission(client, message.member!, "show_userhistory")) &&
+      !message.member!.permissions.has(PermissionFlagsBits.Administrator)
+    )
+      return;
 
     let argsEmbed = await missingArgs(
       message,
@@ -19,7 +22,6 @@ const command: Command = {
       ` ${message.member} ${client.user}`,
       [` ${message.member}`, `${message.member} ${client.user}`]
     );
-    
 
     if (!args[1] && !message.author.id) {
       return message.reply({ embeds: [argsEmbed] });
