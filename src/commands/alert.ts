@@ -8,8 +8,11 @@ import { hasPermission } from "../functions";
 const command: Command = {
   name: "alert",
   execute: async (client, message, args) => {
-
-    if(!(await hasPermission(client, message.member!, "use_alert")) && !message.member!.permissions.has(PermissionFlagsBits.Administrator)) return
+    if (
+      !(await hasPermission(client, message.member!, "use_alert")) &&
+      !message.member!.permissions.has(PermissionFlagsBits.Administrator)
+    )
+      return;
 
     let argsEmbed = await missingArgs(
       message,

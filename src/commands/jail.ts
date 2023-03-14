@@ -17,8 +17,11 @@ import { hasPermission } from "../functions";
 const command: Command = {
   name: "jail",
   execute: async (client, message, args) => {
-
-    if(!(await hasPermission(client, message.member!, "use_jail")) && !message.member!.permissions.has(PermissionFlagsBits.Administrator)) return
+    if (
+      !(await hasPermission(client, message.member!, "use_jail")) &&
+      !message.member!.permissions.has(PermissionFlagsBits.Administrator)
+    )
+      return;
 
     let argsEmbed = await missingArgs(
       message,
@@ -36,7 +39,7 @@ const command: Command = {
 
     if (!args[1]) {
       message.reply({ embeds: [argsEmbed] });
-      return
+      return;
     }
 
     if (args[1].toLocaleLowerCase() === "restore") {
@@ -165,7 +168,10 @@ const command: Command = {
         );
 
       if (!user.roles.cache.has(jailRole.id))
-        return textEmbed(message, `${emoji.huh} | ${user} isn't currently jailed.`);
+        return textEmbed(
+          message,
+          `${emoji.huh} | ${user} isn't currently jailed.`
+        );
 
       return user.roles
         .remove(jailRole, `${message.member?.user.tag} - jail remove`)
@@ -298,7 +304,7 @@ const command: Command = {
               embeds: [
                 await RtextEmbed(
                   `${emoji.yay} | ${user} **jail has been successfully removed**.`
-                  ),
+                ),
               ],
             });
           }
@@ -330,7 +336,10 @@ const command: Command = {
         .catch((e) => {
           switch (e.message) {
             case "Unknown User":
-              textEmbed(message, `${emoji.error} | The use you've specified is invalid, try again.`);
+              textEmbed(
+                message,
+                `${emoji.error} | The use you've specified is invalid, try again.`
+              );
               break;
             case "Missing Permissions":
               textEmbed(
@@ -431,7 +440,10 @@ const command: Command = {
       );
 
     if (user.roles.cache.has(jailRole.id)) {
-      return textEmbed(message, `${emoji.huh} | ${user} has already an active jail sanction.`);
+      return textEmbed(
+        message,
+        `${emoji.huh} | ${user} has already an active jail sanction.`
+      );
     }
 
     await client.redis
@@ -495,7 +507,9 @@ const command: Command = {
             await RtextEmbed(
               `${emoji.jailed} | **${user} has been jailed ${
                 duration !== "lifetime" && duration
-                  ? ` during the next ${ms(Number(duration), { roundUp: true })}.`
+                  ? ` during the next ${ms(Number(duration), {
+                      roundUp: true,
+                    })}.`
                   : "."
               }**`
             ),
@@ -557,7 +571,10 @@ const command: Command = {
       .catch((e) => {
         switch (e.message) {
           case "Unknown User":
-            textEmbed(message, `${emoji.error} | The user you've specified is invalid, try again.`);
+            textEmbed(
+              message,
+              `${emoji.error} | The user you've specified is invalid, try again.`
+            );
             break;
           case "Missing Permissions":
             textEmbed(

@@ -9,8 +9,11 @@ import { hasPermission } from "../functions";
 const command: Command = {
   name: "joins",
   execute: async (client, message, args) => {
-
-    if(!(await hasPermission(client, message.member!, "show_joins")) && !message.member!.permissions.has(PermissionFlagsBits.Administrator)) return
+    if (
+      !(await hasPermission(client, message.member!, "show_joins")) &&
+      !message.member!.permissions.has(PermissionFlagsBits.Administrator)
+    )
+      return;
 
     let user =
       message.mentions.members?.first() ||
