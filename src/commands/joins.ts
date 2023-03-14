@@ -1,14 +1,16 @@
-import { EmbedBuilder } from "discord.js";
+import { EmbedBuilder, PermissionFlagsBits } from "discord.js";
 import emoji from "../data/emojies.json";
 import { sendPagination } from "../functions";
 import GuildJoinModel from "../schemas/GuildJoin";
 import { Command, IGuildJoin } from "../types";
 import { RtextEmbed, textEmbed } from "../utils/msgUtils";
+import { hasPermission } from "../functions";
 
 const command: Command = {
   name: "joins",
   execute: async (client, message, args) => {
-    message.reply("emitted");
+
+    if(!(await hasPermission(client, message.member!, "show_joins")) && !message.member!.permissions.has(PermissionFlagsBits.Administrator)) return
 
     let user =
       message.mentions.members?.first() ||

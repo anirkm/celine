@@ -1,13 +1,18 @@
 import { EmbedBuilder, PermissionFlagsBits } from "discord.js";
 import emoji from "../data/emojies.json";
-import { sendPagination } from "../functions";
+import { hasPermission, sendPagination } from "../functions";
 import WarnModel from "../schemas/Warn";
 import { Command } from "../types";
 import { missingArgs, textEmbed } from "../utils/msgUtils";
-
 const command: Command = {
   name: "modwarns",
   execute: async (client, message, args) => {
+    if (
+      !(await hasPermission(client, message.member!, "show_modwarns")) &&
+      !message.member!.permissions.has(PermissionFlagsBits.Administrator)
+    )
+      return;
+
     let argsEmbed = await missingArgs(
       message,
       "modwarns",

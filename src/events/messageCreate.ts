@@ -80,7 +80,6 @@ const event: BotEvent = {
         Date.now() + command.cooldown * 1000
       );
     }
-    message.channel.sendTyping();
     command.execute(client, message, args);
   },
 };

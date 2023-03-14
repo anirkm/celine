@@ -1,13 +1,19 @@
-import { EmbedBuilder } from "discord.js";
+import { EmbedBuilder, PermissionFlagsBits } from "discord.js";
 import ms from "enhanced-ms";
 import emoji from "../data/emojies.json";
-import { sendPagination } from "../functions";
+import { hasPermission, sendPagination } from "../functions";
 import { Command } from "../types";
 import { RtextEmbed, textEmbed } from "../utils/msgUtils";
 
 const command: Command = {
   name: "mutes",
   execute: async (client, message, args) => {
+    if (
+      !(await hasPermission(client, message.member!, "use_mute")) &&
+      !message.member!.permissions.has(PermissionFlagsBits.Administrator)
+    )
+      return;
+
     let cursor = "0";
     let mutes: any[] = [];
 

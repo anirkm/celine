@@ -1,12 +1,16 @@
-import { EmbedBuilder } from "discord.js";
+import { EmbedBuilder, PermissionFlagsBits } from "discord.js";
 import emoji from "../data/emojies.json";
 import { genId } from "../functions";
 import { Command } from "../types";
 import { missingArgs, textEmbed } from "../utils/msgUtils";
+import { hasPermission } from "../functions";
 
 const command: Command = {
   name: "alert",
   execute: async (client, message, args) => {
+
+    if(!(await hasPermission(client, message.member!, "use_alert")) && !message.member!.permissions.has(PermissionFlagsBits.Administrator)) return
+
     let argsEmbed = await missingArgs(
       message,
       "alert",

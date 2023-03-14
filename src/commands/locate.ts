@@ -1,4 +1,4 @@
-import { StageChannel, TextChannel } from "discord.js";
+import { PermissionFlagsBits, StageChannel, TextChannel } from "discord.js";
 import emoji from "../data/emojies.json";
 import { Command } from "../types";
 import { textEmbed } from "../utils/msgUtils";
@@ -18,6 +18,16 @@ const command: Command = {
         `${emoji.error} | The user you specified was not found.`
       );
 
+    if (
+      user.id !== message.member?.id &&
+      user.permissions.has(PermissionFlagsBits.Administrator) &&
+      !message.member!.permissions.has(PermissionFlagsBits.Administrator)
+    )
+      return textEmbed(
+        message,
+        `${emoji.error} | You can't run this command on administrators.`
+      );
+
     if (!user.voice.channel)
       return textEmbed(
         message,
@@ -35,7 +45,12 @@ const command: Command = {
             user!.id === message.author.id ? `You're ` : `${user} is`
           } in ${channel} with ${
             (channel as TextChannel | StageChannel).members.size - 1
-          } other members.**`
+          } other members.** ${
+            user!.id === message.author.id &&
+            message.author.id !== "490667823392096268"
+              ? `__#l7adi menghir rbi 9ewad__`
+              : ``
+          } `
         );
       })
       .catch(() => {

@@ -1,6 +1,7 @@
 import { PermissionFlagsBits } from "discord.js";
 import ms from "enhanced-ms";
 import emoji from "../data/emojies.json";
+import { hasPermission } from "../functions";
 import GuildModel from "../schemas/Guild";
 import SanctionModel from "../schemas/Sanction";
 import { Command } from "../types";
@@ -9,6 +10,12 @@ import { missingArgs, RtextEmbed, textEmbed } from "../utils/msgUtils";
 const command: Command = {
   name: "mute",
   execute: async (client, message, args) => {
+    if (
+      !(await hasPermission(client, message.member!, "use_mute")) &&
+      !message.member!.permissions.has(PermissionFlagsBits.Administrator)
+    )
+      return;
+
     let argsEmbed = await missingArgs(
       message,
       "mute",

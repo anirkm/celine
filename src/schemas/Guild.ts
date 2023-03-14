@@ -2,7 +2,7 @@ import { model, Schema } from "mongoose";
 import { IGuild } from "../types";
 
 const GuildSchema = new Schema<IGuild>({
-  guildID: { required: true, type: String },
+  guildID: { required: true, type: String, unique: true },
   options: {
     prefix: { type: String, default: process.env.PREFIX },
     muteRole: { type: String },

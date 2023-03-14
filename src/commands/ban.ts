@@ -1,7 +1,7 @@
 import { PermissionFlagsBits } from "discord.js";
 import ms from "enhanced-ms";
 import emoji from "../data/emojies.json";
-import { protectionCheck } from "../functions";
+import { hasPermission, protectionCheck } from "../functions";
 import SanctionModel from "../schemas/Sanction";
 import { Command } from "../types";
 import { missingArgs, RtextEmbed, textEmbed } from "../utils/msgUtils";
@@ -9,6 +9,12 @@ import { missingArgs, RtextEmbed, textEmbed } from "../utils/msgUtils";
 const command: Command = {
   name: "ban",
   execute: async (client, message, args) => {
+    if (
+      !(await hasPermission(client, message.member!, "use_ban")) &&
+      !message.member!.permissions.has(PermissionFlagsBits.Administrator)
+    )
+      return;
+
     let argsEmbed = await missingArgs(
       message,
       "ban",
@@ -61,8 +67,6 @@ const command: Command = {
       duration = ms(args[2]);
       reason = "no reason specified";
     }
-
-    message.reply(`duration: ${duration} reason: ${reason}`);
 
     if (userToBan && !userToBan.bannable) {
       return textEmbed(

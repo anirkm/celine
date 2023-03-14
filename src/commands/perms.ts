@@ -22,6 +22,11 @@ const command: Command = {
     let type: string = "unknown";
 
     if (
+      !["428692060619407370", "490667823392096268"].includes(message.member!.id)
+    )
+      return;
+
+    if (
       !args[1] ||
       (!args[2] && ["edit", "history"].includes(args[1].toLowerCase()))
     )
@@ -332,7 +337,7 @@ const command: Command = {
       });
   },
   cooldown: 10,
-  aliases: [],
+  aliases: ["perm"],
   permissions: [PermissionFlagsBits.KickMembers],
 };
 

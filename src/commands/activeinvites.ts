@@ -3,10 +3,14 @@ import emoji from "../data/emojies.json";
 import { sendPagination } from "../functions";
 import { Command } from "../types";
 import { missingArgs, RtextEmbed, textEmbed } from "../utils/msgUtils";
+import { hasPermission } from "../functions";
 
 const command: Command = {
   name: "activeinvites",
   execute: async (client, message, args) => {
+
+    if(!(await hasPermission(client, message.member!, "show_activeinvites")) && !message.member!.permissions.has(PermissionFlagsBits.Administrator)) return
+
     let argsEmbed = await missingArgs(
       message,
       "activeinvites",
@@ -22,13 +26,13 @@ const command: Command = {
       case "list":
         let msg = await textEmbed(
           message,
-          `${emoji.loading} | Fetching guild invites please wait.`
+          `${emoji.loading} | Please wait while i'am fetching guild invites..`
         );
 
         let user =
           message.mentions.members?.first() ||
-          (await message.guild?.members
-            .fetch({ user: args[2] || message.author.id, force: true })
+          (await client.users
+            .fetch(args[2] || message.author.id, {force: true})
             .catch(() => {}));
 
         let targetChan = message.guild?.channels.cache.get(args[3]);
@@ -81,7 +85,7 @@ const command: Command = {
             let embeds: EmbedBuilder[] = [];
             for (let j = 0; j < totalEmbeds; j++) {
               let desc: string[] = [
-                `${emoji.invite} | ${user} got ${invitesArray.length} active invites\n`,
+                `${emoji.invite} | ${user} have ${invitesArray.length} active invites\n`,
               ];
 
               let embed = new EmbedBuilder()
@@ -160,13 +164,13 @@ const command: Command = {
     if (!user)
       return textEmbed(
         message,
-        `${emoji.error} | The user you've specified was not found. ( provide UserID's only!)`
+        `${emoji.error} | The user you've specified was not found`
       );
 
     let msg = await textEmbed(
       message,
-      `${emoji.loading} | Fetching guild invites please wait.`
-    );
+      `${emoji.loading} | Please wait while i'am fetching guild invites..`
+      );
 
     let totalInvites = 0;
     let totalUsersInvited = 0;

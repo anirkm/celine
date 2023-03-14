@@ -1,11 +1,18 @@
 import { Message, PermissionFlagsBits, TextChannel } from "discord.js";
 import emoji from "../data/emojies.json";
+import { hasPermission } from "../functions";
 import { Command } from "../types";
 import { missingArgs, RtextEmbed, textEmbed } from "../utils/msgUtils";
 
 const command: Command = {
   name: "clear",
   execute: async (client, message, args) => {
+    if (
+      !(await hasPermission(client, message.member!, "use_clear")) &&
+      !message.member!.permissions.has(PermissionFlagsBits.Administrator)
+    )
+      return;
+
     let argsEmbed = await missingArgs(message, "clear", ` (amount)`, [
       ` 69`,
       `69 ${message.member}`,

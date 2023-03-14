@@ -1,7 +1,7 @@
 import { EmbedBuilder, PermissionFlagsBits } from "discord.js";
 import ms from "enhanced-ms";
 import emoji from "../data/emojies.json";
-import { sendPagination } from "../functions";
+import { hasPermission, sendPagination } from "../functions";
 import SanctionModel from "../schemas/Sanction";
 import { Command } from "../types";
 import { missingArgs, textEmbed } from "../utils/msgUtils";
@@ -9,6 +9,11 @@ import { missingArgs, textEmbed } from "../utils/msgUtils";
 const command: Command = {
   name: "modhistory",
   execute: async (client, message, args) => {
+    if (
+      !(await hasPermission(client, message.member!, "show_modhistory")) &&
+      !message.member!.permissions.has(PermissionFlagsBits.Administrator)
+    )
+      return;
     let argsEmbed = await missingArgs(
       message,
       "modhistory",

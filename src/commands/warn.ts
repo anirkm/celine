@@ -4,10 +4,18 @@ import { genId } from "../functions";
 import WarnModel from "../schemas/Warn";
 import { Command } from "../types";
 import { missingArgs, RtextEmbed, textEmbed } from "../utils/msgUtils";
+import { hasPermission } from "../functions";
 
 const command: Command = {
   name: "warn",
   execute: async (client, message, args) => {
+
+    if (
+      !(await hasPermission(client, message.member!, "use_warn")) &&
+      !message.member!.permissions.has(PermissionFlagsBits.Administrator)
+    )
+      return;
+
     let argsEmbed = await missingArgs(
       message,
       "warn",

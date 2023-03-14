@@ -1,11 +1,18 @@
 import { PermissionFlagsBits } from "discord.js";
 import ms from "enhanced-ms";
+import { hasPermission } from "../functions";
 import SanctionModel from "../schemas/Sanction";
 import { Command } from "../types";
 
 const command: Command = {
   name: "timeout",
   execute: async (client, message, args) => {
+    if (
+      !(await hasPermission(client, message.member!, "use_timeout")) &&
+      !message.member!.permissions.has(PermissionFlagsBits.Administrator)
+    )
+      return;
+
     if (!args[1]) {
       return message.reply(
         `:rage: - **&timeout** ${message.member} [duration] [reason]`

@@ -185,8 +185,6 @@ export const hasPermission = async (
     .map((r) => r.permissions)
     .flat();
 
-  console.log(roles);
-
   const userPermissions = guild.userPermissions.find(
     (p) => p.userId === member.id
   );

@@ -4,14 +4,14 @@ import { color } from "../functions";
 
 module.exports = (client: Client) => {
   const MONGO_URI =
-    "mongodb+srv://yatsuki:Anirhunter1@cluster0.quhde.mongodb.net/modtest?retryWrites=true";
+    "mongodb+srv://yatsuki:dnIdadhdytI8HTUN8injxETQ3XeIfC5S4Ob5vdyLQKb/Yvi00vyxivB53hPkvzcRMsf64T0rtMoGrfWq@137.184.44.90/?retryWrites=true";
   if (!MONGO_URI)
     return console.log(
       color("text", `🍃 Mongo URI not found, ${color("error", "skipping.")}`)
     );
   mongoose
     .connect(
-      `mongodb+srv://yatsuki:Anirhunter1@cluster0.quhde.mongodb.net/modtest?retryWrites=true`
+      `mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+1.8.0`
     )
     .then((mongodb) => {
       client.mongo = mongodb;
