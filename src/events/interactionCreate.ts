@@ -8,6 +8,7 @@ import {
 import emoji from "../data/emojies.json";
 import permissions from "../data/perms";
 import GuildModel from "../schemas/Guild";
+import PermissionHistoryModel from "../schemas/PermissionHistory";
 import { BotEvent, IGuild } from "../types";
 import { RtextEmbed } from "../utils/msgUtils";
 
@@ -37,7 +38,7 @@ const event: BotEvent = {
           return await interaction.message.edit({
             embeds: [
               await RtextEmbed(
-                `${emoji.cantsee} | This menu has expired due to inactivity, create a new one if nedded (your changes hasn't been saved)`
+                `${emoji.cantsee} | This menu has expired due to inactivity, create a new one if nedded (your changes aren't saved)`
               ),
             ],
             components: [],
@@ -181,11 +182,14 @@ const event: BotEvent = {
                 throw new Error("Guild not found");
               }
               let updated = false;
+              let previousPermissions: Array<string> = [];
               if (type === "member") {
                 const index = guild.userPermissions.findIndex(
                   (userPermission) => userPermission.userId === target
                 );
                 if (index !== -1) {
+                  previousPermissions =
+                    guild.userPermissions[index].permissions;
                   guild.userPermissions[index].permissions = interaction.values;
                   updated = true;
                 }
@@ -194,11 +198,31 @@ const event: BotEvent = {
                   (rolePermission) => rolePermission.roleId === target
                 );
                 if (index !== -1) {
+                  previousPermissions =
+                    guild.rolePermissions[index].permissions;
                   guild.rolePermissions[index].permissions = interaction.values;
                   updated = true;
                 }
               }
               if (updated) {
+                const permissionHistory = new PermissionHistoryModel({
+                  guildId: guild.guildID,
+                  targetType: type,
+                  targetId: target,
+                  changedBy: ogMessageAuhtorId,
+                  previousPermissions: prevPermsArr.map((value) => {
+                    return permissions.find(
+                      (perm) => perm.permission === value.split("-")[1]
+                    )?.permission;
+                  }),
+                  currentPermissions: interaction.values.map((value) => {
+                    return permissions.find(
+                      (perm) => perm.permission === value.split("-")[1]
+                    )?.permission;
+                  }),
+                });
+                permissionHistory.save();
+
                 return GuildModel.findOneAndUpdate(filter, setUpdate, {
                   new: true,
                   arrayFilters: [arrayFilter],
@@ -234,6 +258,35 @@ const event: BotEvent = {
                   components: [updatedRow],
                   embeds: [updateEmbed],
                 });
+
+                await client.redisCache
+                  .set(
+                    `permroles:${updatedGuild.guildID}`,
+                    JSON.stringify(
+                      updatedGuild.rolePermissions.map((role) => role.roleId)
+                    )
+                  )
+                  .catch((error: Error) => {
+                    console.log("redis perm role caching very bad", error);
+                  });
+
+                const cacheKey = `permissions:${type}:${target}:${updatedGuild.guildID}`;
+                const permissions = interaction.values.map((value) => {
+                  return value.split("-")[1];
+                });
+                console.log(permissions);
+                if (permissions.length > 0) {
+                  await client.redisCache
+                    .set(cacheKey, JSON.stringify(permissions))
+                    .then(() => {
+                      console.log("saved new");
+                    })
+                    .catch((error: Error) => {
+                      console.log("redis perm caching very bad", error);
+                    });
+                } else {
+                  await client.redisCache.del(cacheKey);
+                }
               } else {
                 interaction.message.reply(
                   "nothing has been updated which is weird, contact an admin"

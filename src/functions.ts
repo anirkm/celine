@@ -1,15 +1,14 @@
 import {
+  ButtonStyles,
+  ButtonTypes,
   pagination,
-  StylesButton,
-  TypesButtons,
 } from "@devraelfreeze/discordjs-pagination";
-import chalk from "chalk";
 import {
+  Client,
   Collection,
   Embed,
   Guild,
   GuildMember,
-  Message,
   PermissionFlagsBits,
   PermissionResolvable,
   TextChannel,
@@ -17,7 +16,6 @@ import {
 import mongoose from "mongoose";
 import { default as GuildDB, default as GuildModel } from "./schemas/Guild";
 import { GuildOption } from "./types";
-
 type colorType = "text" | "variable" | "error";
 
 const themeColors = {
@@ -30,7 +28,7 @@ export const getThemeColor = (color: colorType) =>
   Number(`0x${themeColors[color].substring(1)}`);
 
 export const color = (color: colorType, message: any) => {
-  return chalk.hex(themeColors[color])(message);
+  return message;
 };
 
 export const checkPermissions = (
@@ -126,7 +124,7 @@ export const protectionCheck = async (
   return guildData.protected.includes(user.id);
 };
 
-export const sendPagination = async (message: Message, embeds: any[]) => {
+export const sendPagination = async (message: any, embeds: any) => {
   return await pagination({
     message: message,
     embeds: embeds as unknown as Embed[],
@@ -136,29 +134,71 @@ export const sendPagination = async (message: Message, embeds: any[]) => {
     disableButtons: true,
     pageTravel: false,
     customFilter: (btn) => {
-      return btn.member?.user.id === message.member?.id || false;
+      return (
+        (btn.member?.user.id === message.member?.id || false) &&
+        (btn.channelId === message.channel.id || false)
+      );
     },
     buttons: [
       {
-        value: TypesButtons.previous,
-        style: StylesButton.Success,
+        type: ButtonTypes.previous,
+        style: ButtonStyles.Success,
         emoji: "◀️",
       },
       {
-        value: TypesButtons.next,
-        style: StylesButton.Success,
+        type: ButtonTypes.next,
+        style: ButtonStyles.Success,
         emoji: "▶️", // Disable emoji for this button
       },
       {
-        value: TypesButtons.last,
-        style: StylesButton.Success,
+        type: ButtonTypes.last,
+        style: ButtonStyles.Success,
         emoji: "⏩", // Disable emoji for this button
       },
       {
-        value: TypesButtons.first,
-        style: StylesButton.Success,
+        type: ButtonTypes.first,
+        style: ButtonStyles.Success,
         emoji: "⏪", // Disable emoji for this button
       },
     ],
   });
+};
+
+export const hasPermission = async (
+  client: Client,
+  member: GuildMember,
+  permission: string
+): Promise<boolean> => {
+  const cacheKey = `permissions:member:${member.id}:${member.guild.id}`;
+  const cached = await client.redisCache.get(cacheKey);
+  if (cached && JSON.parse(cached).includes(permission)) {
+    return true;
+  }
+
+  const guild = await GuildModel.findOne({ guildID: member.guild.id });
+  if (!guild) {
+    return false;
+  }
+
+  const roles = guild.rolePermissions
+    .filter((r) => member.roles.cache.has(r.roleId))
+    .map((r) => r.permissions)
+    .flat();
+
+  console.log(roles);
+
+  const userPermissions = guild.userPermissions.find(
+    (p) => p.userId === member.id
+  );
+  if (!userPermissions) {
+    return false;
+  }
+
+  const allPermissions = [...roles, ...userPermissions.permissions];
+  if (allPermissions.includes(permission)) {
+    client.redisCache.set(cacheKey, JSON.stringify(allPermissions));
+    return true;
+  }
+
+  return false;
 };

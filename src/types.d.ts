@@ -1,3 +1,4 @@
+import { Queue } from "bullmq";
 import {
   AutocompleteInteraction,
   Client,
@@ -9,7 +10,6 @@ import {
 } from "discord.js";
 import { Redis } from "ioredis";
 import mongoose, { Mongoose } from "mongoose";
-import { Queue } from "bullmq";
 
 export interface SlashCommand {
   command: SlashCommandBuilder | any;
@@ -41,6 +41,17 @@ interface UserPermissions {
 interface RolePermissions {
   roleId: string;
   permissions: Array<string>;
+}
+
+interface PermissionHistory {
+  guildId: string;
+  targetType: string;
+  targetId: string;
+  changedBy: string;
+  previousPermissions: Array<string>;
+  currentPermissions: Array<string>;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface IGuild extends mongoose.Document {
@@ -115,7 +126,7 @@ declare global {
 }
 
 interface ClientQueues {
-  [name: string] : Queue
+  [name: string]: Queue;
 }
 
 declare module "discord.js" {
@@ -125,7 +136,8 @@ declare module "discord.js" {
     cooldowns: Collection<string, number>;
     timeouts: Collection<string, Array<t>>;
     redis: Redis;
+    redisCache: Redis;
     mongo: Mongoose;
-    queues: ClientQueues
+    queues: ClientQueues;
   }
 }
