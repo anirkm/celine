@@ -18,10 +18,11 @@ const command: Command = {
     await hasPermission(client, user!, perm).then((result) => {
       let finish = Date.now() - start;
       message.reply({
-        content: `result: ${result} - took ${finish.toFixed(2) + "ms"} to fetch the perm`,
+        content: `result: ${result} - took ${
+          finish.toFixed(2) + "ms"
+        } to fetch the perm`,
       });
     });
-    
   },
   cooldown: 10,
   aliases: [],

@@ -93,7 +93,9 @@ const command: Command = {
               "https://cdn.discordapp.com/embed/avatars/5.png",
           })
           .setDescription(
-            `**${user} has been temporarily granted ${role} for the next ${ms(duration)}**`
+            `**${user} has been temporarily granted ${role} for the next ${ms(
+              duration
+            )}**`
           )
           .setFooter({ text: `Executed by ${message.member?.user.tag}` })
           .setTimestamp();
