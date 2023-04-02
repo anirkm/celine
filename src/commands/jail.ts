@@ -410,7 +410,7 @@ const command: Command = {
       console.log("d");
       duration = ms(args[2]);
       reason = "no reason specified";
-    } else if (args.length === 3 && ms(args[2]) == null) {
+    } else if (args.length === 3 && ms(args[2]) === null) {
       reason = args[2];
     }
 
