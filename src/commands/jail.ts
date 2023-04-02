@@ -83,7 +83,7 @@ const command: Command = {
         return Promise.all(
           resotredRoles!.map(async (role) => {
             await user!.roles
-              .add(role, `Jail restore roles`)
+              .add(role, "Jail restore roles")
               .then(async () => {
                 success++;
                 await msg.edit({
@@ -254,7 +254,7 @@ const command: Command = {
                     return Promise.all(
                       resotredRoles!.map(async (role) => {
                         await user!.roles
-                          .add(role, `Jail restore roles`)
+                          .add(role, "Jail restore roles")
                           .then(async () => {
                             success++;
                             console.log(success);

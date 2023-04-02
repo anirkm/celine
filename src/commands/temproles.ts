@@ -132,7 +132,7 @@ const command: Command = {
                 if (!user || !role) continue;
 
                 await user.roles
-                  .remove(role, `temproles clear`)
+                  .remove(role, "temproles clear")
                   .then(() => {
                     success++;
                   })
@@ -190,8 +190,8 @@ const command: Command = {
       const [nextCursor, keys] = await client.redis.scan(
         cursor,
         "MATCH",
-        `tr_${message.guild?.id}_${arg instanceof GuildMember ? arg.id : `*`}_${
-          arg instanceof Role ? arg.id : `*`
+        `tr_${message.guild?.id}_${arg instanceof GuildMember ? arg.id : "*"}_${
+          arg instanceof Role ? arg.id : "*"
         }`
       );
       cursor = nextCursor;
@@ -245,9 +245,9 @@ const command: Command = {
     for (let j = 0; j < totalEmbeds; j++) {
       let desc: string[] = [
         `${emoji.pepoban} | **${
-          arg instanceof GuildMember ? `${arg} got` : `There is`
+          arg instanceof GuildMember ? `${arg} got` : "There is"
         } ${temproles.length} temporary roles ${
-          arg instanceof Role ? `of ${arg}` : ``
+          arg instanceof Role ? `of ${arg}` : ""
         }\n**`,
       ];
 

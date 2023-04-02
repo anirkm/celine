@@ -111,7 +111,7 @@ const command: Command = {
             await message.reply({ embeds: [trEmbed] });
           })
           .catch(async (e) => {
-            await member.roles.remove(role!, `temprole error`).catch((e) => {
+            await member.roles.remove(role!, "temprole error").catch((e) => {
               console.log("tr error correction role", e);
             });
             await message.reply({

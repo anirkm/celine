@@ -49,7 +49,7 @@ const event: BotEvent = {
           return await interaction.reply({
             embeds: [
               await RtextEmbed(
-                `:grimacing: | This menu is not for you so don't touch it ever again.`
+                ":grimacing: | This menu is not for you so don't touch it ever again."
               ),
             ],
             ephemeral: true,
@@ -235,14 +235,14 @@ const event: BotEvent = {
                 ).setDescription(
                   [
                     `**» Permission manager for ${type} :: <@${target}>**`,
-                    `◟With the menu bellow you can add or remove permissions.\n`,
+                    "◟With the menu bellow you can add or remove permissions.\n",
                     `${emoji.enter} **Added permissions** ::`,
                     addedPermsArr.length > 0
-                      ? addedPermsArr.join("\n") + `\n`
+                      ? addedPermsArr.join("\n") + "\n"
                       : "◟None\n",
                     `${emoji.leave} **Removed permissions** ::`,
                     deletedPermsArr.length > 0
-                      ? deletedPermsArr.join("\n") + `\n`
+                      ? deletedPermsArr.join("\n") + "\n"
                       : "◟None\n",
                   ]
                     .filter((v) => v != "")

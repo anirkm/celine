@@ -38,7 +38,7 @@ export const missingArgs = async (
   let embed = new EmbedBuilder()
     .setColor("Red")
     .setAuthor({
-      name: `Missing arguments !`,
+      name: "Missing arguments !",
       iconURL:
         message.member?.avatarURL({ size: 4096 }) ||
         "https://cdn.discordapp.com/embed/avatars/5.png",

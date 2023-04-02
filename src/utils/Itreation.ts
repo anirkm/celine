@@ -85,7 +85,7 @@ module.exports = async (client: Client, redis: Redis) => {
                 if (resotredRoles && resotredRoles.length > 0) {
                   resotredRoles.forEach(async (role) => {
                     await user.roles
-                      .add(role, `Jail restore roles`)
+                      .add(role, "Jail restore roles")
                       .then(() => {
                         client.redis
                           .del(`jr_${guild?.id}_${user.id}`)

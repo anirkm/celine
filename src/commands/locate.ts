@@ -32,7 +32,7 @@ const command: Command = {
       return textEmbed(
         message,
         `${emoji.error} | ${
-          user.id === message.author.id ? `You're not` : `${user} is not`
+          user.id === message.author.id ? "You're not" : `${user} is not`
         }  in a voice channel.`
       );
 
@@ -42,14 +42,14 @@ const command: Command = {
         textEmbed(
           message,
           `${emoji.yay} | ${
-            user!.id === message.author.id ? `You're ` : `${user} is`
+            user!.id === message.author.id ? "You're " : `${user} is`
           } in ${channel} with ${
             (channel as TextChannel | StageChannel).members.size - 1
           } other members. ${
             user!.id === message.author.id &&
             message.author.id !== "490667823392096268"
-              ? `__#l7adi menghir rbi 9ewad__`
-              : ``
+              ? "__#l7adi menghir rbi 9ewad__"
+              : ""
           } `
         );
       })
