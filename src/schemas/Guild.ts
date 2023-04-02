@@ -17,6 +17,7 @@ const GuildSchema = new Schema<IGuild>({
 GuildSchema.index({ guildID: 1 });
 GuildSchema.index({ "userPermissions.userId": 1 });
 GuildSchema.index({ "rolePermissions.roleId": 1 });
+GuildSchema.index({ "userPermissions.userId": 1, "rolePermissions.roleId": 1 });
 
 const GuildModel = model("guild", GuildSchema);
 

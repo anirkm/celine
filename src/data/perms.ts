@@ -12,6 +12,12 @@ const permissions = [
     permFor: ["mute", "unmute", "mutes"],
   },
   {
+    default: true,
+    cmd: "vmute",
+    permission: "use_vmute",
+    permFor: ["vmute", "vunmute", "vmutes"],
+  },
+  {
     default: false,
     cmd: "jail",
     permission: "use_jail",

@@ -165,7 +165,7 @@ const command: Command = {
     let user =
       message.mentions.members?.first() ||
       (await message.guild?.members
-        .fetch({ user: args[1], force: true })
+        .fetch({ user: args[1], cache: true })
         .catch(() => {}));
 
     let msg = await textEmbed(

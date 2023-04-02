@@ -1,11 +1,11 @@
-import { PermissionFlagsBits } from "discord.js";
+import { EmbedBuilder, PermissionFlagsBits } from "discord.js";
 import ms from "enhanced-ms";
 import emoji from "../data/emojies.json";
 import { hasPermission } from "../functions";
 import GuildModel from "../schemas/Guild";
 import SanctionModel from "../schemas/Sanction";
 import { Command } from "../types";
-import { missingArgs, RtextEmbed, textEmbed } from "../utils/msgUtils";
+import { missingArgs, textEmbed } from "../utils/msgUtils";
 
 const command: Command = {
   name: "mute",
@@ -26,12 +26,15 @@ const command: Command = {
     if (!args[1] || !args[2]) {
       return message.reply({ embeds: [argsEmbed] });
     }
-
+    let st = Date.now();
     let user =
       message.mentions.members?.first() ||
       (await message.guild?.members
-        .fetch({ user: args[1], force: true })
+        .fetch({ user: args[1], cache: true})
         .catch(() => {}));
+    let f = Date.now() - st;
+
+    message.reply(`${f}ms`);
 
     if (!user)
       return textEmbed(
@@ -39,7 +42,7 @@ const command: Command = {
         `${emoji.error} | The user you specified was not found.`
       );
 
-    let reason: string = args[3] || "no reason was specified";
+    let reason: string = args.slice(3).join(" ") || "no reason was specified";
     let muteRole;
 
     if (!ms(args[2])) {
@@ -91,22 +94,33 @@ const command: Command = {
           })}.`
         );
 
-        await user
+        let notifEm = new EmbedBuilder()
+          .setAuthor({
+            name: message.guild!.name,
+            iconURL:
+              message.guild?.iconURL() ||
+              "https://cdn.discordapp.com/avatars/490667823392096268/7ccc56164f0adcde7fe00ef4384785ee.png?size=1024",
+          })
+          .setDescription(
+            [
+              "**You have been text-muted from this guild.**\n",
+              `__Reason__ :: ${reason}`,
+              `__Duration__ :: ${ms(duration, {
+                roundUp: false,
+              })}`,
+            ].join("\n")
+          )
+          .setTimestamp()
+          .setFooter({
+            text: user.user.tag,
+            iconURL:
+              user.user.avatarURL() ||
+              "https://cdn.discordapp.com/avatars/490667823392096268/7ccc56164f0adcde7fe00ef4384785ee.png?size=1024",
+          });
+
+        user
           .send({
-            embeds: [
-              await RtextEmbed(
-                `${emoji.muted} | You've been muted in **${
-                  message.guild?.name || "Failed to fetch guild name"
-                }** - Duration: ` +
-                  "`" +
-                  `${ms(duration) || "wtf?"}` +
-                  "`" +
-                  "- Reason: " +
-                  "`" +
-                  `${reason}` +
-                  "`."
-              ),
-            ],
+            embeds: [notifEm],
           })
           .catch(() => {});
 
@@ -121,16 +135,6 @@ const command: Command = {
           }),
           startAt: new Date(),
         });
-
-        await client.redis
-          .keys(`mutequeue_${message.guild?.id}_${user.id}`)
-          .then((keys) => {
-            if (keys.length !== 0) {
-              client.redis.del(keys).catch((e) => {
-                console.log("del mute keys redis err", e);
-              });
-            }
-          });
 
         await newMute
           .save()

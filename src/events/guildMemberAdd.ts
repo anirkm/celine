@@ -1,31 +1,38 @@
 import { Client, GuildMember } from "discord.js";
-import GuildMemberModel from "../schemas/GuildMember";
-import { BotEvent, IGuildMember } from "../types";
-import { logJoin } from "../utils/userUtils";
+import { BotEvent } from "../types";
+import GuildModel from "../schemas/Guild";
 
 const event: BotEvent = {
   name: "guildMemberAdd",
+  once: false,
   execute: async (client: Client, member: GuildMember) => {
-    let GuildMember = await GuildMemberModel.findOne({
-      userID: member.id,
-      guildID: member.guild.id,
-    });
+    const guild = await GuildModel.findOne({ guildID: member.guild.id });
+    if (!guild) return;
 
-    if (!GuildMember) {
-      let newGuildMember = new GuildMemberModel({
-        userID: member.id,
-        guildID: member.guild.id,
-        permissions: [],
-      });
+    const roleTypes = [
+      { keyPrefix: "mutequeue", roleId: guild.options.muteRole },
+      { keyPrefix: "jailqueue", roleId: guild.options.jailRole },
+    ];
 
-      await newGuildMember
-        .save()
-        .then(async (GuildMember: IGuildMember) => {
-          await logJoin(GuildMember);
-        })
-        .catch((e) => {
-          console.log("couldnt save new member", e);
-        });
+    for (const { keyPrefix, roleId } of roleTypes) {
+      const redisKey = `${keyPrefix}_${member.guild.id}_${member.id}`;
+      if (await client.redis.exists(redisKey)) {
+        const role = member.guild.roles.cache.get(roleId);
+        if (role) {
+          member.roles.add(role).catch(console.error);
+        }
+      }
+    }
+
+    const tempRoleKeys = await client.redis.keys(
+      `tr_${member.guild.id}_${member.id}_*`
+    );
+    for (const tempRoleKey of tempRoleKeys) {
+      const tempRoleId = tempRoleKey.split("_")[3];
+      const tempRole = member.guild.roles.cache.get(tempRoleId);
+      if (tempRole) {
+        member.roles.add(tempRole).catch(console.error);
+      }
     }
   },
 };

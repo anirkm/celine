@@ -182,14 +182,11 @@ const event: BotEvent = {
                 throw new Error("Guild not found");
               }
               let updated = false;
-              let previousPermissions: Array<string> = [];
               if (type === "member") {
                 const index = guild.userPermissions.findIndex(
                   (userPermission) => userPermission.userId === target
                 );
                 if (index !== -1) {
-                  previousPermissions =
-                    guild.userPermissions[index].permissions;
                   guild.userPermissions[index].permissions = interaction.values;
                   updated = true;
                 }
@@ -198,8 +195,6 @@ const event: BotEvent = {
                   (rolePermission) => rolePermission.roleId === target
                 );
                 if (index !== -1) {
-                  previousPermissions =
-                    guild.rolePermissions[index].permissions;
                   guild.rolePermissions[index].permissions = interaction.values;
                   updated = true;
                 }

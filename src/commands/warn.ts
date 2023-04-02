@@ -1,15 +1,13 @@
 import { PermissionFlagsBits } from "discord.js";
 import emoji from "../data/emojies.json";
-import { genId } from "../functions";
+import { genId, hasPermission } from "../functions";
 import WarnModel from "../schemas/Warn";
 import { Command } from "../types";
 import { missingArgs, RtextEmbed, textEmbed } from "../utils/msgUtils";
-import { hasPermission } from "../functions";
 
 const command: Command = {
   name: "warn",
   execute: async (client, message, args) => {
-
     if (
       !(await hasPermission(client, message.member!, "use_warn")) &&
       !message.member!.permissions.has(PermissionFlagsBits.Administrator)
@@ -109,7 +107,7 @@ const command: Command = {
     let user =
       message.mentions.members?.first() ||
       (await message.guild?.members
-        .fetch({ user: args[1], force: true })
+        .fetch({ user: args[1], cache: true })
         .catch(() => {}));
 
     let reason = args.slice(2).join(" ");
@@ -135,10 +133,9 @@ const command: Command = {
           .send({
             embeds: [
               await RtextEmbed(
-                `${emoji.warning} | You've got warned in **${
+                `${emoji.warning} | You've got a warn in **${
                   message.guild?.name || "Failed to fetch guild name"
                 }** for ` +
-                  "- Reason: " +
                   "`" +
                   `${reason}` +
                   "`."
@@ -148,7 +145,7 @@ const command: Command = {
           .then(() => {
             return textEmbed(
               message,
-              `${emoji.warning} | \`#${doc.warnID}\` ${user} has been warned.`
+              `${emoji.warning} | \`#${doc.warnID}\` ${user} has been warned successfully.`
             );
           })
           .catch((e) => {

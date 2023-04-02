@@ -25,7 +25,7 @@ const command: Command = {
     let user =
       message.mentions.members?.first() ||
       (await message.guild?.members
-        .fetch({ user: args[1], force: true })
+        .fetch({ user: args[1], force: false, cache: true })
         .catch(() => {}));
 
     let reason = args.slice(2).join(" ");

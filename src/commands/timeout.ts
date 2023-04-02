@@ -26,7 +26,7 @@ const command: Command = {
       const user =
         message.mentions.members?.first() ||
         (await message.guild?.members
-          .fetch({ user: args[2], force: true })
+          .fetch({ user: args[2], cache: true })
           .catch(() => {}));
 
       if (!user)
@@ -78,7 +78,7 @@ const command: Command = {
     const user =
       message.mentions.members?.first() ||
       (await message.guild?.members
-        .fetch({ user: args[1], force: true })
+        .fetch({ user: args[1], cache: true })
         .catch(() => {}));
 
     if (!user) return message.reply(":triumph: - **unknown user, try again.**");

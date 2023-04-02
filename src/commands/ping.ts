@@ -1,9 +1,9 @@
-import { EmbedBuilder } from "discord.js";
+import { EmbedBuilder, Message } from "discord.js";
 import { ms } from "enhanced-ms";
 import emoji from "../data/emojies.json";
 import GuildModel from "../schemas/Guild";
 import { Command } from "../types";
-import { RtextEmbed, textEmbed } from "../utils/msgUtils";
+import { RtextEmbed } from "../utils/msgUtils";
 
 const command: Command = {
   name: "ping",
@@ -12,12 +12,23 @@ const command: Command = {
 
     let redisLatency = 0;
     let mongoLatency = 0;
-    let apiLatency = client.ws.ping;
+    let apiLatency = 0;
+    let gatewayLatency = client.ws.ping;
+    let msg: Message;
 
-    let msg = await textEmbed(
-      message,
-      `${emoji.loading} Calculaing API latency...`
-    );
+    await message
+      .reply({
+        embeds: [
+          {
+            color: 10181046,
+            description: `**${emoji.loading} » Calculaing API latency...**`,
+          },
+        ],
+      })
+      .then((m: Message) => {
+        msg = m;
+        apiLatency = new Date().getTime() - msg.createdTimestamp;
+      });
 
     let startTimeRedis = new Date().getTime();
     await client.redis.ping().then(() => {
@@ -38,8 +49,7 @@ const command: Command = {
       })
       .catch(() => {});
 
-    let startRound = new Date().getTime();
-    msg
+    (msg! as Message)
       .edit({
         embeds: [
           await RtextEmbed(
@@ -48,7 +58,7 @@ const command: Command = {
         ],
       })
       .then((msg) => {
-        let endRound = new Date().getTime() - startRound;
+        let endRound = new Date().getTime() - msg.editedTimestamp!;
         let embed = new EmbedBuilder()
           .setAuthor({
             name: `${message.guild?.name || "no name"} Latency Report`,
@@ -59,8 +69,9 @@ const command: Command = {
           .setDescription(
             [
               `\n`,
-              `➥ **API** :: ${apiLatency} ms`,
-              `➥ **Roundtrip** :: ${endRound} ms`,
+              `➥ **API Median Latency** :: ${apiLatency} ms`,
+              `➥ **WS Gateway** :: ${gatewayLatency} ms`,
+              `➥ **API Roundtrip** :: ${endRound} ms`,
               `➥ **Database** :: ${mongoLatency} ms`,
               `➥ **Cache** :: ${redisLatency} ms`,
               `➥ **Uptime** :: ${ms(client.uptime!)} \n`,

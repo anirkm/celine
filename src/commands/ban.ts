@@ -1,10 +1,16 @@
-import { PermissionFlagsBits } from "discord.js";
+import crypto from "crypto";
+import { EmbedBuilder, PermissionFlagsBits } from "discord.js";
 import ms from "enhanced-ms";
 import emoji from "../data/emojies.json";
 import { hasPermission, protectionCheck } from "../functions";
 import SanctionModel from "../schemas/Sanction";
 import { Command } from "../types";
 import { missingArgs, RtextEmbed, textEmbed } from "../utils/msgUtils";
+
+const errorMessages = {
+  invalidUser: `${emoji.error} » Specified user is invalid, try again.`,
+  malformedCommand: `${emoji.error} | You've malformed the command, try again.`,
+};
 
 const command: Command = {
   name: "ban",
@@ -36,36 +42,26 @@ const command: Command = {
       "<:banned:1063755520017694772>",
     ];
 
-    let userToBan =
+    const userToBan =
       message.mentions.members?.first() ||
       (await message.guild?.members
-        .fetch({ user: args[1], force: true })
+        .fetch({ user: args[1], force: false, cache: true })
         .catch(() => {}));
 
-    let reason: string;
-    let duration: string;
-
-    if (args.length >= 4 && ms(args[2]) !== null) {
-      if (ms(args[2]) < ms("10m") || ms(args[2]) > ms("1y")) {
-        return textEmbed(
-          message,
-          `${emoji.error} | The duration should be between 10 minutes and 1 year.`
-        );
-      }
-    }
-    args.length >= 4 && ms(args[2]) !== null
-      ? ((reason = args.slice(3).join(" ")), (duration = ms(args[2])))
-      : ((reason = args.slice(2).join(" ")), (duration = "lifetime"));
+    const duration =
+      args.length >= 4 && ms(args[2]) !== null ? ms(args[2]) : "lifetime";
+    const reason =
+      args.slice(args.length >= 4 && ms(args[2]) !== null ? 3 : 2).join(" ") ||
+      "no reason specified";
 
     if (
-      args.length === 3 &&
-      ms(args[2]) !== null &&
-      ms(args[2]) >= ms("10m") &&
-      ms(args[2]) <= ms("1y")
+      duration !== "lifetime" &&
+      (ms(args[2]) < ms("10m") || ms(args[2]) > ms("1y"))
     ) {
-      console.log("d");
-      duration = ms(args[2]);
-      reason = "no reason specified";
+      return textEmbed(
+        message,
+        `${emoji.error} | The duration should be between 10 minutes and 1 year.`
+      );
     }
 
     if (userToBan && !userToBan.bannable) {
@@ -86,27 +82,34 @@ const command: Command = {
       );
     }
 
+    const _id = crypto.randomBytes(6).toString("hex");
+
     if (userToBan) {
-      await userToBan
-        .send({
-          embeds: [
-            await RtextEmbed(
-              `${
-                emAr[Math.floor(Math.random() * emAr.length)]
-              } | You've been banned from **${
-                message.guild?.name || "Failed to fetch guild name"
-              }** - Reason: ` +
-                "`" +
-                `${reason}` +
-                "`" +
-                "- Duration: " +
-                "`" +
-                `${ms(duration) || "Lifetime"}` +
-                "`."
-            ),
-          ],
+      let notifEm = new EmbedBuilder()
+        .setAuthor({
+          name: message.guild!.name,
+          iconURL:
+            message.guild?.iconURL() ||
+            "https://cdn.discordapp.com/avatars/490667823392096268/7ccc56164f0adcde7fe00ef4384785ee.png?size=1024",
         })
-        .catch(() => {});
+        .setDescription(
+          [
+            "**You have been banned from this guild.**\n",
+            `__Ban ID__ :: ${_id}`,
+            `__Reason__ :: ${reason}`,
+            `__Duration__ :: ${
+              duration === "lifetime" ? "permanant" : `${ms(ms(args[2]))}`
+            }`,
+          ].join("\n")
+        )
+        .setTimestamp()
+        .setFooter({
+          text: userToBan.user.tag,
+          iconURL:
+            userToBan.user.avatarURL() ||
+            "https://cdn.discordapp.com/avatars/490667823392096268/7ccc56164f0adcde7fe00ef4384785ee.png?size=1024",
+        });
+      userToBan.send({ embeds: [notifEm] }).catch(() => {});
     }
 
     message.guild?.members
@@ -121,7 +124,7 @@ const command: Command = {
                 typeof banned === "string" ? `@<${banned}>` : `${banned}`
               } has been banned${
                 duration !== "lifetime" && duration
-                  ? ` during the next ${ms(Number(duration), {
+                  ? ` for the next ${ms(Number(duration), {
                       roundUp: true,
                     })}.`
                   : "."
@@ -130,20 +133,21 @@ const command: Command = {
           ],
         });
 
-        if (duration && duration !== "lifetime" && ms(args[2])) {
-          let newBan = new SanctionModel({
-            guildID: message.guild?.id,
-            modID: message.member?.id,
-            userID: userToBan ? userToBan.id : args[1],
-            type: "Ban",
-            duration: args[2],
-            reason: reason,
-            startAt: new Date(),
-          });
+        let newBan = new SanctionModel({
+          sanctionId: _id,
+          guildID: message.guild?.id,
+          modID: message.member?.id,
+          userID: userToBan ? userToBan.id : args[1],
+          type: "Ban",
+          duration: duration !== "lifetime" ? args[2] : undefined,
+          reason: reason,
+          startAt: new Date(),
+        });
 
-          await newBan
-            .save()
-            .then(async () => {
+        await newBan
+          .save()
+          .then(async () => {
+            if (duration && duration !== "lifetime" && ms(args[2])) {
               client.redis
                 .set(
                   `banqueue_${message.guild?.id}_${
@@ -154,23 +158,7 @@ const command: Command = {
                 .catch((e) => {
                   console.log("save redis ban err", e);
                 });
-            })
-            .catch((e) => {
-              console.log("save mongo ban err", e);
-            });
-        } else {
-          let newBan = new SanctionModel({
-            guildID: message.guild?.id,
-            modID: message.member?.id,
-            userID: userToBan ? userToBan.id : args[1],
-            type: "Ban",
-            reason: reason,
-            startAt: new Date(),
-          });
-
-          await newBan
-            .save()
-            .then(async () => {
+            } else {
               await client.redis
                 .del(
                   `banqueue_${message.guild?.id}_${
@@ -180,25 +168,19 @@ const command: Command = {
                 .catch((e) => {
                   console.log("redis delete ban keys err", e);
                 });
-            })
-            .catch((e) => {
-              console.log("save mongo ban err", e);
-            });
-        }
+            }
+          })
+          .catch((e) => {
+            console.log("save mongo ban err", e);
+          });
       })
       .catch((e) => {
         switch (e.message) {
           case "Unknown User":
-            textEmbed(
-              message,
-              `${emoji.error} » Specified user is invalid, try again.`
-            );
+            textEmbed(message, errorMessages.invalidUser);
             break;
           case "Invalid Form Body":
-            textEmbed(
-              message,
-              `${emoji.error} | You've malformed the command, try again.`
-            );
+            textEmbed(message, errorMessages.malformedCommand);
             break;
           default:
             textEmbed(

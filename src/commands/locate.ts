@@ -9,7 +9,7 @@ const command: Command = {
     let user =
       message.mentions.members?.first() ||
       (await message.guild?.members
-        .fetch({ user: args[1] || message.author, force: true })
+        .fetch({ user: args[1] || message.author, cache: true })
         .catch(() => {}));
 
     if (!user)
@@ -41,11 +41,11 @@ const command: Command = {
       .then((channel) => {
         textEmbed(
           message,
-          `**${emoji.yay} | ${
+          `${emoji.yay} | ${
             user!.id === message.author.id ? `You're ` : `${user} is`
           } in ${channel} with ${
             (channel as TextChannel | StageChannel).members.size - 1
-          } other members.** ${
+          } other members. ${
             user!.id === message.author.id &&
             message.author.id !== "490667823392096268"
               ? `__#l7adi menghir rbi 9ewad__`

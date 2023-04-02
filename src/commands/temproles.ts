@@ -136,7 +136,9 @@ const command: Command = {
                   .then(() => {
                     success++;
                   })
-                  .catch(() => {});
+                  .catch(() => {
+                    failed++;
+                  });
               }
               await client.redis.del(trKeys).catch((e) => {
                 console.log("temproles all clear error redis", e);
@@ -145,7 +147,7 @@ const command: Command = {
               collectorPrompt.edit({
                 embeds: [
                   await RtextEmbed(
-                    `${emoji.approve} | ${success} temporary roles were successfully canceled.`
+                    `${emoji.approve} | ${success} temporary roles were successfully canceled, while have ${failed} failed.`
                   ),
                 ],
                 components: [],
@@ -175,7 +177,7 @@ const command: Command = {
       message.mentions.members?.first() ||
       message.mentions.roles?.first() ||
       (await message.guild?.members
-        .fetch({ user: args[1], force: true })
+        .fetch({ user: args[1], cache: true })
         .catch(() => {})) ||
       (await message.guild?.roles.fetch(args[1]).catch(() => {}));
 
@@ -265,7 +267,6 @@ const command: Command = {
 
       for (let k = 0; k < dataPerPage; k++) {
         if (temproles[i + k]) {
-          console.log("push");
           desc.push(
             [
               `**User**: <@${temproles[i + k].member.id}> (${

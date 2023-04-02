@@ -15,7 +15,7 @@ const command: Command = {
     let user =
       message.mentions.members?.first() ||
       (await message.guild?.members
-        .fetch({ user: args[1] || message.author, force: true })
+        .fetch({ user: args[1] || message.author, cache: true })
         .catch(() => {}));
 
     if (!user)

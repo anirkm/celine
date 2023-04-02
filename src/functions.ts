@@ -7,8 +7,10 @@ import {
   Client,
   Collection,
   Embed,
+  EmbedBuilder,
   Guild,
   GuildMember,
+  Message,
   PermissionFlagsBits,
   PermissionResolvable,
   TextChannel,
@@ -124,7 +126,7 @@ export const protectionCheck = async (
   return guildData.protected.includes(user.id);
 };
 
-export const sendPagination = async (message: any, embeds: any) => {
+export const sendPagination = async (message: any, embeds: EmbedBuilder[]) => {
   return await pagination({
     message: message,
     embeds: embeds as unknown as Embed[],

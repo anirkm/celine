@@ -64,6 +64,7 @@ export interface IGuild extends mongoose.Document {
 }
 
 export interface ISanction extends mongoose.Document {
+  sanctionId: string;
   guildID: string;
   modID: string;
   userID: string;
@@ -71,13 +72,6 @@ export interface ISanction extends mongoose.Document {
   reason: string;
   duration?: string;
   startAt: Date;
-}
-
-export interface ISanctionQueue extends mongoose.Document {
-  guildID: string;
-  userID: string;
-  type: string;
-  endAt: Date;
 }
 
 export interface IWarn extends mongoose.Document {

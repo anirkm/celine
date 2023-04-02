@@ -6,10 +6,10 @@ import { Command } from "../types";
 import { RtextEmbed, textEmbed } from "../utils/msgUtils";
 
 const command: Command = {
-  name: "mutes",
+  name: "vmutes",
   execute: async (client, message, args) => {
     if (
-      !(await hasPermission(client, message.member!, "use_mute")) &&
+      !(await hasPermission(client, message.member!, "use_vmute")) &&
       !message.member!.permissions.has(PermissionFlagsBits.Administrator)
     )
       return;
@@ -25,14 +25,14 @@ const command: Command = {
 
     let msg = await textEmbed(
       message,
-      `${emoji.loading} | Fetching active mutes..`
+      `${emoji.loading} | Fetching active voice-mutes..`
     );
 
     do {
       const [nextCursor, keys] = await client.redis.scan(
         cursor,
         "MATCH",
-        `mutequeue_${message.guild?.id}_${user?.id || "*"}`
+        `vmutequeue_${message.guild?.id}_${user?.id || "*"}`
       );
       cursor = nextCursor;
       for await (const key of keys) {
@@ -51,7 +51,9 @@ const command: Command = {
     if (!mutes || mutes.length <= 0)
       return msg.edit({
         embeds: [
-          await RtextEmbed(`${emoji.error} | **No active mutes were found**.`),
+          await RtextEmbed(
+            `${emoji.error} | **No active voice-mutes were found**.`
+          ),
         ],
       });
 
@@ -65,12 +67,12 @@ const command: Command = {
 
     for (let j = 0; j < totalEmbeds; j++) {
       let desc: string[] = [
-        `${emoji.muted} | There is ${mutes.length} active mutes\n`,
+        `${emoji.muted} | There is ${mutes.length} active voice-mutes\n`,
       ];
 
       let embed = new EmbedBuilder()
         .setAuthor({
-          name: `${message.guild?.name || "Unknown"} Mutes`,
+          name: `${message.guild?.name || "Unknown"} Voice mutes`,
           iconURL:
             message.guild?.iconURL({ size: 4096 }) ||
             "https://cdn.discordapp.com/embed/avatars/5.png",

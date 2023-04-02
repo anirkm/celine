@@ -27,7 +27,7 @@ const command: Command = {
     let user =
       message.mentions.members?.first() ||
       (await message.guild?.members
-        .fetch({ user: args[1], force: true })
+        .fetch({ user: args[1], cache: true })
         .catch(() => {}));
 
     let role =
@@ -49,7 +49,7 @@ const command: Command = {
     if (role instanceof Collection && role.size > 1) {
       return textEmbed(
         message,
-        `${emoji.huh} | Too many roles with this name choose a role using it's ID.`
+        `${emoji.huh} | Too many roles with this name choose a role using it's role identifier.`
       );
     }
 
@@ -93,7 +93,7 @@ const command: Command = {
               "https://cdn.discordapp.com/embed/avatars/5.png",
           })
           .setDescription(
-            `${user} has been granted the ${role} role for ${ms(duration)}`
+            `**${user} has been temporarily granted ${role} for the next ${ms(duration)}**`
           )
           .setFooter({ text: `Executed by ${message.member?.user.tag}` })
           .setTimestamp();

@@ -55,6 +55,14 @@ module.exports = async (client: Client, redis: Redis) => {
               });
           }
           break;
+        case "vmutequeue":
+          if (Number(expireTime) < new Date().getTime()) {
+            if ((user as GuildMember).voice.channel) {
+              (user as GuildMember).voice.setMute(false, "Mute expired");
+            }
+            client.redis.del(key).catch(() => {});
+            client.redis.set(`vmex_${guildID}_${userID}`, 0, "EX", 86400).catch(console.log);
+          }
         case "jailqueue":
           if (Number(expireTime) < new Date().getTime()) {
             let dbJailRole = dbGuild.options.jailRole || "none";
