@@ -15,7 +15,6 @@ import { hasPermission } from "../functions";
 const command: Command = {
   name: "unmute",
   execute: async (client, message, args) => {
-
     if (
       !(await hasPermission(client, message.member!, "use_mute")) &&
       !message.member!.permissions.has(PermissionFlagsBits.Administrator)
