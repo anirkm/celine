@@ -13,7 +13,7 @@ export const textEmbed = async (
   reply = true
 ) => {
   let embed = {
-    color: 10181046,
+    color: 15158332,
     description: `**${data.replace("|", "»")}**`,
   };
 
@@ -24,7 +24,7 @@ export const textEmbed = async (
 
 export const RtextEmbed = async (data: string) => {
   let embed = new EmbedBuilder()
-    .setColor("Purple")
+    .setColor("Red")
     .setDescription(data.replace("|", "»"));
   return embed;
 };
@@ -36,7 +36,7 @@ export const missingArgs = async (
   examples: string[]
 ) => {
   let embed = new EmbedBuilder()
-    .setColor("Purple")
+    .setColor("Red")
     .setAuthor({
       name: `Missing arguments !`,
       iconURL:
