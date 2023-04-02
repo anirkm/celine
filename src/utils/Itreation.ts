@@ -61,7 +61,9 @@ module.exports = async (client: Client, redis: Redis) => {
               (user as GuildMember).voice.setMute(false, "Mute expired");
             }
             client.redis.del(key).catch(() => {});
-            client.redis.set(`vmex_${guildID}_${userID}`, 0, "EX", 86400).catch(console.log);
+            client.redis
+              .set(`vmex_${guildID}_${userID}`, 0, "EX", 86400)
+              .catch(console.log);
           }
         case "jailqueue":
           if (Number(expireTime) < new Date().getTime()) {
@@ -85,7 +87,7 @@ module.exports = async (client: Client, redis: Redis) => {
                 if (resotredRoles && resotredRoles.length > 0) {
                   resotredRoles.forEach(async (role) => {
                     await user.roles
-                      .add(role, `Jail restore roles`)
+                      .add(role, "Jail restore roles")
                       .then(() => {
                         client.redis
                           .del(`jr_${guild?.id}_${user.id}`)

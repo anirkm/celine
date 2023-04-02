@@ -18,7 +18,7 @@ const command: Command = {
       message,
       "warn",
       `${message.member} (reason)`,
-      [`${message.member} reason`, `remove 1337`]
+      [`${message.member} reason`, "remove 1337"]
     );
 
     if (!args[1]) return message.reply({ embeds: [argsEmbed] });
@@ -27,8 +27,8 @@ const command: Command = {
       let argsEmbed2 = await missingArgs(
         message,
         "warn remove",
-        `remove (warnid)`,
-        [`remove 1337`]
+        "remove (warnid)",
+        ["remove 1337"]
       );
       if (!args[2]) {
         return message.reply({ embeds: [argsEmbed2] });

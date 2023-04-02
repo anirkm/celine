@@ -9,7 +9,7 @@ const event: BotEvent = {
       client.redis
         .del(`banqueue_${ban.guild.id}_${ban.user.id}`)
         .catch(() => {})
-        .catch((e) => console.log(`err deleting queue unban`, e));
+        .catch((e) => console.log("err deleting queue unban", e));
   },
 };
 

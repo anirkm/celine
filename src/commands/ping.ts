@@ -68,14 +68,14 @@ const command: Command = {
           })
           .setDescription(
             [
-              `\n`,
+              "\n",
               `➥ **API Median Latency** :: ${apiLatency} ms`,
               `➥ **WS Gateway** :: ${gatewayLatency} ms`,
               `➥ **API Roundtrip** :: ${endRound} ms`,
               `➥ **Database** :: ${mongoLatency} ms`,
               `➥ **Cache** :: ${redisLatency} ms`,
               `➥ **Uptime** :: ${ms(client.uptime!)} \n`,
-              `**Unresolved Discord Incidents: **`,
+              "**Unresolved Discord Incidents: **",
               discordIncidents?.length > 0
                 ? discordIncidents!.filter((v) => v != "").join("\n")
                 : "All incidents have been resolved.",

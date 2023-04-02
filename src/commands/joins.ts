@@ -9,8 +9,11 @@ import { hasPermission } from "../functions";
 const command: Command = {
   name: "joins",
   execute: async (client, message, args) => {
-
-    if(!(await hasPermission(client, message.member!, "show_joins")) && !message.member!.permissions.has(PermissionFlagsBits.Administrator)) return
+    if (
+      !(await hasPermission(client, message.member!, "show_joins")) &&
+      !message.member!.permissions.has(PermissionFlagsBits.Administrator)
+    )
+      return;
 
     let user =
       message.mentions.members?.first() ||
@@ -88,7 +91,7 @@ const command: Command = {
     for (let j = 0; j < totalEmbeds; j++) {
       let desc: string[] = [
         `${user} joined the server ${userJoins.length} ${
-          userJoins.length === 0 ? `time` : `times`
+          userJoins.length === 0 ? "time" : "times"
         } with <@${mostInviter}> being his most inviter at ${mostInvites} invites \n`,
         `Joins using someone's invite :: ${
           userJoinNormal.length

@@ -93,7 +93,9 @@ const command: Command = {
               "https://cdn.discordapp.com/embed/avatars/5.png",
           })
           .setDescription(
-            `**${user} has been temporarily granted ${role} for the next ${ms(duration)}**`
+            `**${user} has been temporarily granted ${role} for the next ${ms(
+              duration
+            )}**`
           )
           .setFooter({ text: `Executed by ${message.member?.user.tag}` })
           .setTimestamp();
@@ -111,7 +113,7 @@ const command: Command = {
             await message.reply({ embeds: [trEmbed] });
           })
           .catch(async (e) => {
-            await member.roles.remove(role!, `temprole error`).catch((e) => {
+            await member.roles.remove(role!, "temprole error").catch((e) => {
               console.log("tr error correction role", e);
             });
             await message.reply({

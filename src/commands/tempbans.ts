@@ -122,7 +122,7 @@ const command: Command = {
                 const user = await client.users.fetch(key.split("_")[2]);
                 if (user) {
                   await message.guild?.members
-                    .unban(user, `tempban clear`)
+                    .unban(user, "tempban clear")
                     .then(() => {
                       success++;
                     })
