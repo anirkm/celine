@@ -36,4 +36,8 @@ readdirSync(handlersDir).forEach((handler) => {
   require(`${handlersDir}/${handler}`)(client);
 });
 
-client.login(process.env.TOKEN);
+(async function() {
+  await require("./utils/Redis")(client)
+  client.login(process.env.TOKEN);
+}());
+

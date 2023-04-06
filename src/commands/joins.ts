@@ -1,10 +1,9 @@
 import { EmbedBuilder, PermissionFlagsBits } from "discord.js";
 import emoji from "../data/emojies.json";
-import { sendPagination } from "../functions";
+import { hasPermission, sendPagination } from "../functions";
 import GuildJoinModel from "../schemas/GuildJoin";
 import { Command, IGuildJoin } from "../types";
 import { RtextEmbed, textEmbed } from "../utils/msgUtils";
-import { hasPermission } from "../functions";
 
 const command: Command = {
   name: "joins",
@@ -16,10 +15,12 @@ const command: Command = {
       return;
 
     let user =
-      message.mentions.members?.first() ||
-      (await message.guild?.members
-        .fetch({ user: args[1] || message.author, cache: true })
-        .catch(() => {}));
+ await message.guild?.members
+      .fetch({
+        user: message.mentions.members?.first() || args[1],
+        cache: true,
+      })
+      .catch(() => {});
 
     if (!user)
       return textEmbed(
@@ -34,7 +35,7 @@ const command: Command = {
 
     let userJoins = await GuildJoinModel.find({
       guildId: message.guild?.id,
-      userId: message.member?.id,
+      userId: user.id,
     })
       .sort({ created_at: 1 })
       .catch((e) => {
@@ -46,7 +47,7 @@ const command: Command = {
       msg.edit({
         embeds: [
           await RtextEmbed(
-            `${emoji.error} | ** We don't have any data in our database about past ${user} joins.`
+            `${emoji.error} | ** I don't have any data about past ${user} joins. **`
           ),
         ],
       });
@@ -81,9 +82,10 @@ const command: Command = {
       }
     });
 
-    let [mostInviter, mostInvites] = [...inviters.entries()].reduce((a, e) =>
-      e[1] > a[1] ? e : a
-    );
+    let [mostInviter, mostInvites] =
+      inviters.size > 0
+        ? [...inviters.entries()].reduce((a, e) => (e[1] > a[1] ? e : a))
+        : [null, 0];
 
     let i = 0;
     let embeds: EmbedBuilder[] = [];
@@ -91,15 +93,19 @@ const command: Command = {
     for (let j = 0; j < totalEmbeds; j++) {
       let desc: string[] = [
         `${user} joined the server ${userJoins.length} ${
-          userJoins.length === 0 ? "time" : "times"
-        } with <@${mostInviter}> being his most inviter at ${mostInvites} invites \n`,
-        `Joins using someone's invite :: ${
+          userJoins.length === 1 ? "time" : "times"
+        } ${
+          mostInviter && mostInvites > 0
+            ? `with <@${mostInviter}> being his most inviter at ${mostInvites} invites`
+            : ""
+        }\n`,
+        `**Joins using someone's invite** :: ${
           userJoinNormal.length
         } (${ujnp.toFixed(2)} %)`,
-        `Joins using vanity link :: ${userJoinVanity.length} (${ujvp.toFixed(
+        `**Joins using vanity link** :: ${userJoinVanity.length} (${ujvp.toFixed(
           2
         )} %)`,
-        `Joins which i can't figure how :: ${
+        `**Joins which i can't figure how** :: ${
           userJoinUnknown.length
         } (${ujup.toFixed(2)} %)\n`,
       ];
@@ -114,7 +120,7 @@ const command: Command = {
         .setFooter({
           text: `Requested by ${message.author.tag}`,
           iconURL:
-            message.author.avatarURL({ size: 4096 }) ||
+            message.author.displayAvatarURL({ size: 4096 }) ||
             "https://cdn.discordapp.com/embed/avatars/5.png",
         });
 

@@ -6,6 +6,12 @@ import { Command } from "../types";
 const command: Command = {
   name: "config",
   execute: async (client, message, args) => {
+    
+    if (
+      !["428692060619407370", "490667823392096268"].includes(message.member!.id)
+    )
+      return;
+
     if (!args[1])
       return message.reply(":rage: - **&config [query] [...subQuery]**");
 

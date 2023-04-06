@@ -1,17 +1,19 @@
 import { EmbedBuilder, PermissionFlagsBits } from "discord.js";
 import ms from "enhanced-ms";
 import emoji from "../data/emojies.json";
-import { sendPagination } from "../functions";
+import { hasPermission, sendPagination } from "../functions";
 import SanctionModel from "../schemas/Sanction";
 import { Command } from "../types";
 import { missingArgs, textEmbed } from "../utils/msgUtils";
-import { hasPermission } from "../functions";
 
 const command: Command = {
   name: "history",
   execute: async (client, message, args) => {
-
-    if(!(await hasPermission(client, message.member!, "show_userhistory")) && !message.member!.permissions.has(PermissionFlagsBits.Administrator)) return
+    if (
+      !(await hasPermission(client, message.member!, "show_userhistory")) &&
+      !message.member!.permissions.has(PermissionFlagsBits.Administrator)
+    )
+      return;
 
     let argsEmbed = await missingArgs(
       message,
@@ -19,7 +21,6 @@ const command: Command = {
       ` ${message.member} ${client.user}`,
       [` ${message.member}`, `${message.member} ${client.user}`]
     );
-    
 
     if (!args[1] && !message.author.id) {
       return message.reply({ embeds: [argsEmbed] });
@@ -65,11 +66,11 @@ const command: Command = {
 
     for (let j = 0; j < totalEmbeds; j++) {
       let embedJSON = {
-        color: 800080,
+        color: 10031625,
         author: {
           name: `${user.tag}`,
           icon_url:
-            user.avatarURL({ size: 4096 }) ||
+            user.displayAvatarURL({ size: 4096 }) ||
             "https://cdn.discordapp.com/embed/avatars/5.png",
         },
         description: [
@@ -151,7 +152,7 @@ const command: Command = {
         footer: {
           text: `Requested by ${message.member?.user.tag}`,
           icon_url:
-            message.member?.user.avatarURL({ size: 4096 }) ||
+            message.member?.user.displayAvatarURL({ size: 4096 }) ||
             "https://cdn.discordapp.com/embed/avatars/5.png",
         },
       };
@@ -163,7 +164,7 @@ const command: Command = {
     await sendPagination(message, embeds);
   },
   cooldown: 10,
-  aliases: [],
+  aliases: ["userhistory"],
   permissions: [PermissionFlagsBits.KickMembers],
 };
 

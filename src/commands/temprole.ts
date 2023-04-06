@@ -1,7 +1,7 @@
 import { Collection, EmbedBuilder, PermissionFlagsBits } from "discord.js";
 import ms from "enhanced-ms";
 import emoji from "../data/emojies.json";
-import { getGuildRole, hasPermission } from "../functions";
+import { fuzzyRoleSearch, hasPermission } from "../functions";
 import { Command } from "../types";
 import { missingArgs, RtextEmbed, textEmbed } from "../utils/msgUtils";
 
@@ -16,23 +16,33 @@ const command: Command = {
     let argsEmbed = await missingArgs(
       message,
       "temprole",
-      `${message.member} [role | roldId] [duration]`,
+      `${message.member} [role | role id | role name] [duration]`,
       [`${message.member} ${message.member?.roles.highest} 1337d`]
     );
 
-    if (!args[1] || !args[2] || !args[3]) {
+    if (args.length < 3) {
       return message.reply({ embeds: [argsEmbed] });
     }
 
-    let user =
-      message.mentions.members?.first() ||
-      (await message.guild?.members
-        .fetch({ user: args[1], cache: true })
-        .catch(() => {}));
+    let user = await message.guild?.members
+      .fetch({
+        user: message.mentions.members?.first() || args[1],
+        cache: true,
+      })
+      .catch(() => {});
 
     let role =
       message.mentions.roles.first() ||
-      (await getGuildRole(message.guild!, args[2]));
+      message.guild?.roles.cache.get(args[2]) ||
+      message.guild?.roles.cache.get(
+        fuzzyRoleSearch(
+          message.guild!,
+          args
+            .slice(2, args.length - 1)
+            .filter((x) => x !== undefined)
+            .join("")
+        )[0].id
+      );
 
     if (!user)
       return textEmbed(
@@ -53,27 +63,26 @@ const command: Command = {
       );
     }
 
-    role instanceof Collection ? (role = role.toJSON()[0]) : (role = role);
-
-    if (ms(args[3]) === null)
+    if (!parseInt(args[args.length - 1]) || ms(args[args.length - 1]) === null)
       return textEmbed(
         message,
         `${emoji.error} | The duration you've specified is invalid.`
       );
 
-    if (ms(args[3]) < ms("1m"))
+    if (ms(args[args.length - 1]) < ms("1m"))
       return textEmbed(
         message,
         `${emoji.huh} | Minimum duration of 1 minute is not reached.`
       );
 
-    if (ms(args[3]) > ms("30d"))
+
+    if (ms(args[args.length - 1]) > ms("30d"))
       return textEmbed(
         message,
         `${emoji.huh} | Maximum duration of 30 days is execed.`
       );
 
-    let duration = ms(args[3]);
+    let duration = ms(args[args.length - 1]);
 
     if (message.member?.roles.highest.position! <= role.position) {
       return textEmbed(
@@ -86,16 +95,17 @@ const command: Command = {
       .add(role, `${message.member?.user.tag} - temprole`)
       .then((member) => {
         let trEmbed = new EmbedBuilder()
+          .setColor(10031625)
           .setAuthor({
             name: `${member.user.tag}`,
             iconURL:
-              member.avatarURL({ size: 4096 }) ||
+              member.displayAvatarURL({ size: 4096 }) ||
               "https://cdn.discordapp.com/embed/avatars/5.png",
           })
           .setDescription(
-            `**${user} has been temporarily granted ${role} for the next ${ms(
+            `${user} has been temporarily granted ${role} for the next ${ms(
               duration
-            )}**`
+            )}`
           )
           .setFooter({ text: `Executed by ${message.member?.user.tag}` })
           .setTimestamp();

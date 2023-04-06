@@ -13,8 +13,9 @@ const command: Command = {
     if (
       !(await hasPermission(client, message.member!, "use_mute")) &&
       !message.member!.permissions.has(PermissionFlagsBits.Administrator)
-    )
-      return;
+    ) {
+      return console.log(message.member?.user.id, "no perm mute");
+    }
 
     let argsEmbed = await missingArgs(
       message,
@@ -27,15 +28,15 @@ const command: Command = {
       return message.reply({ embeds: [argsEmbed] });
     }
     let st = Date.now();
-    let user =
-      message.mentions.members?.first() ||
-      (await message.guild?.members
-        .fetch({ user: args[1], cache: true})
-        .catch(() => {}));
+
+    let user = await message.guild?.members
+      .fetch({
+        user: message.mentions.members?.first() || args[1],
+        cache: true,
+      })
+      .catch(() => {});
+
     let f = Date.now() - st;
-
-    message.reply(`${f}ms`);
-
     if (!user)
       return textEmbed(
         message,
@@ -45,7 +46,7 @@ const command: Command = {
     let reason: string = args.slice(3).join(" ") || "no reason was specified";
     let muteRole;
 
-    if (!ms(args[2])) {
+    if (!parseInt(args[2]) || !ms(args[2])) {
       return textEmbed(
         message,
         `${emoji.huh} | The duration you've specified is invalid`
@@ -61,7 +62,7 @@ const command: Command = {
       }
     }
 
-    let duration: number = ms(args[2]);
+    let duration: number = ms(args[2].toLowerCase());
 
     let guild = await GuildModel.findOne({ guildID: message.guild?.id });
 
@@ -114,7 +115,7 @@ const command: Command = {
           .setFooter({
             text: user.user.tag,
             iconURL:
-              user.user.avatarURL() ||
+              user.user.displayAvatarURL() ||
               "https://cdn.discordapp.com/avatars/490667823392096268/7ccc56164f0adcde7fe00ef4384785ee.png?size=1024",
           });
 

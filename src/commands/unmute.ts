@@ -7,15 +7,14 @@ import {
 } from "discord.js";
 import { CollectorUtils } from "discord.js-collector-utils";
 import emoji from "../data/emojies.json";
+import { hasPermission } from "../functions";
 import GuildModel from "../schemas/Guild";
 import { Command } from "../types";
 import { missingArgs, RtextEmbed, textEmbed } from "../utils/msgUtils";
-import { hasPermission } from "../functions";
 
 const command: Command = {
   name: "unmute",
   execute: async (client, message, args) => {
-
     if (
       !(await hasPermission(client, message.member!, "use_mute")) &&
       !message.member!.permissions.has(PermissionFlagsBits.Administrator)
@@ -209,17 +208,16 @@ const command: Command = {
     user.roles
       .remove(muteRole, `User unmuted by ${message.member?.user.tag}`)
       .then(async (user) => {
-        await client.redis
-          .keys(`mutequeue_${message.guild?.id}_${user.id}`)
-          .then((keys) => {
-            if (keys.length !== 0) {
-              client.redis.del(keys).catch((e) => {
-                console.log("unmute mute clear error redis", e);
-              });
-            }
-          });
+        textEmbed(
+          message,
+          `${emoji.confetti} | ${user} has been text-unmuted.`
+        );
 
-        message.reply(`**${emoji.yay} | ${user} unmuted.**`);
+        await client.redis
+          .del(`mutequeue_${message.guild?.id}_${user.id}`)
+          .catch((e) => {
+            console.log(e);
+          });
 
         return await user
           .send({

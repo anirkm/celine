@@ -1,4 +1,4 @@
-import { PermissionFlagsBits } from "discord.js";
+import { EmbedBuilder, PermissionFlagsBits } from "discord.js";
 import ms from "enhanced-ms";
 import emoji from "../data/emojies.json";
 import { hasPermission } from "../functions";
@@ -25,11 +25,12 @@ const command: Command = {
       return message.reply({ embeds: [argsEmbed] });
     }
 
-    let user =
-      message.mentions.members?.first() ||
-      (await message.guild?.members
-        .fetch({ user: args[1], cache: true })
-        .catch(() => {}));
+    let user = await message.guild?.members
+      .fetch({
+        user: message.mentions.members?.first() || args[1],
+        cache: true,
+      })
+      .catch(() => {});
 
     if (!user)
       return textEmbed(
@@ -39,7 +40,7 @@ const command: Command = {
 
     let reason: string = args.slice(3).join(" ") || "no reason was specified";
 
-    if (!ms(args[2])) {
+    if (!parseInt(args[2]) || !ms(args[2])) {
       return textEmbed(
         message,
         `${emoji.huh} | The duration you've specified is invalid`
@@ -73,6 +74,37 @@ const command: Command = {
             roundUp: false,
           })}.`
         );
+
+        let notifEm = new EmbedBuilder()
+          .setAuthor({
+            name: message.guild!.name,
+            iconURL:
+              message.guild?.iconURL() ||
+              "https://cdn.discordapp.com/avatars/490667823392096268/7ccc56164f0adcde7fe00ef4384785ee.png?size=1024",
+          })
+          .setDescription(
+            [
+              "**You have been voice-muted from this guild.**",
+              "**Each time you will join a voice channel you will be muted unless someone un-mute you.**\n",
+              `__Reason__ :: ${reason}`,
+              `__Duration__ :: ${ms(duration, {
+                roundUp: false,
+              })}`,
+            ].join("\n")
+          )
+          .setTimestamp()
+          .setFooter({
+            text: user!.user.tag,
+            iconURL:
+              user!.user.displayAvatarURL() ||
+              "https://cdn.discordapp.com/avatars/490667823392096268/7ccc56164f0adcde7fe00ef4384785ee.png?size=1024",
+          });
+
+        user!
+          .send({
+            embeds: [notifEm],
+          })
+          .catch(() => {});
       })
       .catch((e) => {
         console.log("set mute redis err", e);

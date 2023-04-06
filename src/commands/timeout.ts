@@ -1,22 +1,33 @@
-import { PermissionFlagsBits } from "discord.js";
+import { EmbedBuilder, PermissionFlagsBits } from "discord.js";
 import ms from "enhanced-ms";
+import emoji from "../data/emojies.json";
 import { hasPermission } from "../functions";
 import SanctionModel from "../schemas/Sanction";
 import { Command } from "../types";
+import { missingArgs, textEmbed } from "../utils/msgUtils";
 
 const command: Command = {
   name: "timeout",
   execute: async (client, message, args) => {
     if (
-      !(await hasPermission(client, message.member!, "use_timeout")) &&
+      !(await hasPermission(client, await message.member!, "use_timeout")) &&
       !message.member!.permissions.has(PermissionFlagsBits.Administrator)
     )
       return;
 
-    if (!args[1]) {
-      return message.reply(
-        `:rage: - **&timeout** ${message.member} [duration] [reason]`
-      );
+    let argsEmbed = await missingArgs(
+      message,
+      "timeout",
+      `${message.member} [duration] (reason)`,
+      [
+        `${message.member} 1337s`,
+        `${message.member} 1337s reason`,
+        `${message.member} end`,
+      ]
+    );
+
+    if (!args[1] || !args[2]) {
+      return message.reply({ embeds: [argsEmbed] });
     }
 
     if (["stop", "end"].includes(args[1].toLocaleLowerCase())) {
@@ -30,11 +41,14 @@ const command: Command = {
           .catch(() => {}));
 
       if (!user)
-        return message.reply(":triumph: - **unknown user, try again.**");
-
+        return textEmbed(
+          message,
+          `${emoji.error} | The user you specified was not found.`
+        );
       if (!user.isCommunicationDisabled())
-        return message.reply(
-          `:triumph: - **${user} doesn't have an active timeout at the moment.**`
+        return textEmbed(
+          message,
+          `${emoji.error} | ${user} is not timed out at the moment.}`
         );
       return user
         .timeout(null, `${message.member?.user.tag} - timeout end`)
@@ -44,21 +58,24 @@ const command: Command = {
         .catch((e) => {
           switch (e.message) {
             case "Unknown User":
-              message.reply(":triumph: - **unknown user try again.**");
+              textEmbed(message, `${emoji.error} | Invalid user, Try again.`);
               break;
             case "Missing Permissions":
-              message.reply(
-                ":zipper_mouth: - **unfortunately, due to a lack of permissions I cannot perfom this action.**"
+              textEmbed(
+                message,
+                `${emoji.error} | Due to missing permissions i can't execute this command on ${user}.`
               );
               break;
             case "Invalid Form Body":
-              message.reply(
-                ":face_with_monocle: - **You've malformed the command, try again.**"
+              textEmbed(
+                message,
+                `${emoji.error} | You've malformed the command, try again.`
               );
               break;
             default:
-              message.reply(
-                ":flushed: - **an error occurred while trying to execute this command, try again.**"
+              textEmbed(
+                message,
+                `${emoji.error} | An error occurred while trying to execute this command, try again.. (DiscordAPI: ${e.message})`
               );
               console.log(e);
               break;
@@ -81,17 +98,59 @@ const command: Command = {
         .fetch({ user: args[1], cache: true })
         .catch(() => {}));
 
-    if (!user) return message.reply(":triumph: - **unknown user, try again.**");
-
+    if (!user)
+      return textEmbed(
+        message,
+        `${emoji.error} | The user you specified was not found.`
+      );
     if (ms(duration) === null)
-      return message.reply(
-        ":rage: - **the duration you specified is invalid**"
+      return textEmbed(
+        message,
+        `${emoji.error} | The duration should be between 10 seconds and 1 month.`
       );
 
     user
       .timeout(Number(ms(duration)), `${message.member?.user.tag} - ${reason}`)
       .then(async (user) => {
-        message.reply(`${user} timedout`);
+        textEmbed(
+          message,
+          `${emoji.muted} | ${user} has been timedout for the next ${ms(
+            duration,
+            {
+              roundUp: false,
+            }
+          )}.`
+        );
+
+        let notifEm = new EmbedBuilder()
+          .setAuthor({
+            name: message.guild!.name,
+            iconURL:
+              message.guild?.iconURL() ||
+              "https://cdn.discordapp.com/avatars/490667823392096268/7ccc56164f0adcde7fe00ef4384785ee.png?size=1024",
+          })
+          .setDescription(
+            [
+              "**You have been timeouted from this guild.**\n",
+              `__Reason__ :: ${reason}`,
+              `__Duration__ :: ${ms(duration, {
+                roundUp: false,
+              })}`,
+            ].join("\n")
+          )
+          .setTimestamp()
+          .setFooter({
+            text: user.user.tag,
+            iconURL:
+              user.user.displayAvatarURL() ||
+              "https://cdn.discordapp.com/avatars/490667823392096268/7ccc56164f0adcde7fe00ef4384785ee.png?size=1024",
+          });
+
+        user
+          .send({
+            embeds: [notifEm],
+          })
+          .catch(() => {});
 
         const newTimeout = new SanctionModel({
           guildID: message.guild?.id,
@@ -114,21 +173,24 @@ const command: Command = {
       .catch((e) => {
         switch (e.message) {
           case "Unknown User":
-            message.reply(":triumph: - **unknown user try again.**");
+            textEmbed(message, `${emoji.error} | Invalid user, Try again.`);
             break;
           case "Missing Permissions":
-            message.reply(
-              ":zipper_mouth: - **unfortunately, due to a lack of permissions I cannot perfom this action.**"
+            textEmbed(
+              message,
+              `${emoji.error} | Due to missing permissions i can't execute this command on ${user}.`
             );
             break;
           case "Invalid Form Body":
-            message.reply(
-              ":face_with_monocle: - **You've malformed the command, try again.**"
+            textEmbed(
+              message,
+              `${emoji.error} | You've malformed the command, try again.`
             );
             break;
           default:
-            message.reply(
-              ":flushed: - **an error occurred while trying to execute this command, try again.**"
+            textEmbed(
+              message,
+              `${emoji.error} | An error occurred while trying to execute this command, try again.. (DiscordAPI: ${e.message})`
             );
             console.log(e);
             break;

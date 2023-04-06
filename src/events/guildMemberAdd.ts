@@ -6,6 +6,7 @@ const event: BotEvent = {
   name: "guildMemberAdd",
   once: false,
   execute: async (client: Client, member: GuildMember) => {
+
     const guild = await GuildModel.findOne({ guildID: member.guild.id });
     if (!guild) return;
 

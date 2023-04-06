@@ -5,10 +5,10 @@ import { BotEvent } from "../types";
 const event: BotEvent = {
   name: "guildCreate",
   execute: (client: Client, guild: Guild) => {
+    console.log("new guild");
     let newGuild = new GuildModel({
       guildID: guild.id,
       options: {},
-      joinedAt: Date.now(),
     });
     newGuild.save();
   },

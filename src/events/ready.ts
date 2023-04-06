@@ -9,8 +9,8 @@ const event: BotEvent = {
     console.log(
       color("text", `💪 Logged in as ${color("variable", client.user?.tag)}`)
     );
+    client.user?.setPresence({ status: "dnd" });
 
-    await require("../utils/Redis")(client);
   },
 };
 

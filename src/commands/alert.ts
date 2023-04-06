@@ -23,10 +23,12 @@ const command: Command = {
     }
 
     let user =
-      message.mentions.members?.first() ||
-      (await message.guild?.members
-        .fetch({ user: args[1], force: false, cache: true })
-        .catch(() => {}));
+ await message.guild?.members
+      .fetch({
+        user: message.mentions.members?.first() || args[1],
+        cache: true,
+      })
+      .catch(() => {});
 
     let reason = args.slice(2).join(" ");
 
@@ -77,6 +79,11 @@ const command: Command = {
                 `${emoji.approve} | ${user} has been successfully alerted. but i couldn't send the attachements`
               );
             });
+        } else {
+          return textEmbed(
+            message,
+            `${emoji.approve} | ${user} has been successfully alerted.`
+          );
         }
       })
       .catch(() => {

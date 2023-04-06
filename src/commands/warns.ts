@@ -239,11 +239,11 @@ const command: Command = {
 
     for (let j = 0; j < totalEmbeds; j++) {
       let embedJSON = {
-        color: 800080,
+        color: 10031625,
         author: {
           name: `${user.tag}`,
           icon_url:
-            user.avatarURL({ size: 4096 }) ||
+            user.displayAvatarURL({ size: 4096 }) ||
             "https://cdn.discordapp.com/embed/avatars/5.png",
         },
         description: [
@@ -284,7 +284,7 @@ const command: Command = {
         footer: {
           text: `Requested by ${message.member?.user.tag}`,
           icon_url:
-            message.member?.user.avatarURL({ size: 4096 }) ||
+            message.member?.user.displayAvatarURL({ size: 4096 }) ||
             "https://cdn.discordapp.com/embed/avatars/5.png",
         },
       };

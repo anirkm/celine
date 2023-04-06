@@ -20,19 +20,19 @@ const command: Command = {
       .reply({
         embeds: [
           {
-            color: 10181046,
+            color: 10031625,
             description: `**${emoji.loading} » Calculaing API latency...**`,
           },
         ],
       })
       .then((m: Message) => {
         msg = m;
-        apiLatency = new Date().getTime() - msg.createdTimestamp;
+        apiLatency = msg.createdTimestamp - new Date().getTime();
       });
 
     let startTimeRedis = new Date().getTime();
     await client.redis.ping().then(() => {
-      redisLatency = new Date().getTime() - startTimeRedis;
+      redisLatency = new Date().getTime() - new Date().getTime();
     });
 
     let startTimeMongo = new Date().getTime();
@@ -58,8 +58,9 @@ const command: Command = {
         ],
       })
       .then((msg) => {
-        let endRound = new Date().getTime() - msg.editedTimestamp!;
+        let endRound = msg.editedTimestamp! - new Date().getTime();
         let embed = new EmbedBuilder()
+          .setColor(10031625)
           .setAuthor({
             name: `${message.guild?.name || "no name"} Latency Report`,
             iconURL:
@@ -86,7 +87,7 @@ const command: Command = {
           .setFooter({
             text: `Requested by ${message.member?.user.tag}`,
             iconURL:
-              message.member?.user.avatarURL({ size: 4096 }) ||
+              message.member?.user.displayAvatarURL({ size: 4096 }) ||
               "https://cdn.discordapp.com/embed/avatars/5.png",
           })
           .setTimestamp();

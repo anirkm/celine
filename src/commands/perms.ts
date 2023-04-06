@@ -22,7 +22,11 @@ const command: Command = {
     let type: string = "unknown";
 
     if (
-      !["428692060619407370", "490667823392096268"].includes(message.member!.id)
+      ![
+        "428692060619407370",
+        "490667823392096268",
+        "786356804107108403",
+      ].includes(message.member!.id)
     )
       return;
 
@@ -33,15 +37,13 @@ const command: Command = {
       return message.reply("please specify a role or user");
 
     const target =
-      message.mentions.members?.first() ||
       (await message.guild?.members
         .fetch(
           ["edit", "history"].includes(args[1].toLowerCase())
-            ? args[2]
-            : args[1]
+            ? message.mentions.members?.first() || args[2]
+            : message.mentions.members?.first() || args[1]
         )
         .catch(() => {})) ||
-      message.mentions.roles.first() ||
       (await message.guild?.roles
         .fetch(
           ["edit", "history"].includes(args[1].toLowerCase())
@@ -69,7 +71,7 @@ const command: Command = {
       }).sort({ createdAt: -1 });
 
       if (!permissionHistory || permissionHistory.length === 0) {
-        return message.reply({
+        return msg.edit({
           embeds: [
             await RtextEmbed(
               `${emoji.error} | No permission history found for ${target}`
@@ -100,7 +102,7 @@ const command: Command = {
           .setFooter({
             text: `Requested by ${message.author.tag}`,
             iconURL:
-              message.author.avatarURL({ size: 4096 }) ||
+              message.author.displayAvatarURL({ size: 4096 }) ||
               "https://cdn.discordapp.com/embed/avatars/5.png",
           })
           .setTimestamp();
@@ -211,7 +213,7 @@ const command: Command = {
         .setFooter({
           text: `Executed by ${message.author.tag}`,
           iconURL:
-            message.author.avatarURL({ size: 4096 }) ||
+            message.author.displayAvatarURL({ size: 4096 }) ||
             "https://cdn.discordapp.com/embed/avatars/5.png",
         })
         .setTimestamp()
@@ -303,7 +305,7 @@ const command: Command = {
           .setFooter({
             text: `Executed by ${message.author.tag}`,
             iconURL:
-              message.author.avatarURL({ size: 4096 }) ||
+              message.author.displayAvatarURL({ size: 4096 }) ||
               "https://cdn.discordapp.com/embed/avatars/5.png",
           })
           .setTimestamp()

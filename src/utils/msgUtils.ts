@@ -13,7 +13,7 @@ export const textEmbed = async (
   reply = true
 ) => {
   let embed = {
-    color: 15158332,
+    color: 10031625,
     description: `**${data.replace("|", "»")}**`,
   };
 
@@ -24,7 +24,7 @@ export const textEmbed = async (
 
 export const RtextEmbed = async (data: string) => {
   let embed = new EmbedBuilder()
-    .setColor("Red")
+    .setColor(10031625)
     .setDescription(data.replace("|", "»"));
   return embed;
 };
@@ -35,14 +35,9 @@ export const missingArgs = async (
   syntax: string,
   examples: string[]
 ) => {
+
   let embed = new EmbedBuilder()
-    .setColor("Red")
-    .setAuthor({
-      name: "Missing arguments !",
-      iconURL:
-        message.member?.avatarURL({ size: 4096 }) ||
-        "https://cdn.discordapp.com/embed/avatars/5.png",
-    })
+    .setColor(10031625)
     .setTitle(`Command :: __&${cmdName}__`)
     .setDescription(
       [

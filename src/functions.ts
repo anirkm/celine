@@ -3,6 +3,7 @@ import {
   ButtonTypes,
   pagination,
 } from "@devraelfreeze/discordjs-pagination";
+import decancer from "decancer";
 import {
   Client,
   Collection,
@@ -10,11 +11,11 @@ import {
   EmbedBuilder,
   Guild,
   GuildMember,
-  Message,
   PermissionFlagsBits,
   PermissionResolvable,
   TextChannel,
 } from "discord.js";
+import { search } from "fast-fuzzy";
 import mongoose from "mongoose";
 import { default as GuildDB, default as GuildModel } from "./schemas/Guild";
 import { GuildOption } from "./types";
@@ -68,6 +69,21 @@ export const sendTimedMessage = (
   return;
 };
 
+export const fuzzyRoleSearch = (guild: Guild, string: string) => {
+  console.log(string)
+  let rolesArr = guild.roles.cache.map((r) => {
+    return { name: decancer(r.name).toString(), id: r.id };
+  });
+  let s = search(decancer(string).toString(), rolesArr, {
+    keySelector: (obj: any) => obj.name,
+    ignoreSymbols: true,
+    normalizeWhitespace: true,
+    threshold: 0.76,
+  });
+
+  if(s.length === 0) return [{id: "1"}]
+  return s
+};
 export const getGuildRole = async (guild: Guild, role: string) => {
   let fetchedRole =
     (await guild.roles.fetch(role, { force: true })) ||
@@ -173,6 +189,7 @@ export const hasPermission = async (
 ): Promise<boolean> => {
   const cacheKey = `permissions:member:${member.id}:${member.guild.id}`;
   const cached = await client.redisCache.get(cacheKey);
+  console.log();
   if (cached && JSON.parse(cached).includes(permission)) {
     return true;
   }
@@ -187,16 +204,28 @@ export const hasPermission = async (
     .map((r) => r.permissions)
     .flat();
 
+  console.log(roles);
+
   const userPermissions = guild.userPermissions.find(
     (p) => p.userId === member.id
   );
-  if (!userPermissions) {
+
+  if (!userPermissions && !roles) {
     return false;
   }
 
-  const allPermissions = [...roles, ...userPermissions.permissions];
+  const allPermissions = [...roles, ...(userPermissions?.permissions || [])];
+
+  console.log(member.user.tag, member.user.id, allPermissions);
+
+  if ([...(userPermissions?.permissions || [])].includes(permission)) {
+    client.redisCache.set(
+      cacheKey,
+      JSON.stringify(userPermissions!.permissions)
+    );
+  }
+
   if (allPermissions.includes(permission)) {
-    client.redisCache.set(cacheKey, JSON.stringify(allPermissions));
     return true;
   }
 

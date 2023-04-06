@@ -16,7 +16,9 @@ module.exports = async (client: Client, redis: Redis) => {
 
       let guild = await client.guilds.fetch(guildID).catch(() => {});
       let dbGuild = await GuildModel.findOne({ guildID: guild!.id }).catch(
-        () => {}
+        (e) => {
+          console.log("dbguild irreation", e);
+        }
       );
 
       let user;
@@ -44,14 +46,18 @@ module.exports = async (client: Client, redis: Redis) => {
             let dbMuteRole = dbGuild.options.muteRole || "none";
             let muteRole = await guild.roles.fetch(dbMuteRole).catch(() => {});
             if (!muteRole) {
-              redis.del(key).catch(() => {});
               continue;
             }
             await (user as GuildMember).roles
               .remove(muteRole, "Mute Expired")
               .then(() => {
                 console.log("mute expired");
-                redis.del(key).catch(() => {});
+                redis.del(key).catch((e) => {
+                  console.log("muteexpire error", e);
+                });
+              })
+              .catch((e) => {
+                console.log("muteexpire error", e);
               });
           }
           break;
@@ -62,7 +68,7 @@ module.exports = async (client: Client, redis: Redis) => {
             }
             client.redis.del(key).catch(() => {});
             client.redis
-              .set(`vmex_${guildID}_${userID}`, 0, "EX", 86400)
+              .set(`vmex_${guildID}_${userID}`, 0, "EX", 172800)
               .catch(console.log);
           }
         case "jailqueue":
@@ -70,7 +76,6 @@ module.exports = async (client: Client, redis: Redis) => {
             let dbJailRole = dbGuild.options.jailRole || "none";
             let jailRole = await guild.roles.fetch(dbJailRole).catch(() => {});
             if (!jailRole) {
-              redis.del(key).catch(() => {});
               continue;
             }
             await (user as GuildMember).roles

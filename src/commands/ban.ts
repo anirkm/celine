@@ -42,17 +42,23 @@ const command: Command = {
       "<:banned:1063755520017694772>",
     ];
 
-    const userToBan =
-      message.mentions.members?.first() ||
-      (await message.guild?.members
-        .fetch({ user: args[1], force: false, cache: true })
-        .catch(() => {}));
+    const userToBan = await message.guild?.members
+      .fetch({
+        user: message.mentions.members?.first() || args[1],
+        cache: true,
+      })
+      .catch(() => {});
 
     const duration =
-      args.length >= 4 && ms(args[2]) !== null ? ms(args[2]) : "lifetime";
+      args.length >= 4 && parseInt(args[2]) && ms(args[2]) !== null
+        ? ms(args[2])
+        : "lifetime";
     const reason =
-      args.slice(args.length >= 4 && ms(args[2]) !== null ? 3 : 2).join(" ") ||
-      "no reason specified";
+      args
+        .slice(
+          args.length >= 4 && Number(args[2]) && ms(args[2]) !== null ? 3 : 2
+        )
+        .join(" ") || "no reason specified";
 
     if (
       duration !== "lifetime" &&
@@ -82,7 +88,18 @@ const command: Command = {
       );
     }
 
-    const _id = crypto.randomBytes(6).toString("hex");
+    if (userToBan) {
+      if (
+        userToBan.roles.highest.position >=
+        message.member!.roles.highest.position
+      )
+        return textEmbed(
+          message,
+          `${emoji.error} | You cannot ban someone with higher or equal hierarchy than you.`
+        );
+    }
+
+    const _id = crypto.randomBytes(10).toString("hex");
 
     if (userToBan) {
       let notifEm = new EmbedBuilder()
@@ -106,7 +123,7 @@ const command: Command = {
         .setFooter({
           text: userToBan.user.tag,
           iconURL:
-            userToBan.user.avatarURL() ||
+            userToBan.user.displayAvatarURL() ||
             "https://cdn.discordapp.com/avatars/490667823392096268/7ccc56164f0adcde7fe00ef4384785ee.png?size=1024",
         });
       userToBan.send({ embeds: [notifEm] }).catch(() => {});
@@ -122,11 +139,11 @@ const command: Command = {
             await RtextEmbed(
               `**${emoji.ban} | ${
                 typeof banned === "string" ? `@<${banned}>` : `${banned}`
-              } has been banned${
+              } has been ${
+                duration === "lifetime" ? "permanently" : ""
+              } banned${
                 duration !== "lifetime" && duration
-                  ? ` for the next ${ms(Number(duration), {
-                      roundUp: true,
-                    })}.`
+                  ? ` for the next ${ms(Number(duration), { roundUp: true })}.`
                   : "."
               }**`
             ),

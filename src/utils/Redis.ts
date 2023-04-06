@@ -12,6 +12,7 @@ module.exports = async (client: Client) => {
     host: REDIS_HOST, // Redis host
     password: REDIS_PW,
     maxRetriesPerRequest: null,
+    db: 10,
   });
 
   const cacheRedis = new Redis({
@@ -19,7 +20,7 @@ module.exports = async (client: Client) => {
     host: REDIS_HOST, // Redis host
     password: REDIS_PW,
     maxRetriesPerRequest: null,
-    db: 2,
+    db: 9,
   });
 
   cacheRedis.on("connect", async () => {

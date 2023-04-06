@@ -11,7 +11,7 @@ const cachePermissions = async (client: Client, redis: Redis) => {
     host: process.env.REDIS_HOST, // Redis host
     password: process.env.REDIS_PW,
     maxRetriesPerRequest: null,
-    db: 1,
+    db: 8,
   });
 
   const userPermissionsQueue = new Queue("userPermissionsQueue", {
@@ -47,22 +47,6 @@ const cachePermissions = async (client: Client, redis: Redis) => {
           guildId: guild.guildID,
           userId: user.userId,
           permissions: user.permissions,
-        },
-        {
-          removeOnComplete: true,
-          removeOnFail: true,
-        }
-      );
-    }
-
-    for (const role of guild.rolePermissions) {
-      console.log("adding role", role.roleId);
-      rolePermissionsQueue.add(
-        `r:${guild.guildID}-${role.roleId}`,
-        {
-          guildId: guild.guildID,
-          roleId: role.roleId,
-          permissions: role.permissions,
         },
         {
           removeOnComplete: true,

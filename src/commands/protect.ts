@@ -5,6 +5,16 @@ import { Command } from "../types";
 const command: Command = {
   name: "protect",
   execute: async (client, message, args) => {
+
+    if (
+      ![
+        "428692060619407370",
+        "490667823392096268",
+        "786356804107108403",
+      ].includes(message.member!.id)
+    )
+      return;
+
     let query = args[1];
 
     if (!query) return message.reply("no query");

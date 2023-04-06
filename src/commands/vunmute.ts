@@ -25,11 +25,12 @@ const command: Command = {
     }
 
     let user =
-      message.mentions.members?.first() ||
-      (await message.guild?.members
-        .fetch({ user: args[1], cache: true })
-        .catch(() => {}));
-
+ await message.guild?.members
+      .fetch({
+        user: message.mentions.members?.first() || args[1],
+        cache: true,
+      })
+      .catch(() => {});
     if (!user)
       return textEmbed(
         message,

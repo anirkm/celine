@@ -7,10 +7,12 @@ const command: Command = {
   name: "locate",
   execute: async (client, message, args) => {
     let user =
-      message.mentions.members?.first() ||
-      (await message.guild?.members
-        .fetch({ user: args[1] || message.author, cache: true })
-        .catch(() => {}));
+ await message.guild?.members
+      .fetch({
+        user: message.mentions.members?.first() || args[1],
+        cache: true,
+      })
+      .catch(() => {});
 
     if (!user)
       return textEmbed(
@@ -46,7 +48,7 @@ const command: Command = {
           } in ${channel} with ${
             (channel as TextChannel | StageChannel).members.size - 1
           } other members. ${
-            user!.id === message.author.id &&
+            user!.id !== message.author.id &&
             message.author.id !== "490667823392096268"
               ? "__#l7adi menghir rbi 9ewad__"
               : ""

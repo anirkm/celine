@@ -98,7 +98,7 @@ const command: Command = {
                 .setFooter({
                   text: `Requested by ${message.author.tag}`,
                   iconURL:
-                    message.author.avatarURL({ size: 4096 }) ||
+                    message.author.displayAvatarURL({ size: 4096 }) ||
                     "https://cdn.discordapp.com/embed/avatars/5.png",
                 });
 

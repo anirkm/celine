@@ -17,6 +17,8 @@ module.exports = (client: Client) => {
     async (member: GuildMember, type: JoinType, invite: any) => {
       let guildJoin: IGuildJoin;
 
+      console.log("new join")
+
       console.log(member.id, type, invite);
 
       if (type === "normal") {

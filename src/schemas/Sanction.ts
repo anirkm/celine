@@ -7,7 +7,7 @@ const generateUniqueId = (n: number): string => {
 };
 
 const SanctionSchema = new Schema<ISanction>({
-  sanctionId: { type: String, unique: true, default: generateUniqueId(6) },
+  sanctionId: { type: String, unique: true, default: generateUniqueId(10) },
   guildID: { required: true, type: String },
   modID: { required: true, type: String },
   userID: { required: true, type: String },

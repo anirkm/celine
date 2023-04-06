@@ -11,7 +11,7 @@ const event: BotEvent = {
   ) => {
     if (newState.channel && newState.serverMute && oldState.serverMute) {
       const key = `vmex_${newState.guild.id}_${newState.id}`;
-      const keyExists = await client.redis.exists(key);
+      const keyExists = await client.redis.exists(key)
       if (keyExists) {
         client.redis
           .del(key)

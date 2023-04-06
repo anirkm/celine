@@ -83,6 +83,12 @@ const permissions = [
     permission: "use_clear",
     permFor: ["clear"],
   },
+  {
+    default: false,
+    cmd: "role",
+    permission: "use_role",
+    permFor: ["role"],
+  },
 ];
 
 export default permissions;

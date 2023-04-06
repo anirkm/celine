@@ -19,11 +19,13 @@ import { missingArgs, RtextEmbed, textEmbed } from "../utils/msgUtils";
 const command: Command = {
   name: "jail",
   execute: async (client, message, args) => {
+    console.log(message.member?.id, message.member?.user.username);
     if (
       !(await hasPermission(client, message.member!, "use_jail")) &&
       !message.member!.permissions.has(PermissionFlagsBits.Administrator)
-    )
-      return;
+    ) {
+      return console.log(message.member?.user.id, "no perm mute");
+    }
 
     let argsEmbed = await missingArgs(
       message,
@@ -53,16 +55,48 @@ const command: Command = {
           `${emoji.error} | You haven't specified any user.`
         );
       }
-      let user =
-        message.mentions.members?.first() ||
-        (await message.guild?.members
-          .fetch({ user: args[2], force: true })
-          .catch(() => {}));
+      let user = await message.guild?.members
+        .fetch({
+          user: message.mentions.members?.first() || args[2],
+          cache: true,
+        })
+        .catch(() => {});
       if (!user)
         return textEmbed(
           message,
           `${emoji.error} | The user you've specified was not found.`
         );
+
+      let guild = await GuildModel.findOne({ guildID: message.guild?.id });
+
+      if (!guild)
+        return textEmbed(
+          message,
+          `${emoji.error} | This guild isn't correctly setup. run __&cfg sg__.`
+        );
+
+      if (guild && !guild.options.jailRole)
+        return textEmbed(
+          message,
+          `${emoji.error} | Jail role for this guild isn't correctly setup. run __&cfg jailrole__.`
+        );
+
+      let jailRole = await message.guild?.roles.fetch(guild.options.jailRole, {
+        cache: true,
+      });
+
+      if (!jailRole)
+        return textEmbed(
+          message,
+          `${emoji.error} | Jail role for this guild is invalid setup. run __&cfg jailrole__.`
+        );
+
+      if (user.roles.cache.has(jailRole.id))
+        return textEmbed(
+          message,
+          `${emoji.huh} | ${user} is still jailed use __&jail remove__ instead.`
+        );
+
       let resotredRoles = await client.redis
         .lrange(`jr_${message.guild?.id}_${user.id}`, 0, -1)
         .catch(() => {});
@@ -136,11 +170,12 @@ const command: Command = {
           `${emoji.error} | You haven't specified any user.`
         );
       }
-      let user =
-        message.mentions.members?.first() ||
-        (await message.guild?.members
-          .fetch({ user: args[2], force: false, cache: true })
-          .catch(() => {}));
+      let user = await message.guild?.members
+        .fetch({
+          user: message.mentions.members?.first() || args[2],
+          cache: true,
+        })
+        .catch(() => {});
       if (!user)
         return textEmbed(
           message,
@@ -368,16 +403,23 @@ const command: Command = {
         });
     }
 
-    let user =
-      message.mentions.members?.first() ||
-      (await message.guild?.members
-        .fetch({ user: args[1], cache: true })
-        .catch(() => {}));
+    let user = await message.guild?.members
+      .fetch({
+        user: message.mentions.members?.first() || args[1],
+        cache: true,
+      })
+      .catch(() => {});
 
     if (!user)
       return textEmbed(
         message,
         `${emoji.error} | The user you've specified was not found.`
+      );
+
+    if (user.roles.highest.position >= message.member!.roles.highest.position)
+      return textEmbed(
+        message,
+        `${emoji.error} | You can't jail someone with higher or equal hierarchy than you.`
       );
 
     let reason: String = "no reason specified";
@@ -403,11 +445,11 @@ const command: Command = {
 
     if (
       args.length === 3 &&
-      ms(args[2]) !== null &&
-      ms(args[2]) >= ms("10m") &&
+      parseInt(args[2]) &&
+      ms(args[2]) !== null && 
+      ms(args[2]) >= ms("10s") &&
       ms(args[2]) <= ms("1y")
     ) {
-      console.log("d");
       duration = ms(args[2]);
       reason = "no reason specified";
     } else if (args.length === 3 && ms(args[2]) === null) {
@@ -446,7 +488,7 @@ const command: Command = {
     if (user.roles.cache.has(jailRole.id)) {
       return textEmbed(
         message,
-        `${emoji.huh} | ${user} has already an active jail sanction.`
+        `${emoji.error} | ${user} has already an active jail sanction.`
       );
     }
 
@@ -465,7 +507,7 @@ const command: Command = {
       `${emoji.loading} | Wait while saving current ${user} roles...`
     );
 
-    const userMember = user!;
+    const userMember = user;
     const clientMember = await message.guild!.members.fetch({
       user: client.user!.id,
       cache: true,
@@ -473,15 +515,12 @@ const command: Command = {
     });
     const jailRoleID = jailRole!.id;
 
+    const bypassedRoles = userMember.roles.cache.filter((role) => {
+      return !role.permissions.has(PermissionFlagsBits.Administrator);
+    });
+
     const userRoles = userMember.roles.cache.filter((role) => {
       return (
-        !role.permissions.any([
-          PermissionFlagsBits.BanMembers,
-          PermissionFlagsBits.KickMembers,
-          PermissionFlagsBits.Administrator,
-          PermissionFlagsBits.ManageGuild,
-          PermissionFlagsBits.ManageRoles,
-        ]) &&
         role.id !== jailRoleID &&
         role !== message.guild?.roles.everyone &&
         !role.managed &&
@@ -494,21 +533,26 @@ const command: Command = {
       .filter((role) => !userRoles.has(role.id))
       .map((role) => role.id);
 
-    console.log(remainingRoleIDs);
-
     await user.roles.set(remainingRoleIDs);
 
     user.roles
       .add(jailRole, `${message.member?.user.tag} - ${reason}`)
       .then(async (user) => {
-        if (userRoles && Array.from(userRoles.keys()).length !== 0) {
+        if (
+          userRoles &&
+          Array.from(userRoles.keys()).filter((str) => {
+            return bypassedRoles.has(str);
+          }).length !== 0
+        ) {
           await client.redis
             .del(`jr_${message.guild?.id}_${user.id}`)
             .catch(() => {});
           client.redis
             .lpush(
               `jr_${message.guild?.id}_${user.id}`,
-              ...Array.from(userRoles.keys())
+              ...Array.from(userRoles.keys()).filter((str) => {
+                return bypassedRoles.has(str);
+              })
             )
             .catch((e) => {
               console.log("couldnt save roles jail", e);
@@ -518,12 +562,12 @@ const command: Command = {
         msg.edit({
           embeds: [
             await RtextEmbed(
-              `${emoji.jailed} | **${user} has been jailed${
+              `**${emoji.jailed} | ${user} has been ${
+                duration === "lifetime" ? "permanently" : ""
+              } jailed${
                 duration !== "lifetime" && duration
-                  ? ` during the next ${ms(Number(duration), {
-                      roundUp: true,
-                    })}.`
-                  : " permanently."
+                  ? ` for the next ${ms(Number(duration), { roundUp: true })}.`
+                  : "."
               }**`
             ),
           ],
@@ -554,7 +598,7 @@ const command: Command = {
             .setFooter({
               text: user.user.tag,
               iconURL:
-                user.user.avatarURL() ||
+                user.user.displayAvatarURL() ||
                 "https://cdn.discordapp.com/avatars/490667823392096268/7ccc56164f0adcde7fe00ef4384785ee.png?size=1024",
             });
 
@@ -626,9 +670,9 @@ const command: Command = {
         }
       });
   },
-  cooldown: 10,
+  cooldown: 1,
   aliases: [],
-  permissions: [PermissionFlagsBits.ManageRoles],
+  permissions: [],
 };
 
 export default command;

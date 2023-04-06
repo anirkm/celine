@@ -244,7 +244,7 @@ const command: Command = {
 
     for (let j = 0; j < totalEmbeds; j++) {
       let desc: string[] = [
-        `${emoji.pepoban} | **${
+        `<:searchbae:1085255657420238888> | **${
           arg instanceof GuildMember ? `${arg} got` : "There is"
         } ${temproles.length} temporary roles ${
           arg instanceof Role ? `of ${arg}` : ""
@@ -261,7 +261,7 @@ const command: Command = {
         .setFooter({
           text: `Requested by ${message.author.tag}`,
           iconURL:
-            message.author.avatarURL({ size: 4096 }) ||
+            message.author.displayAvatarURL({ size: 4096 }) ||
             "https://cdn.discordapp.com/embed/avatars/5.png",
         });
 
@@ -272,7 +272,7 @@ const command: Command = {
               `**User**: <@${temproles[i + k].member.id}> (${
                 temproles[i + k].member.id
               })`,
-              `**Roles:** ${temproles[i + k].role} (${
+              `**Role:** ${temproles[i + k].role} (${
                 temproles[i + k].role.id
               })`,
               `**Expires in:** ${ms(
