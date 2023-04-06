@@ -119,13 +119,13 @@ const command: Command = {
                 permissionHistory[i + k].currentPermissions.length > 0
                   ? permissionHistory[i + k].currentPermissions
                       .map((p) => `◟${p}`)
-                      .join("\n") + `\n`
+                      .join("\n") + "\n"
                   : "◟None\n",
                 `${emoji.leave} **Previous Permissions** ::`,
                 permissionHistory[i + k].previousPermissions.length > 0
                   ? permissionHistory[i + k].previousPermissions
                       .map((p) => `◟${p}`)
-                      .join("\n") + `\n`
+                      .join("\n") + "\n"
                   : "◟None\n",
               ]
                 .filter((v) => v != "")
@@ -222,7 +222,7 @@ const command: Command = {
             `**» Editing permissions for ${
               target instanceof GuildMember ? "member" : "role"
             } :: ${target}**`,
-            `◟With the menu bellow you can add or remove permissions.`,
+            "◟With the menu bellow you can add or remove permissions.",
           ]
             .filter((v) => v != "")
             .join("\n")
@@ -313,13 +313,13 @@ const command: Command = {
             [
               `**» Viewing permissions for ${target}**`,
               `◟_to edit permissions use __&perms edit___ ${target}\n`,
-              `» **Current permissions:**`,
+              "» **Current permissions:**",
               permissions && permissions?.length !== 0
                 ? permissions
                     .map((p) => `◟${p}`)
                     .filter((v) => v != "")
                     .join("\n")
-                : `There is no permissions`,
+                : "There is no permissions",
             ]
               .filter((v) => v != "")
               .join("\n")

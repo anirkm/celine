@@ -77,7 +77,7 @@ const command: Command = {
             `${
               emoji.question
             } |  Are you sure you want to **clear** all of ${user} warnings ${
-              mod ? `from ${mod}` : ``
+              mod ? `from ${mod}` : ""
             } **_(${
               userWarns.length
             } warnings)_**. This action is irreversible!`
