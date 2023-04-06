@@ -70,7 +70,7 @@ export const sendTimedMessage = (
 };
 
 export const fuzzyRoleSearch = (guild: Guild, string: string) => {
-  console.log(string)
+  console.log(string);
   let rolesArr = guild.roles.cache.map((r) => {
     return { name: decancer(r.name).toString(), id: r.id };
   });
@@ -81,8 +81,8 @@ export const fuzzyRoleSearch = (guild: Guild, string: string) => {
     threshold: 0.76,
   });
 
-  if(s.length === 0) return [{id: "1"}]
-  return s
+  if (s.length === 0) return [{ id: "1" }];
+  return s;
 };
 export const getGuildRole = async (guild: Guild, role: string) => {
   let fetchedRole =

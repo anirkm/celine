@@ -24,8 +24,7 @@ const command: Command = {
       return message.reply({ embeds: [argsEmbed] });
     }
 
-    let user =
- await message.guild?.members
+    let user = await message.guild?.members
       .fetch({
         user: message.mentions.members?.first() || args[1],
         cache: true,

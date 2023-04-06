@@ -14,16 +14,17 @@ const command: Command = {
 
     let perm = args[2];
 
-    if(!user) return message.reply({content: "user not found"});
+    if (!user) return message.reply({ content: "user not found" });
 
     let start = Date.now();
     await hasPermission(client, user!, perm).then((result) => {
       let finish = Date.now() - start;
       message.reply({
-        content: `result: ${result} - took ${finish.toFixed(2) + "ms"} to fetch the perm`,
+        content: `result: ${result} - took ${
+          finish.toFixed(2) + "ms"
+        } to fetch the perm`,
       });
     });
-    
   },
   cooldown: 10,
   aliases: [],

@@ -218,7 +218,6 @@ const event: BotEvent = {
                 });
                 permissionHistory.save().then(() => {
                   console.log("saved");
-                  
                 });
 
                 return GuildModel.findOneAndUpdate(filter, setUpdate, {
