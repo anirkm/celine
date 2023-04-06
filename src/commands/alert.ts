@@ -8,8 +8,11 @@ import { hasPermission } from "../functions";
 const command: Command = {
   name: "alert",
   execute: async (client, message, args) => {
-
-    if(!(await hasPermission(client, message.member!, "use_alert")) && !message.member!.permissions.has(PermissionFlagsBits.Administrator)) return
+    if (
+      !(await hasPermission(client, message.member!, "use_alert")) &&
+      !message.member!.permissions.has(PermissionFlagsBits.Administrator)
+    )
+      return;
 
     let argsEmbed = await missingArgs(
       message,
@@ -22,8 +25,7 @@ const command: Command = {
       return message.reply({ embeds: [argsEmbed] });
     }
 
-    let user =
- await message.guild?.members
+    let user = await message.guild?.members
       .fetch({
         user: message.mentions.members?.first() || args[1],
         cache: true,
