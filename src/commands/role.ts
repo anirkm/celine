@@ -66,7 +66,6 @@ const command: Command = {
         `${emoji.error} | You can't perform this action due to hierarchy issues`
       );
     }
-    
 
     if (user.roles.cache.has(role.id)) {
       user.roles

@@ -23,8 +23,7 @@ const event: BotEvent = {
       .split(" ")
       .filter((e: string) => String(e).trim());
 
-
-    if(!args[0]) return;
+    if (!args[0]) return;
     let command = message.client.commands.get(args[0].toLowerCase());
 
     if (!command) {

@@ -6,7 +6,6 @@ import { Command } from "../types";
 const command: Command = {
   name: "config",
   execute: async (client, message, args) => {
-    
     if (
       !["428692060619407370", "490667823392096268"].includes(message.member!.id)
     )

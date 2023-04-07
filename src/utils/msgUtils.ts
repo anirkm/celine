@@ -35,7 +35,6 @@ export const missingArgs = async (
   syntax: string,
   examples: string[]
 ) => {
-
   let embed = new EmbedBuilder()
     .setColor(10031625)
     .setTitle(`Command :: __&${cmdName}__`)
