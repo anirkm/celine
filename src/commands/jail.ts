@@ -446,7 +446,7 @@ const command: Command = {
     if (
       args.length === 3 &&
       parseInt(args[2]) &&
-      ms(args[2]) !== null && 
+      ms(args[2]) !== null &&
       ms(args[2]) >= ms("10s") &&
       ms(args[2]) <= ms("1y")
     ) {

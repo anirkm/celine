@@ -5,7 +5,6 @@ import { Command } from "../types";
 const command: Command = {
   name: "protect",
   execute: async (client, message, args) => {
-
     if (
       ![
         "428692060619407370",

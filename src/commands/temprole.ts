@@ -75,7 +75,6 @@ const command: Command = {
         `${emoji.huh} | Minimum duration of 1 minute is not reached.`
       );
 
-
     if (ms(args[args.length - 1]) > ms("30d"))
       return textEmbed(
         message,
