@@ -3,7 +3,7 @@ import emoji from "../data/emojies.json";
 import { hasPermission, sendPagination } from "../functions";
 import GuildJoinModel from "../schemas/GuildJoin";
 import { Command, IGuildJoin } from "../types";
-import { RtextEmbed, textEmbed } from "../utils/msgUtils";
+import { missingArgs, RtextEmbed, textEmbed } from "../utils/msgUtils";
 
 const command: Command = {
   name: "joins",
@@ -14,8 +14,16 @@ const command: Command = {
     )
       return;
 
-    let user =
- await message.guild?.members
+    let argsEmbed = await missingArgs(message, "joins", `(user)`, [
+      `${message.member}`,
+    ]);
+
+    if (!args[1]) {
+      message.reply({ embeds: [argsEmbed] });
+      return;
+    }
+
+    let user = await message.guild?.members
       .fetch({
         user: message.mentions.members?.first() || args[1],
         cache: true,
@@ -102,9 +110,9 @@ const command: Command = {
         `**Joins using someone's invite** :: ${
           userJoinNormal.length
         } (${ujnp.toFixed(2)} %)`,
-        `**Joins using vanity link** :: ${userJoinVanity.length} (${ujvp.toFixed(
-          2
-        )} %)`,
+        `**Joins using vanity link** :: ${
+          userJoinVanity.length
+        } (${ujvp.toFixed(2)} %)`,
         `**Joins which i can't figure how** :: ${
           userJoinUnknown.length
         } (${ujup.toFixed(2)} %)\n`,

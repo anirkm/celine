@@ -30,7 +30,7 @@ const command: Command = {
     let argsEmbed = await missingArgs(
       message,
       "jail",
-      `${message.member} (duration) (reason)`,
+      `(user) (duration) (reason)`,
       [
         `${message.member}`,
         `${message.member} reason`,

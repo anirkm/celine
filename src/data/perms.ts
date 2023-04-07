@@ -39,7 +39,7 @@ const permissions = [
     default: false,
     cmd: "timeout",
     permission: "use_timeout",
-    permFor: ["timeout"],
+    permFor: ["timeout", "untimeout"],
   },
   {
     default: false,

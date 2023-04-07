@@ -24,8 +24,7 @@ const command: Command = {
       return message.reply({ embeds: [argsEmbed] });
     }
 
-    let user =
- await message.guild?.members
+    let user = await message.guild?.members
       .fetch({
         user: message.mentions.members?.first() || args[1],
         cache: true,
@@ -40,15 +39,6 @@ const command: Command = {
     let reason: string = args.slice(2).join(" ") || "no reason was specified";
 
     if (reason.trim().length === 0) reason = "no reason was specified";
-
-    if (
-      !(await client.redis.exists(`vmutequeue_${message.guild?.id}_${user.id}`))
-    ) {
-      return textEmbed(
-        message,
-        `${emoji.error} | The user you specified is not voice-muted.`
-      );
-    }
 
     await client.redis
       .del(`vmutequeue_${message.guild?.id}_${user.id}`)

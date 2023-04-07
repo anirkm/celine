@@ -19,95 +19,50 @@ const command: Command = {
       message,
       "timeout",
       `${message.member} [duration] (reason)`,
-      [
-        `${message.member} 1337s`,
-        `${message.member} 1337s reason`,
-        `${message.member} end`,
-      ]
+      [`${message.member} 1337s`, `${message.member} 1337s reason`]
     );
 
     if (!args[1] || !args[2]) {
       return message.reply({ embeds: [argsEmbed] });
     }
 
-    if (["stop", "end"].includes(args[1].toLocaleLowerCase())) {
-      if (!args[2]) {
-        return message.reply(`:rage: - **&timeout** end ${message.member}`);
-      }
-      const user =
-        message.mentions.members?.first() ||
-        (await message.guild?.members
-          .fetch({ user: args[2], cache: true })
-          .catch(() => {}));
-
-      if (!user)
-        return textEmbed(
-          message,
-          `${emoji.error} | The user you specified was not found.`
-        );
-      if (!user.isCommunicationDisabled())
-        return textEmbed(
-          message,
-          `${emoji.error} | ${user} is not timed out at the moment.}`
-        );
-      return user
-        .timeout(null, `${message.member?.user.tag} - timeout end`)
-        .then(async (user) => {
-          message.reply(`${user} ended tm`);
-        })
-        .catch((e) => {
-          switch (e.message) {
-            case "Unknown User":
-              textEmbed(message, `${emoji.error} | Invalid user, Try again.`);
-              break;
-            case "Missing Permissions":
-              textEmbed(
-                message,
-                `${emoji.error} | Due to missing permissions i can't execute this command on ${user}.`
-              );
-              break;
-            case "Invalid Form Body":
-              textEmbed(
-                message,
-                `${emoji.error} | You've malformed the command, try again.`
-              );
-              break;
-            default:
-              textEmbed(
-                message,
-                `${emoji.error} | An error occurred while trying to execute this command, try again.. (DiscordAPI: ${e.message})`
-              );
-              console.log(e);
-              break;
-          }
-        });
-    }
-
-    if (!args[2]) {
-      return message.reply(
-        `:rage: - **&timeout** ${message.member} [duration] [reason]`
-      );
-    }
-
     const reason: string = args[3] || "no reason specified";
     const duration: string = args[2];
 
-    const user =
-      message.mentions.members?.first() ||
-      (await message.guild?.members
-        .fetch({ user: args[1], cache: true })
-        .catch(() => {}));
+    const user = await message.guild?.members
+      .fetch({
+        user: message.mentions.members?.first() || args[1],
+        cache: true,
+      })
+      .catch(() => {});
 
     if (!user)
       return textEmbed(
         message,
         `${emoji.error} | The user you specified was not found.`
       );
-    if (ms(duration) === null)
+
+    if (user.permissions.has(PermissionFlagsBits.Administrator))
       return textEmbed(
         message,
-        `${emoji.error} | The duration should be between 10 seconds and 1 month.`
+        `${emoji.error} | Timeouts can't be executed on administrators.`
       );
+
+    if (!parseInt(duration) || !ms(duration)) {
+      return textEmbed(
+        message,
+        `${emoji.huh} | The duration you've specified is invalid`
+      );
+    }
+
+    if (ms(duration) !== null) {
+      if (ms(duration) < ms("10s") || ms(duration) > ms("1month")) {
+        return textEmbed(
+          message,
+          `${emoji.error} | The duration should be between 10 seconds and 1 month.`
+        );
+      }
+    }
 
     user
       .timeout(Number(ms(duration)), `${message.member?.user.tag} - ${reason}`)
@@ -115,7 +70,7 @@ const command: Command = {
         textEmbed(
           message,
           `${emoji.muted} | ${user} has been timedout for the next ${ms(
-            duration,
+            Number(ms(duration)),
             {
               roundUp: false,
             }
