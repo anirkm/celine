@@ -36,12 +36,6 @@ const command: Command = {
       return message.reply({ embeds: [argsEmbed] });
     }
 
-    let emAr = [
-      "<:pepoban:1063756755995217961>",
-      "<:pepeban:1063756133942181978>",
-      "<:banned:1063755520017694772>",
-    ];
-
     const userToBan = await message.guild?.members
       .fetch({
         user: message.mentions.members?.first() || args[1],

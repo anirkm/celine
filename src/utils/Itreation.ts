@@ -27,8 +27,13 @@ module.exports = async (client: Client, redis: Redis) => {
         ? (user = await client.users.fetch(userID).catch(() => {}))
         : (user = await guild!.members.fetch(userID).catch(() => {}));
 
-      if (!user || !guild || !dbGuild) {
-        console.log(prefix, "failed to fetch user/guild/dbguild");
+      if (!user) {
+        redis.del(key).catch(() => {});
+        continue;
+      }
+
+      if (!guild || !dbGuild) {
+        console.log(prefix, "failed to fetch guild/dbguild");
         continue;
       }
 

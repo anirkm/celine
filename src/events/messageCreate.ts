@@ -6,6 +6,7 @@ import { BotEvent } from "../types";
 const event: BotEvent = {
   name: "messageCreate",
   execute: async (client: Client, message: Message) => {
+
     if (!message.member || message.member.user.bot) return;
     if (!message.guild) return;
 
@@ -16,15 +17,13 @@ const event: BotEvent = {
     }
 
     if (!message.content.startsWith(prefix)) return;
-    if (message.channel.type !== ChannelType.GuildText) return;
 
     let args = message.content
       .substring(prefix.length)
       .split(" ")
       .filter((e: string) => String(e).trim());
 
-
-    if(!args[0]) return;
+    if (!args[0]) return;
     let command = message.client.commands.get(args[0].toLowerCase());
 
     if (!command) {

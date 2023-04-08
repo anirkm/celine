@@ -36,11 +36,16 @@ const command: Command = {
       })
       .catch(() => {});
 
-    let f = Date.now() - st;
     if (!user)
       return textEmbed(
         message,
         `${emoji.error} | The user you specified was not found.`
+      );
+
+    if (user.permissions.has(PermissionFlagsBits.Administrator))
+      return textEmbed(
+        message,
+        `${emoji.error} | Text mutes can't be executed on administrators.`
       );
 
     let reason: string = args.slice(3).join(" ") || "no reason was specified";

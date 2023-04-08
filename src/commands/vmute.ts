@@ -38,6 +38,12 @@ const command: Command = {
         `${emoji.error} | The user you specified was not found.`
       );
 
+    if (user.permissions.has(PermissionFlagsBits.Administrator))
+      return textEmbed(
+        message,
+        `${emoji.error} | Voice mutes can't be executed on administrators.`
+      );
+
     let reason: string = args.slice(3).join(" ") || "no reason was specified";
 
     if (!parseInt(args[2]) || !ms(args[2])) {

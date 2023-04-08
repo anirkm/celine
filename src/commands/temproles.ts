@@ -246,7 +246,7 @@ const command: Command = {
       let desc: string[] = [
         `<:searchbae:1085255657420238888> | **${
           arg instanceof GuildMember ? `${arg} got` : "There is"
-        } ${temproles.length} temporary roles ${
+        } ${temproles.length} active temporary roles ${
           arg instanceof Role ? `of ${arg}` : ""
         }\n**`,
       ];

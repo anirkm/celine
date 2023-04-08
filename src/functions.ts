@@ -204,8 +204,6 @@ export const hasPermission = async (
     .map((r) => r.permissions)
     .flat();
 
-  console.log(roles);
-
   const userPermissions = guild.userPermissions.find(
     (p) => p.userId === member.id
   );
@@ -215,8 +213,6 @@ export const hasPermission = async (
   }
 
   const allPermissions = [...roles, ...(userPermissions?.permissions || [])];
-
-  console.log(member.user.tag, member.user.id, allPermissions);
 
   if ([...(userPermissions?.permissions || [])].includes(permission)) {
     client.redisCache.set(
