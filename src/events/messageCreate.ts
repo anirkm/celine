@@ -6,7 +6,6 @@ import { BotEvent } from "../types";
 const event: BotEvent = {
   name: "messageCreate",
   execute: async (client: Client, message: Message) => {
-
     if (!message.member || message.member.user.bot) return;
     if (!message.guild) return;
 

@@ -446,7 +446,7 @@ const command: Command = {
     if (
       args.length === 3 &&
       parseInt(args[2]) &&
-      ms(args[2]) !== null && 
+      ms(args[2]) !== null &&
       ms(args[2]) >= ms("10s") &&
       ms(args[2]) <= ms("1y")
     ) {
@@ -624,7 +624,7 @@ const command: Command = {
           .save()
           .then(async (doc) => {
             if (duration && duration !== "lifetime" && ms(args[2])) {
-              console.log("saving duration")
+              console.log("saving duration");
               doc["duration"] = args[2];
               doc.save();
               client.redis
