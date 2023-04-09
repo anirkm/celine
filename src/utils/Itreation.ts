@@ -87,7 +87,15 @@ module.exports = async (client: Client, redis: Redis) => {
             client.redis
               .del(key)
               .then(async () => {
-                user!.send({ embeds: [await RtextEmbed(`${emoji.confetti} | Your voice-mute has expired in ${user!.guild.name}`)] });
+                user!.send({
+                  embeds: [
+                    await RtextEmbed(
+                      `${emoji.confetti} | Your voice-mute has expired in ${
+                        user!.guild.name
+                      }`
+                    ),
+                  ],
+                });
               })
               .catch(() => {});
             client.redis
@@ -109,7 +117,15 @@ module.exports = async (client: Client, redis: Redis) => {
             (user as GuildMember).roles
               .remove(jailRole, "Jail Expired")
               .then(async (user) => {
-                user!.send({ embeds: [await RtextEmbed(`${emoji.confetti} | Your jail sanction has expired in ${user!.guild.name}`)] });
+                user!.send({
+                  embeds: [
+                    await RtextEmbed(
+                      `${emoji.confetti} | Your jail sanction has expired in ${
+                        user!.guild.name
+                      }`
+                    ),
+                  ],
+                });
                 console.log("jail expired");
                 redis.del(key).catch((e) => {
                   console.log("redjail", e);
