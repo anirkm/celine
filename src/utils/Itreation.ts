@@ -1,6 +1,8 @@
 import { Client, GuildMember } from "discord.js";
 import { Redis } from "ioredis";
+import emoji from "../data/emojies.json";
 import GuildModel from "../schemas/Guild";
+import { RtextEmbed } from "./msgUtils";
 
 module.exports = async (client: Client, redis: Redis) => {
   let cursor = "0";
@@ -21,17 +23,6 @@ module.exports = async (client: Client, redis: Redis) => {
         }
       );
 
-      let user;
-
-      prefix == "banqueue"
-        ? (user = await client.users.fetch(userID).catch(() => {}))
-        : (user = await guild!.members.fetch(userID).catch(() => {}));
-
-      if (!user) {
-        redis.del(key).catch(() => {});
-        continue;
-      }
-
       if (!guild || !dbGuild) {
         console.log(prefix, "failed to fetch guild/dbguild");
         continue;
@@ -40,7 +31,12 @@ module.exports = async (client: Client, redis: Redis) => {
       switch (prefix) {
         case "banqueue":
           if (Number(expireTime) < new Date().getTime()) {
-            await guild.members.unban(user, "Ban expired.").then(() => {
+            let user = await client.users.fetch(userID).catch(() => {});
+            if (!user) {
+              redis.del(key).catch(() => {});
+              continue;
+            }
+            guild.members.unban(user, "Ban expired.").then(() => {
               console.log("ban expired");
               redis.del(key).catch(() => {});
             });
@@ -48,14 +44,26 @@ module.exports = async (client: Client, redis: Redis) => {
           break;
         case "mutequeue":
           if (Number(expireTime) < new Date().getTime()) {
+            let user = await guild!.members.fetch(userID).catch(() => {});
+            if (!user) {
+              redis.del(key).catch(() => {});
+              continue;
+            }
             let dbMuteRole = dbGuild.options.muteRole || "none";
             let muteRole = await guild.roles.fetch(dbMuteRole).catch(() => {});
             if (!muteRole) {
               continue;
             }
-            await (user as GuildMember).roles
+            (user as GuildMember).roles
               .remove(muteRole, "Mute Expired")
-              .then(() => {
+              .then(async (user) => {
+                user.send({
+                  embeds: [
+                    await RtextEmbed(
+                      `${emoji.confetti} | Your text-mute has expired in ${user.guild.name}`
+                    ),
+                  ],
+                });
                 console.log("mute expired");
                 redis.del(key).catch((e) => {
                   console.log("muteexpire error", e);
@@ -68,24 +76,40 @@ module.exports = async (client: Client, redis: Redis) => {
           break;
         case "vmutequeue":
           if (Number(expireTime) < new Date().getTime()) {
+            let user = await guild!.members.fetch(userID).catch(() => {});
+            if (!user) {
+              redis.del(key).catch(() => {});
+              continue;
+            }
             if ((user as GuildMember).voice.channel) {
               (user as GuildMember).voice.setMute(false, "Mute expired");
             }
-            client.redis.del(key).catch(() => {});
+            client.redis
+              .del(key)
+              .then(async () => {
+                user!.send({ embeds: [await RtextEmbed(`${emoji.confetti} | Your voice-mute has expired in ${user!.guild.name}`)] });
+              })
+              .catch(() => {});
             client.redis
               .set(`vmex_${guildID}_${userID}`, 0, "EX", 172800)
               .catch(console.log);
           }
         case "jailqueue":
           if (Number(expireTime) < new Date().getTime()) {
+            let user = await guild!.members.fetch(userID).catch(() => {});
+            if (!user) {
+              redis.del(key).catch(() => {});
+              continue;
+            }
             let dbJailRole = dbGuild.options.jailRole || "none";
             let jailRole = await guild.roles.fetch(dbJailRole).catch(() => {});
             if (!jailRole) {
               continue;
             }
-            await (user as GuildMember).roles
+            (user as GuildMember).roles
               .remove(jailRole, "Jail Expired")
               .then(async (user) => {
+                user!.send({ embeds: [await RtextEmbed(`${emoji.confetti} | Your jail sanction has expired in ${user!.guild.name}`)] });
                 console.log("jail expired");
                 redis.del(key).catch((e) => {
                   console.log("redjail", e);
@@ -114,6 +138,11 @@ module.exports = async (client: Client, redis: Redis) => {
           break;
         case "tr":
           if (Number(expireTime) < new Date().getTime()) {
+            let user = await guild!.members.fetch(userID).catch(() => {});
+            if (!user) {
+              redis.del(key).catch(() => {});
+              continue;
+            }
             let roleEnQuestion = await guild.roles
               .fetch(key.split("_")[3])
               .catch(() => {});

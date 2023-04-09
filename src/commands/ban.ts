@@ -5,7 +5,7 @@ import emoji from "../data/emojies.json";
 import { hasPermission, protectionCheck } from "../functions";
 import SanctionModel from "../schemas/Sanction";
 import { Command } from "../types";
-import { missingArgs, RtextEmbed, textEmbed } from "../utils/msgUtils";
+import { RtextEmbed, missingArgs, textEmbed } from "../utils/msgUtils";
 
 const errorMessages = {
   invalidUser: `${emoji.error} » Specified user is invalid, try again.`,
@@ -93,7 +93,7 @@ const command: Command = {
         );
     }
 
-    const _id = crypto.randomBytes(10).toString("hex");
+    const _id = crypto.randomBytes(8).toString("hex");
 
     if (userToBan) {
       let notifEm = new EmbedBuilder()

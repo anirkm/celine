@@ -1,5 +1,5 @@
-import { model, Schema } from "mongoose";
 import crypto from "crypto";
+import { model, Schema } from "mongoose";
 import { ISanction } from "../types";
 
 const generateUniqueId = (n: number): string => {
@@ -7,7 +7,13 @@ const generateUniqueId = (n: number): string => {
 };
 
 const SanctionSchema = new Schema<ISanction>({
-  sanctionId: { type: String, unique: true, default: generateUniqueId(10) },
+  sanctionId: {
+    type: String,
+    unique: true,
+    default: function () {
+      return crypto.randomBytes(8).toString("hex");
+    },
+  },
   guildID: { required: true, type: String },
   modID: { required: true, type: String },
   userID: { required: true, type: String },

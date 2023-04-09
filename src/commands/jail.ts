@@ -14,7 +14,7 @@ import { hasPermission } from "../functions";
 import GuildModel from "../schemas/Guild";
 import SanctionModel from "../schemas/Sanction";
 import { Command } from "../types";
-import { missingArgs, RtextEmbed, textEmbed } from "../utils/msgUtils";
+import { RtextEmbed, missingArgs, textEmbed } from "../utils/msgUtils";
 
 const command: Command = {
   name: "jail",
@@ -318,7 +318,7 @@ const command: Command = {
                   };
 
                   await restoreRole().then(async () => {
-                    await client.redis
+                    client.redis
                       .del(`jr_${message.guild?.id}_${user?.id}`)
                       .catch(() => {});
                     collectorPrompt.edit({
@@ -362,7 +362,11 @@ const command: Command = {
               .catch(() => {});
           }
 
-          await client.redis
+          client.persistanceRedis
+            .del(`jail_${message.guild?.id}_${user?.id}`)
+            .catch(() => {});
+
+          client.redis
             .keys(`jailqueue_${message.guild?.id}_${user.id}`)
             .then((keys) => {
               if (keys.length !== 0) {
@@ -446,7 +450,7 @@ const command: Command = {
     if (
       args.length === 3 &&
       parseInt(args[2]) &&
-      ms(args[2]) !== null && 
+      ms(args[2]) !== null &&
       ms(args[2]) >= ms("10s") &&
       ms(args[2]) <= ms("1y")
     ) {
@@ -624,7 +628,7 @@ const command: Command = {
           .save()
           .then(async (doc) => {
             if (duration && duration !== "lifetime" && ms(args[2])) {
-              console.log("saving duration")
+              console.log("saving duration");
               doc["duration"] = args[2];
               doc.save();
               client.redis
@@ -634,6 +638,12 @@ const command: Command = {
                 )
                 .catch((e) => {
                   console.log("save redis jail queue err", e);
+                });
+            } else {
+              client.persistanceRedis
+                .set(`jail_${message.guild?.id}_${user.id}`, `1`)
+                .catch((e) => {
+                  console.log("pr redit jail", e);
                 });
             }
           })

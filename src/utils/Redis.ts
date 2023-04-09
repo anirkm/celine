@@ -23,6 +23,14 @@ module.exports = async (client: Client) => {
     db: 9,
   });
 
+  const persistanceRedis = new Redis({
+    port: 6379, // Redis port
+    host: REDIS_HOST, // Redis host
+    password: REDIS_PW,
+    maxRetriesPerRequest: null,
+    db: 7,
+  });
+
   cacheRedis.on("connect", async () => {
     console.log(
       color(
@@ -36,6 +44,19 @@ module.exports = async (client: Client) => {
     client.redisCache = cacheRedis;
 
     cachePermissions(client, cacheRedis);
+  });
+
+  persistanceRedis.on("connect", async () => {
+    console.log(
+      color(
+        "text",
+        `🔴 Redis persisitance connection has been ${color(
+          "variable",
+          "established."
+        )}`
+      )
+    );
+    client.persistanceRedis = persistanceRedis;
   });
 
   redis.on("connect", async () => {

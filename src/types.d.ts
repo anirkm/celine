@@ -131,6 +131,7 @@ declare module "discord.js" {
     timeouts: Collection<string, Array<t>>;
     redis: Redis;
     redisCache: Redis;
+    persistanceRedis: Redis;
     mongo: Mongoose;
     queues: ClientQueues;
   }

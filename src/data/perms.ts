@@ -13,6 +13,12 @@ const permissions = [
   },
   {
     default: true,
+    cmd: "kick",
+    permission: "usekick",
+    permFor: ["kick"],
+  },
+  {
+    default: true,
     cmd: "vmute",
     permission: "use_vmute",
     permFor: ["vmute", "vunmute", "vmutes"],

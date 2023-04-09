@@ -9,7 +9,7 @@ const command: Command = {
     let user =
  await message.guild?.members
       .fetch({
-        user: message.mentions.members?.first() || args[1],
+        user: message.mentions.members?.first() || args[1] || message.author,
         cache: true,
       })
       .catch(() => {});
