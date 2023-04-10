@@ -6,7 +6,7 @@ const command: Command = {
   execute: async (client, message, args) => {},
   cooldown: 10,
   aliases: [],
-  permissions: [PermissionFlagsBits.KickMembers],
+  permissions: [],
 };
 
 export default command;

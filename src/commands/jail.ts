@@ -24,7 +24,7 @@ const command: Command = {
       !(await hasPermission(client, message.member!, "use_jail")) &&
       !message.member!.permissions.has(PermissionFlagsBits.Administrator)
     ) {
-      return console.log(message.member?.user.id, "no perm mute");
+      return
     }
 
     let argsEmbed = await missingArgs(

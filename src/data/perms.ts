@@ -27,7 +27,7 @@ const permissions = [
     default: false,
     cmd: "jail",
     permission: "use_jail",
-    permFor: ["jail", "jails"],
+    permFor: ["jail", "unjail", "jails"],
   },
   {
     default: false,
