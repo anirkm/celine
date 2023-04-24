@@ -19,7 +19,7 @@ const command: Command = {
   name: "perms",
   execute: async (client, message, args) => {
     let permissionsArr: Array<any> = [];
-    let type: string = "unknown";
+    let type = "unknown";
 
     if (
       ![
@@ -167,7 +167,7 @@ const command: Command = {
       }
 
       permissions.forEach((perm) => {
-        let isDefault: boolean = false;
+        let isDefault = false;
         if (target instanceof GuildMember) {
           type = "member";
           isDefault = guild.userPermissions
