@@ -8,8 +8,11 @@ import { hasPermission } from "../functions";
 const command: Command = {
   name: "alert",
   execute: async (client, message, args) => {
-
-    if(!(await hasPermission(client, message.member!, "use_alert")) && !message.member!.permissions.has(PermissionFlagsBits.Administrator)) return
+    if (
+      !(await hasPermission(client, message.member!, "use_alert")) &&
+      !message.member!.permissions.has(PermissionFlagsBits.Administrator)
+    )
+      return;
 
     let argsEmbed = await missingArgs(
       message,
@@ -51,7 +54,13 @@ const command: Command = {
           message.guild?.iconURL({ size: 4096 }) ||
           "https://cdn.discordapp.com/embed/avatars/5.png",
       })
-      .setDescription(`**ID**: \`${id}\`\n**From ${message.member?.permissions.has(PermissionFlagsBits.Administrator) ? `Admin` : `Staff`}**: ${reason}`)
+      .setDescription(
+        `**ID**: \`${id}\`\n**From ${
+          message.member?.permissions.has(PermissionFlagsBits.Administrator)
+            ? `Admin`
+            : `Staff`
+        }**: ${reason}`
+      )
       .setTimestamp();
 
     console.log(Array.from(message.attachments.values()));
