@@ -51,7 +51,7 @@ const command: Command = {
           message.guild?.iconURL({ size: 4096 }) ||
           "https://cdn.discordapp.com/embed/avatars/5.png",
       })
-      .setDescription(`**ID**: \`${id}\`\n**From ${message.member?.permissions.has(PermissionFlagsBits.Administrator) ? `Admin` : `Staff`}**: ${reason}`)
+      .setDescription(`**ID**: \`${id}\`\n**From ${message.member?.permissions.has(PermissionFlagsBits.Administrator) ? "Admin" : "Staff"}**: ${reason}`)
       .setTimestamp();
 
     console.log(Array.from(message.attachments.values()));

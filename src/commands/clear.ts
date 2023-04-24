@@ -13,8 +13,8 @@ const command: Command = {
     )
       return;
 
-    let argsEmbed = await missingArgs(message, "clear", ` (amount)`, [
-      ` 69`,
+    let argsEmbed = await missingArgs(message, "clear", " (amount)", [
+      " 69",
       `69 ${message.member}`,
     ]);
 

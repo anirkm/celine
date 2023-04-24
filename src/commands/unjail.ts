@@ -21,7 +21,7 @@ const command: Command = {
       return;
     }
 
-    let argsEmbed = await missingArgs(message, "unjail", `(user) (reason)`, [
+    let argsEmbed = await missingArgs(message, "unjail", "(user) (reason)", [
       `${message.member}`,
       `${message.member} reason`,
     ]);

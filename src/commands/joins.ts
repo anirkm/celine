@@ -14,7 +14,7 @@ const command: Command = {
     )
       return;
 
-    let argsEmbed = await missingArgs(message, "joins", `(user)`, [
+    let argsEmbed = await missingArgs(message, "joins", "(user)", [
       `${message.member}`,
     ]);
 

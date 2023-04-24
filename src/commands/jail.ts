@@ -30,7 +30,7 @@ const command: Command = {
     let argsEmbed = await missingArgs(
       message,
       "jail",
-      `(user) (duration) (reason)`,
+      "(user) (duration) (reason)",
       [
         `${message.member}`,
         `${message.member} reason`,
@@ -641,7 +641,7 @@ const command: Command = {
                 });
             } else {
               client.persistanceRedis
-                .set(`jail_${message.guild?.id}_${user.id}`, `1`)
+                .set(`jail_${message.guild?.id}_${user.id}`, "1")
                 .catch((e) => {
                   console.log("pr redit jail", e);
                 });
