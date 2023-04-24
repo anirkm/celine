@@ -10,7 +10,7 @@ import emoji from "../data/emojies.json";
 import { hasPermission } from "../functions";
 import GuildModel from "../schemas/Guild";
 import { Command } from "../types";
-import { missingArgs, RtextEmbed, textEmbed } from "../utils/msgUtils";
+import { RtextEmbed, missingArgs, textEmbed } from "../utils/msgUtils";
 
 const command: Command = {
   name: "unmute",
@@ -193,11 +193,12 @@ const command: Command = {
       return;
     }
 
-    const user =
-      message.mentions.members?.first() ||
-      (await message.guild?.members
-        .fetch({ user: args[1], cache: true })
-        .catch(() => {}));
+    let user = await message.guild?.members
+      .fetch({
+        user: message.mentions.parsedUsers.first() || args[1],
+        cache: true,
+      })
+      .catch(() => {});
 
     if (!user)
       return textEmbed(

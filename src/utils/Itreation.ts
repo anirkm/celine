@@ -125,7 +125,9 @@ module.exports = async (client: Client, redis: Redis) => {
                       .then(() => {
                         client.redis
                           .del(`jr_${guild?.id}_${user.id}`)
-                          .catch(() => {});
+                          .catch((e) => {
+                            console.log("redjail", e);
+                          });
                       })
                       .catch(() => {});
                   });
@@ -140,7 +142,9 @@ module.exports = async (client: Client, redis: Redis) => {
           if (Number(expireTime) < new Date().getTime()) {
             let user = await guild!.members.fetch(userID).catch(() => {});
             if (!user) {
-              redis.del(key).catch(() => {});
+              redis.del(key).catch((e) => {
+                console.log("tr", e);
+              });
               continue;
             }
             let roleEnQuestion = await guild.roles

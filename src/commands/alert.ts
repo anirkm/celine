@@ -22,10 +22,9 @@ const command: Command = {
       return message.reply({ embeds: [argsEmbed] });
     }
 
-    let user =
- await message.guild?.members
+    const user = await message.guild?.members
       .fetch({
-        user: message.mentions.members?.first() || args[1],
+        user: message.mentions.parsedUsers.first() || args[1],
         cache: true,
       })
       .catch(() => {});
@@ -52,7 +51,7 @@ const command: Command = {
           message.guild?.iconURL({ size: 4096 }) ||
           "https://cdn.discordapp.com/embed/avatars/5.png",
       })
-      .setDescription(`**ID**: \`${id}\`\n**From Staff**: ${reason}`)
+      .setDescription(`**ID**: \`${id}\`\n**From ${message.member?.permissions.has(PermissionFlagsBits.Administrator) ? `Admin` : `Staff`}**: ${reason}`)
       .setTimestamp();
 
     console.log(Array.from(message.attachments.values()));

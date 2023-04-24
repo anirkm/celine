@@ -18,7 +18,7 @@ const command: Command = {
     let jails: any[] = [];
 
     let user =
-      message.mentions.members?.first() ||
+      message.mentions.parsedUsers.first() ||
       (await message.guild?.members
         .fetch({ user: args[1], cache: true })
         .catch(() => {}));

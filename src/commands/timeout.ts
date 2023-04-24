@@ -31,11 +31,10 @@ const command: Command = {
 
     const user = await message.guild?.members
       .fetch({
-        user: message.mentions.members?.first() || args[1],
+        user: message.mentions.parsedUsers.first() || args[1],
         cache: true,
       })
       .catch(() => {});
-
     if (!user)
       return textEmbed(
         message,

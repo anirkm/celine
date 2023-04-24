@@ -77,7 +77,7 @@ const command: Command = {
 
     if (args[2] && messages) {
       let user =
-        message.mentions.members?.first() ||
+        message.mentions.parsedUsers.first() ||
         (await message.guild?.members
           .fetch({ user: args[2], force: true })
           .catch(() => {}));

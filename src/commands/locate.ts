@@ -6,14 +6,12 @@ import { textEmbed } from "../utils/msgUtils";
 const command: Command = {
   name: "locate",
   execute: async (client, message, args) => {
-    let user =
- await message.guild?.members
+    let user = await message.guild?.members
       .fetch({
-        user: message.mentions.members?.first() || args[1] || message.author,
+        user: message.mentions.parsedUsers.first() || args[1] || message.author,
         cache: true,
       })
       .catch(() => {});
-
     if (!user)
       return textEmbed(
         message,

@@ -28,9 +28,9 @@ const command: Command = {
       return message.reply({ embeds: [argsEmbed] });
     }
 
-    let user = await message.guild?.members
+    const user = await message.guild?.members
       .fetch({
-        user: message.mentions.members?.first() || args[1],
+        user: message.mentions.parsedUsers.first() || args[1],
         cache: true,
       })
       .catch(() => {});
@@ -60,13 +60,19 @@ const command: Command = {
         `${emoji.error} | The role you've specified was not found.`
       );
 
+    if (role.managed) {
+      return textEmbed(
+        message,
+        `${emoji.error} | ${role} is managed and therefore cannot be assigned or removed.`
+      );
+    }
+
     if (message.member?.roles.highest.position! <= role.position) {
       return textEmbed(
         message,
         `${emoji.error} | You can't perform this action due to hierarchy issues`
       );
     }
-    
 
     if (user.roles.cache.has(role.id)) {
       user.roles

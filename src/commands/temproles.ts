@@ -174,7 +174,7 @@ const command: Command = {
     }
 
     let arg =
-      message.mentions.members?.first() ||
+      message.mentions.parsedUsers.first() ||
       message.mentions.roles?.first() ||
       (await message.guild?.members
         .fetch({ user: args[1], cache: true })

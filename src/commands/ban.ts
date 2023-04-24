@@ -1,5 +1,5 @@
 import crypto from "crypto";
-import { EmbedBuilder, PermissionFlagsBits } from "discord.js";
+import { EmbedBuilder, GuildMember, PermissionFlagsBits } from "discord.js";
 import ms from "enhanced-ms";
 import emoji from "../data/emojies.json";
 import { hasPermission, protectionCheck } from "../functions";
@@ -8,6 +8,7 @@ import { Command } from "../types";
 import { RtextEmbed, missingArgs, textEmbed } from "../utils/msgUtils";
 
 const errorMessages = {
+  userNotFound: `${emoji.error} » The user you've specified was not found.`,
   invalidUser: `${emoji.error} » Specified user is invalid, try again.`,
   malformedCommand: `${emoji.error} | You've malformed the command, try again.`,
 };
@@ -36,12 +37,17 @@ const command: Command = {
       return message.reply({ embeds: [argsEmbed] });
     }
 
-    const userToBan = await message.guild?.members
-      .fetch({
-        user: message.mentions.members?.first() || args[1],
-        cache: true,
-      })
-      .catch(() => {});
+    const userToBan =
+      (await message.guild?.members.fetch(
+        message.mentions.parsedUsers.first() || args[1]
+      )) ||
+      (await client.users.fetch(
+        message.mentions.parsedUsers.first() || args[1]
+      ));
+
+    if (!userToBan) {
+      return textEmbed(message, errorMessages.userNotFound);
+    }
 
     const duration =
       args.length >= 4 && parseInt(args[2]) && ms(args[2]) !== null
@@ -64,7 +70,7 @@ const command: Command = {
       );
     }
 
-    if (userToBan && !userToBan.bannable) {
+    if (userToBan && userToBan instanceof GuildMember && !userToBan.bannable) {
       return textEmbed(
         message,
         `${emoji.error} | Due to role hierarchy i can't execute this command on ${userToBan}.`
@@ -73,6 +79,7 @@ const command: Command = {
 
     if (
       userToBan &&
+      userToBan instanceof GuildMember &&
       (await protectionCheck(message.guild!, userToBan)) &&
       !message.member?.permissions.has(PermissionFlagsBits.Administrator)
     ) {
@@ -82,7 +89,7 @@ const command: Command = {
       );
     }
 
-    if (userToBan) {
+    if (userToBan && userToBan instanceof GuildMember) {
       if (
         userToBan.roles.highest.position >=
         message.member!.roles.highest.position
@@ -95,7 +102,7 @@ const command: Command = {
 
     const _id = crypto.randomBytes(8).toString("hex");
 
-    if (userToBan) {
+    if (userToBan && userToBan instanceof GuildMember) {
       let notifEm = new EmbedBuilder()
         .setAuthor({
           name: message.guild!.name,
@@ -124,7 +131,7 @@ const command: Command = {
     }
 
     message.guild?.members
-      .ban(userToBan?.id || args[1], {
+      .ban(userToBan.id, {
         reason: `${message.member?.user.tag} - ${reason}`,
       })
       .then(async (banned) => {

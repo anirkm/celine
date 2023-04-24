@@ -40,8 +40,8 @@ const command: Command = {
       (await message.guild?.members
         .fetch(
           ["edit", "history"].includes(args[1].toLowerCase())
-            ? message.mentions.members?.first() || args[2]
-            : message.mentions.members?.first() || args[1]
+            ? message.mentions.parsedUsers.first() || args[2]
+            : message.mentions.parsedUsers.first() || args[1]
         )
         .catch(() => {})) ||
       (await message.guild?.roles

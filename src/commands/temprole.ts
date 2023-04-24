@@ -2,8 +2,9 @@ import { Collection, EmbedBuilder, PermissionFlagsBits } from "discord.js";
 import ms from "enhanced-ms";
 import emoji from "../data/emojies.json";
 import { fuzzyRoleSearch, hasPermission } from "../functions";
+import GuildModel from "../schemas/Guild";
 import { Command } from "../types";
-import { missingArgs, RtextEmbed, textEmbed } from "../utils/msgUtils";
+import { RtextEmbed, missingArgs, textEmbed } from "../utils/msgUtils";
 
 const command: Command = {
   name: "temprole",
@@ -24,9 +25,9 @@ const command: Command = {
       return message.reply({ embeds: [argsEmbed] });
     }
 
-    let user = await message.guild?.members
+    const user = await message.guild?.members
       .fetch({
-        user: message.mentions.members?.first() || args[1],
+        user: message.mentions.parsedUsers.first() || args[1],
         cache: true,
       })
       .catch(() => {});
@@ -56,6 +57,29 @@ const command: Command = {
         `${emoji.error} | The role you've specified was not found.`
       );
 
+    if (role.managed) {
+      return textEmbed(
+        message,
+        `${emoji.error} | ${role} is managed and therefore cannot be assigned or removed.`
+      );
+    }
+
+    const dbGuild = await GuildModel.findOne({
+      guildID: message.guild?.id,
+    }).catch(console.log);
+
+    if (role.id === dbGuild?.options.jailRole)
+      return textEmbed(
+        message,
+        `${emoji.warning} | i'd rather use the jail command for this...`
+      );
+
+    if (role.id === dbGuild?.options.muteRole)
+      return textEmbed(
+        message,
+        `${emoji.warning} | i'd rather use the mute command for this...`
+      );
+
     if (role instanceof Collection && role.size > 1) {
       return textEmbed(
         message,
@@ -74,7 +98,6 @@ const command: Command = {
         message,
         `${emoji.huh} | Minimum duration of 1 minute is not reached.`
       );
-
 
     if (ms(args[args.length - 1]) > ms("30d"))
       return textEmbed(

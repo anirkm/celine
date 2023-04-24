@@ -27,11 +27,10 @@ const command: Command = {
     if (!args[1] || !args[2]) {
       return message.reply({ embeds: [argsEmbed] });
     }
-    let st = Date.now();
 
     let user = await message.guild?.members
       .fetch({
-        user: message.mentions.members?.first() || args[1],
+        user: message.mentions.parsedUsers.first() || args[1],
         cache: true,
       })
       .catch(() => {});
@@ -100,6 +99,19 @@ const command: Command = {
           })}.`
         );
 
+        await client.redis
+          .set(
+            `vmutequeue_${message.guild?.id}_${user.id}`,
+            new Date().getTime() + duration
+          )
+          .then(() => {
+            if (user!.voice.channel)
+              user!.voice.setMute(
+                true,
+                `${message.member?.user.tag} - ${reason}`
+              );
+          });
+
         let notifEm = new EmbedBuilder()
           .setAuthor({
             name: message.guild!.name,
@@ -109,7 +121,9 @@ const command: Command = {
           })
           .setDescription(
             [
-              "**You have been text-muted from this guild.**\n",
+              "**You have been muted from this guild.**",
+              "**You can't send text messages in public channels.**",
+              "**Each time you will join a voice channel you will be muted unless someone unmute you.**\n",
               `__Reason__ :: ${reason}`,
               `__Duration__ :: ${ms(duration, {
                 roundUp: false,

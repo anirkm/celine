@@ -37,17 +37,6 @@ const event: BotEvent = {
         }
       }
     }
-
-    const tempRoleKeys = await client.redis.keys(
-      `tr_${member.guild.id}_${member.id}_*`
-    );
-    for (const tempRoleKey of tempRoleKeys) {
-      const tempRoleId = tempRoleKey.split("_")[3];
-      const tempRole = member.guild.roles.cache.get(tempRoleId);
-      if (tempRole) {
-        member.roles.add(tempRole).catch(console.error);
-      }
-    }
   },
 };
 

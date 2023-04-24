@@ -3,7 +3,7 @@ import emoji from "../data/emojies.json";
 import { genId, hasPermission } from "../functions";
 import WarnModel from "../schemas/Warn";
 import { Command } from "../types";
-import { missingArgs, RtextEmbed, textEmbed } from "../utils/msgUtils";
+import { RtextEmbed, missingArgs, textEmbed } from "../utils/msgUtils";
 
 const command: Command = {
   name: "warn",
@@ -106,7 +106,7 @@ const command: Command = {
 
     let user = await message.guild?.members
       .fetch({
-        user: message.mentions.members?.first() || args[1],
+        user: message.mentions.parsedUsers.first() || args[1],
         cache: true,
       })
       .catch(() => {});

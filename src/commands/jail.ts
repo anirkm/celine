@@ -55,12 +55,12 @@ const command: Command = {
           `${emoji.error} | You haven't specified any user.`
         );
       }
-      let user = await message.guild?.members
-        .fetch({
-          user: message.mentions.members?.first() || args[2],
-          cache: true,
-        })
-        .catch(() => {});
+    const user = await message.guild?.members
+      .fetch({
+        user: message.mentions.parsedUsers.first() || args[2],
+        cache: true,
+      })
+      .catch(() => {});
       if (!user)
         return textEmbed(
           message,
@@ -170,12 +170,12 @@ const command: Command = {
           `${emoji.error} | You haven't specified any user.`
         );
       }
-      let user = await message.guild?.members
-        .fetch({
-          user: message.mentions.members?.first() || args[2],
-          cache: true,
-        })
-        .catch(() => {});
+    const user = await message.guild?.members
+      .fetch({
+        user: message.mentions.parsedUsers.first() || args[2],
+        cache: true,
+      })
+      .catch(() => {});
       if (!user)
         return textEmbed(
           message,
@@ -409,7 +409,7 @@ const command: Command = {
 
     let user = await message.guild?.members
       .fetch({
-        user: message.mentions.members?.first() || args[1],
+        user: message.mentions.parsedUsers.first() || args[1],
         cache: true,
       })
       .catch(() => {});
