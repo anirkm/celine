@@ -8,8 +8,11 @@ import { hasPermission } from "../functions";
 const command: Command = {
   name: "activeinvites",
   execute: async (client, message, args) => {
-
-    if(!(await hasPermission(client, message.member!, "show_activeinvites")) && !message.member!.permissions.has(PermissionFlagsBits.Administrator)) return
+    if (
+      !(await hasPermission(client, message.member!, "show_activeinvites")) &&
+      !message.member!.permissions.has(PermissionFlagsBits.Administrator)
+    )
+      return;
 
     let argsEmbed = await missingArgs(
       message,
@@ -32,7 +35,7 @@ const command: Command = {
         let user =
           message.mentions.members?.first() ||
           (await client.users
-            .fetch(args[2] || message.author.id, {force: true})
+            .fetch(args[2] || message.author.id, { force: true })
             .catch(() => {}));
 
         let targetChan = message.guild?.channels.cache.get(args[3]);
@@ -170,7 +173,7 @@ const command: Command = {
     let msg = await textEmbed(
       message,
       `${emoji.loading} | Please wait while i'am fetching guild invites..`
-      );
+    );
 
     let totalInvites = 0;
     let totalUsersInvited = 0;
