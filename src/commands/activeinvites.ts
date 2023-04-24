@@ -69,7 +69,7 @@ const command: Command = {
                     `${
                       emoji.error
                     } | ** ${user} doesn't have any active invites ${
-                      targetChan ? `in ${targetChan}.` : `.`
+                      targetChan ? `in ${targetChan}.` : "."
                     } **`
                   ),
                 ],
@@ -199,7 +199,7 @@ const command: Command = {
             embeds: [
               await RtextEmbed(
                 `${emoji.error} | ** ${user} doesn't have any active invites ${
-                  targetChan ? `in ${targetChan}.` : `.`
+                  targetChan ? `in ${targetChan}.` : "."
                 } **`
               ),
             ],
@@ -221,11 +221,11 @@ const command: Command = {
               `${
                 emoji.invite
               } | **${user} has  ${totalInvites} active invites ${
-                targetChan ? `in ${targetChan},` : ``
+                targetChan ? `in ${targetChan},` : ""
               } and were used for a total ${totalUsersInvited} uses ${
                 maxInvite.length > 0
                   ? `with ${maxInvite} being the most used one with ${maxInviteCount} uses`
-                  : ``
+                  : ""
               }**`
             ),
           ],

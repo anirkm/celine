@@ -11,7 +11,7 @@ module.exports = (client: Client) => {
     );
   mongoose
     .connect(
-      `mongodb://127.0.0.1:27017/celineprod?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+1.8.0`
+      "mongodb://127.0.0.1:27017/celineprod?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+1.8.0"
     )
     .then((mongodb) => {
       client.mongo = mongodb;
