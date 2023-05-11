@@ -1,8 +1,5 @@
 import { PermissionFlagsBits } from "discord.js";
-import {
-  fuzzyRoleSearch,
-  hasPermission,
-} from "../functions";
+import { fuzzyRoleSearch, hasPermission } from "../functions";
 import emoji from "../data/emojies.json";
 import { Command } from "../types";
 import { missingArgs, textEmbed } from "../utils/msgUtils";

@@ -1,9 +1,6 @@
 import { Collection, EmbedBuilder, PermissionFlagsBits } from "discord.js";
 import ms from "enhanced-ms";
-import {
-  fuzzyRoleSearch,
-  hasPermission,
-} from "../functions";
+import { fuzzyRoleSearch, hasPermission } from "../functions";
 import emoji from "../data/emojies.json";
 import GuildModel from "../schemas/Guild";
 import { Command } from "../types";

@@ -33,7 +33,7 @@ const command: Command = {
         user: message.mentions.parsedUsers.first() || args[1],
         cache: true,
       })
-      .catch(() => {})
+      .catch(() => {});
 
     if (!user)
       return textEmbed(
