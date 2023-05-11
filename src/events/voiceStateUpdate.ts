@@ -30,11 +30,9 @@ const event: BotEvent = {
       const queueKey = `vmutequeue_${newState.guild.id}_${newState.id}`;
       const queueKeyExists = await client.redis.exists(queueKey);
       if (queueKeyExists && newState.channelId) {
-        newState
-          .setMute(true, "&vmute persist")
-          .catch((error) => {
-            console.error("Error in setting mute:", error);
-          });
+        newState.setMute(true, "&vmute persist").catch((error) => {
+          console.error("Error in setting mute:", error);
+        });
       }
     }
   },
