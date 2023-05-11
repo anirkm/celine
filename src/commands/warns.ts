@@ -7,11 +7,11 @@ import {
   PermissionFlagsBits,
 } from "discord.js";
 import { CollectorUtils } from "discord.js-collector-utils";
-import emoji from "../data/emojies.json";
 import { hasPermission, sendPagination } from "../functions";
+import emoji from "../data/emojies.json";
 import WarnModel from "../schemas/Warn";
 import { Command } from "../types";
-import { missingArgs, RtextEmbed, textEmbed } from "../utils/msgUtils";
+import { RtextEmbed, missingArgs, textEmbed } from "../utils/msgUtils";
 
 const command: Command = {
   name: "warnings",

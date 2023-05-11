@@ -1,6 +1,6 @@
 import { EmbedBuilder, PermissionFlagsBits } from "discord.js";
-import emoji from "../data/emojies.json";
 import { hasPermission, sendPagination } from "../functions";
+import emoji from "../data/emojies.json";
 import WarnModel from "../schemas/Warn";
 import { Command } from "../types";
 import { missingArgs, textEmbed } from "../utils/msgUtils";

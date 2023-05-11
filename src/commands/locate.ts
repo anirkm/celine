@@ -41,14 +41,18 @@ const command: Command = {
       .then((channel) => {
         textEmbed(
           message,
-          `${emoji.yay} | ${
+          `${emoji.eye} | ${
             user!.id === message.author.id ? "You're " : `${user} is`
-          } in ${channel} with ${
-            (channel as TextChannel | StageChannel).members.size - 1
-          } other members. ${
+          } in ${channel} ${
+            (channel as TextChannel | StageChannel).members.size <= 1
+              ? "alone."
+              : `with ${
+                  (channel as TextChannel | StageChannel).members.size - 1
+                } other members.`
+          } ${
             user!.id !== message.author.id &&
             message.author.id !== "490667823392096268"
-              ? "__#l7adi menghir rbi 9ewad__"
+              ? "(_**#l7adi menghir rbi 9ewad**_)"
               : ""
           } `
         );

@@ -7,9 +7,9 @@ import {
   StringSelectMenuBuilder,
 } from "discord.js";
 
+import { sendPagination } from "../functions";
 import emoji from "../data/emojies.json";
 import permissions from "../data/perms";
-import { sendPagination } from "../functions";
 import GuildModel from "../schemas/Guild";
 import PermissionHistoryModel from "../schemas/PermissionHistory";
 import { Command, IGuild } from "../types";

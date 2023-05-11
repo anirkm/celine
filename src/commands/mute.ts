@@ -1,7 +1,7 @@
 import { EmbedBuilder, PermissionFlagsBits } from "discord.js";
 import ms from "enhanced-ms";
-import emoji from "../data/emojies.json";
 import { hasPermission } from "../functions";
+import emoji from "../data/emojies.json";
 import GuildModel from "../schemas/Guild";
 import SanctionModel from "../schemas/Sanction";
 import { Command } from "../types";
@@ -33,7 +33,7 @@ const command: Command = {
         user: message.mentions.parsedUsers.first() || args[1],
         cache: true,
       })
-      .catch(() => {});
+      .catch(() => {})
 
     if (!user)
       return textEmbed(

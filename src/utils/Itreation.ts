@@ -57,13 +57,15 @@ module.exports = async (client: Client, redis: Redis) => {
             (user as GuildMember).roles
               .remove(muteRole, "Mute Expired")
               .then(async (user) => {
-                user.send({
-                  embeds: [
-                    await RtextEmbed(
-                      `${emoji.confetti} | Your text-mute has expired in ${user.guild.name}`
-                    ),
-                  ],
-                });
+                user
+                  .send({
+                    embeds: [
+                      await RtextEmbed(
+                        `${emoji.confetti} | Your text-mute has expired in ${user.guild.name}`
+                      ),
+                    ],
+                  })
+                  .catch(() => {});
                 console.log("mute expired");
                 redis.del(key).catch((e) => {
                   console.log("muteexpire error", e);
@@ -87,7 +89,15 @@ module.exports = async (client: Client, redis: Redis) => {
             client.redis
               .del(key)
               .then(async () => {
-                user!.send({ embeds: [await RtextEmbed(`${emoji.confetti} | Your voice-mute has expired in ${user!.guild.name}`)] });
+                user!.send({
+                  embeds: [
+                    await RtextEmbed(
+                      `${emoji.confetti} | Your voice-mute has expired in ${
+                        user!.guild.name
+                      }`
+                    ),
+                  ],
+                });
               })
               .catch(() => {});
             client.redis
@@ -109,7 +119,19 @@ module.exports = async (client: Client, redis: Redis) => {
             (user as GuildMember).roles
               .remove(jailRole, "Jail Expired")
               .then(async (user) => {
-                user!.send({ embeds: [await RtextEmbed(`${emoji.confetti} | Your jail sanction has expired in ${user!.guild.name}`)] });
+                user
+                  .send({
+                    embeds: [
+                      await RtextEmbed(
+                        `${
+                          emoji.confetti
+                        } | Your jail sanction has expired in ${
+                          user!.guild.name
+                        }`
+                      ),
+                    ],
+                  })
+                  .catch(() => {});
                 console.log("jail expired");
                 redis.del(key).catch((e) => {
                   console.log("redjail", e);

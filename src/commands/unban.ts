@@ -1,6 +1,6 @@
 import { PermissionFlagsBits } from "discord.js";
-import emojies from "../data/emojies.json";
 import { hasPermission } from "../functions";
+import emojies from "../data/emojies.json";
 import { Command } from "../types";
 import { missingArgs, textEmbed } from "../utils/msgUtils";
 

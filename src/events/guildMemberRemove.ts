@@ -12,7 +12,7 @@ const event: BotEvent = {
     client.redis
       .keys(`tr_${member.guild.id}_${member.id}_*`)
       .then((keys) => {
-        client.redis.del(keys);
+        if (keys.length > 0) client.redis.del(keys).catch(console.log);
       })
       .catch(console.log);
   },

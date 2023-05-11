@@ -1,6 +1,6 @@
 import { PermissionFlagsBits } from "discord.js";
-import emoji from "../data/emojies.json";
 import { genId, hasPermission } from "../functions";
+import emoji from "../data/emojies.json";
 import WarnModel from "../schemas/Warn";
 import { Command } from "../types";
 import { RtextEmbed, missingArgs, textEmbed } from "../utils/msgUtils";
@@ -59,7 +59,7 @@ const command: Command = {
         return msg.edit({
           embeds: [
             await RtextEmbed(
-              `${emoji.decline} | **No warn was found with the WarnID you've specified.**`
+              `${emoji.decline} | **No warn was found with the Warn ID you've specified.**`
             ),
           ],
         });

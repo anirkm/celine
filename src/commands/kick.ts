@@ -1,7 +1,6 @@
 import { EmbedBuilder, PermissionFlagsBits } from "discord.js";
-import ms from "enhanced-ms";
-import emoji from "../data/emojies.json";
 import { hasPermission } from "../functions";
+import emoji from "../data/emojies.json";
 import SanctionModel from "../schemas/Sanction";
 import { Command } from "../types";
 import { missingArgs, textEmbed } from "../utils/msgUtils";

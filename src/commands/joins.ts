@@ -1,9 +1,9 @@
 import { EmbedBuilder, PermissionFlagsBits } from "discord.js";
-import emoji from "../data/emojies.json";
 import { hasPermission, sendPagination } from "../functions";
+import emoji from "../data/emojies.json";
 import GuildJoinModel from "../schemas/GuildJoin";
 import { Command, IGuildJoin } from "../types";
-import { missingArgs, RtextEmbed, textEmbed } from "../utils/msgUtils";
+import { RtextEmbed, missingArgs, textEmbed } from "../utils/msgUtils";
 
 const command: Command = {
   name: "joins",

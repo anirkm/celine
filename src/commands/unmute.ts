@@ -6,8 +6,8 @@ import {
   PermissionFlagsBits,
 } from "discord.js";
 import { CollectorUtils } from "discord.js-collector-utils";
-import emoji from "../data/emojies.json";
 import { hasPermission } from "../functions";
+import emoji from "../data/emojies.json";
 import GuildModel from "../schemas/Guild";
 import { Command } from "../types";
 import { RtextEmbed, missingArgs, textEmbed } from "../utils/msgUtils";

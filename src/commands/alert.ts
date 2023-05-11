@@ -1,15 +1,17 @@
 import { EmbedBuilder, PermissionFlagsBits } from "discord.js";
 import emoji from "../data/emojies.json";
-import { genId } from "../functions";
+import { genId, hasPermission } from "../functions";
 import { Command } from "../types";
 import { missingArgs, textEmbed } from "../utils/msgUtils";
-import { hasPermission } from "../functions";
 
 const command: Command = {
   name: "alert",
   execute: async (client, message, args) => {
-
-    if(!(await hasPermission(client, message.member!, "use_alert")) && !message.member!.permissions.has(PermissionFlagsBits.Administrator)) return
+    if (
+      !(await hasPermission(client, message.member!, "use_alert")) &&
+      !message.member!.permissions.has(PermissionFlagsBits.Administrator)
+    )
+      return;
 
     let argsEmbed = await missingArgs(
       message,
@@ -51,7 +53,13 @@ const command: Command = {
           message.guild?.iconURL({ size: 4096 }) ||
           "https://cdn.discordapp.com/embed/avatars/5.png",
       })
-      .setDescription(`**ID**: \`${id}\`\n**From ${message.member?.permissions.has(PermissionFlagsBits.Administrator) ? "Admin" : "Staff"}**: ${reason}`)
+      .setDescription(
+        `**ID**: \`${id}\`\n**From ${
+          message.member?.permissions.has(PermissionFlagsBits.Administrator)
+            ? "Admin"
+            : "Staff"
+        }**: ${reason}`
+      )
       .setTimestamp();
 
     console.log(Array.from(message.attachments.values()));
@@ -88,7 +96,7 @@ const command: Command = {
       .catch(() => {
         return textEmbed(
           message,
-          `${emoji.error} | I couldn't DM ${user}, his DMs are probably closed.`
+          `${emoji.error} | Attempt to DM ${user} was unsuccessful _(his dm's are probably closed)_`
         );
       });
   },

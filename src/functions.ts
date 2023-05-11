@@ -189,7 +189,6 @@ export const hasPermission = async (
 ): Promise<boolean> => {
   const cacheKey = `permissions:member:${member.id}:${member.guild.id}`;
   const cached = await client.redisCache.get(cacheKey);
-  console.log();
   if (cached && JSON.parse(cached).includes(permission)) {
     return true;
   }

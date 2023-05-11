@@ -10,8 +10,8 @@ import {
 } from "discord.js";
 import { CollectorUtils } from "discord.js-collector-utils";
 import ms from "enhanced-ms";
-import emoji from "../data/emojies.json";
 import { hasPermission, sendPagination } from "../functions";
+import emoji from "../data/emojies.json";
 import { Command } from "../types";
 import { RtextEmbed, textEmbed } from "../utils/msgUtils";
 
