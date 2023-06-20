@@ -24,7 +24,7 @@ const command: Command = {
       !(await hasPermission(client, message.member!, "use_jail")) &&
       !message.member!.permissions.has(PermissionFlagsBits.Administrator)
     ) {
-      return
+      return;
     }
 
     let argsEmbed = await missingArgs(
@@ -55,12 +55,12 @@ const command: Command = {
           `${emoji.error} | You haven't specified any user.`
         );
       }
-    const user = await message.guild?.members
-      .fetch({
-        user: message.mentions.parsedUsers.first() || args[2],
-        cache: true,
-      })
-      .catch(() => {});
+      const user = await message.guild?.members
+        .fetch({
+          user: message.mentions.parsedUsers.first() || args[2],
+          cache: true,
+        })
+        .catch(() => {});
       if (!user)
         return textEmbed(
           message,
@@ -170,12 +170,12 @@ const command: Command = {
           `${emoji.error} | You haven't specified any user.`
         );
       }
-    const user = await message.guild?.members
-      .fetch({
-        user: message.mentions.parsedUsers.first() || args[2],
-        cache: true,
-      })
-      .catch(() => {});
+      const user = await message.guild?.members
+        .fetch({
+          user: message.mentions.parsedUsers.first() || args[2],
+          cache: true,
+        })
+        .catch(() => {});
       if (!user)
         return textEmbed(
           message,
@@ -542,8 +542,10 @@ const command: Command = {
     user.roles
       .add(jailRole, `${message.member?.user.tag} - ${reason}`)
       .then(async (user) => {
-        if(user.voice.channel) {
-          user.voice.disconnect(`Jailed by ${message.author.tag} - ${reason}`).catch(() => {});
+        if (user.voice.channel) {
+          user.voice
+            .disconnect(`Jailed by ${message.author.tag} - ${reason}`)
+            .catch(() => {});
         }
         if (
           userRoles &&
