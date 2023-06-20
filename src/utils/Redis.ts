@@ -67,7 +67,6 @@ module.exports = async (client: Client) => {
     client.persistanceRedis = persistanceRedis;
   });
 
-
   randomRedis.on("connect", async () => {
     console.log(
       color(

@@ -77,7 +77,6 @@ const command: Command = {
       );
     }
 
-
     if (userToBan && userToBan instanceof GuildMember) {
       if (
         userToBan.roles.highest.position >=
