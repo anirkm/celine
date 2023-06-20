@@ -1,6 +1,6 @@
 import { PermissionFlagsBits } from "discord.js";
-import { hasPermission } from "../functions";
 import emoji from "../data/emojies.json";
+import { hasPermission } from "../functions";
 import { Command } from "../types";
 import { missingArgs, textEmbed } from "../utils/msgUtils";
 
@@ -47,10 +47,18 @@ const command: Command = {
           message,
           `${emoji.muted} | ${user} voice mute has been successfully removed.`
         );
-        if (user?.voice.channel)
+        if (user?.voice.channel) {
           user.voice
-            .setMute(false, `${message.author.id} - ${reason}`)
+            .setMute(
+              false,
+              `${message.author.id} - User unmuted by ${message.member?.user.tag}`
+            )
             .catch(() => {});
+        } else {
+          client.redis
+            .set(`vmex_${message.guild?.id}_${user!.id}`, 0, "EX", 172800)
+            .catch(console.log);
+        }
       })
       .catch((e) => {
         console.log(e);

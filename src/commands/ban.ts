@@ -77,17 +77,6 @@ const command: Command = {
       );
     }
 
-    if (
-      userToBan &&
-      userToBan instanceof GuildMember &&
-      (await protectionCheck(message.guild!, userToBan)) &&
-      !message.member?.permissions.has(PermissionFlagsBits.Administrator)
-    ) {
-      return textEmbed(
-        message,
-        `${emoji.warning} | This command can only be executed on this user by an administrator.`
-      );
-    }
 
     if (userToBan && userToBan instanceof GuildMember) {
       if (

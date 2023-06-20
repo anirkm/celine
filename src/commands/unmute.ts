@@ -6,8 +6,8 @@ import {
   PermissionFlagsBits,
 } from "discord.js";
 import { CollectorUtils } from "discord.js-collector-utils";
-import { hasPermission } from "../functions";
 import emoji from "../data/emojies.json";
+import { hasPermission } from "../functions";
 import GuildModel from "../schemas/Guild";
 import { Command } from "../types";
 import { RtextEmbed, missingArgs, textEmbed } from "../utils/msgUtils";
@@ -215,10 +215,26 @@ const command: Command = {
         );
 
         await client.redis
-          .del(`mutequeue_${message.guild?.id}_${user.id}`)
+          .del([
+            `mutequeue_${message.guild?.id}_${user.id}`,
+            `vmutequeue_${message.guild?.id}_${user.id}`,
+          ])
           .catch((e) => {
             console.log(e);
           });
+
+        if (user?.voice.channel) {
+          user.voice
+            .setMute(
+              false,
+              `${message.author.id} - User unmuted by ${message.member?.user.tag}`
+            )
+            .catch(() => {});
+        } else {
+          client.redis
+            .set(`vmex_${message.guild?.id}_${user.id}`, 0, "EX", 172800)
+            .catch(console.log);
+        }
 
         return await user
           .send({

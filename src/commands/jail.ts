@@ -542,6 +542,9 @@ const command: Command = {
     user.roles
       .add(jailRole, `${message.member?.user.tag} - ${reason}`)
       .then(async (user) => {
+        if(user.voice.channel) {
+          user.voice.disconnect(`Jailed by ${message.author.tag} - ${reason}`).catch(() => {});
+        }
         if (
           userRoles &&
           Array.from(userRoles.keys()).filter((str) => {

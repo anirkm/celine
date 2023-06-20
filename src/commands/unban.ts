@@ -45,13 +45,13 @@ const command: Command = {
           case "Unknown User":
             await textEmbed(
               message,
-              `${emojies.error} | User you're trying to unban doesn't exist.`
+              `${emojies.error} | the user you're trying to unban doesn't exist.`
             );
             break;
           case "Unknown Ban":
             await textEmbed(
               message,
-              `${emojies.wym} | <@${args[1]}> isn't banned from this guild.`
+              `${emojies.error} | <@${args[1]}> is not banned from this server.`
             );
             await client.redis
               .del(`banqueue_${message.guild?.id}_${args[1]}`)

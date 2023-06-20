@@ -31,6 +31,14 @@ module.exports = async (client: Client) => {
     db: 7,
   });
 
+  const randomRedis = new Redis({
+    port: 6379, // Redis port
+    host: REDIS_HOST, // Redis host
+    password: REDIS_PW,
+    maxRetriesPerRequest: null,
+    db: 12,
+  });
+
   cacheRedis.on("connect", async () => {
     console.log(
       color(
@@ -57,6 +65,20 @@ module.exports = async (client: Client) => {
       )
     );
     client.persistanceRedis = persistanceRedis;
+  });
+
+
+  randomRedis.on("connect", async () => {
+    console.log(
+      color(
+        "text",
+        `🔴 Redis random connection has been ${color(
+          "variable",
+          "established."
+        )}`
+      )
+    );
+    client.randomRedis = randomRedis;
   });
 
   redis.on("connect", async () => {

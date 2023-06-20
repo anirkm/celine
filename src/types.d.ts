@@ -132,6 +132,7 @@ declare module "discord.js" {
     redis: Redis;
     redisCache: Redis;
     persistanceRedis: Redis;
+    randomRedis: Redis;
     mongo: Mongoose;
     queues: ClientQueues;
   }
