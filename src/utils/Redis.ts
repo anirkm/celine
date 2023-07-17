@@ -4,8 +4,8 @@ import { color } from "../functions";
 import cachePermissions from "./cachePermissions";
 
 module.exports = async (client: Client) => {
-  const REDIS_HOST = process.env.REDIS_HOST;
-  const REDIS_PW = process.env.REDIS_PW;
+  const REDIS_HOST = "127.0.0.1";
+  const REDIS_PW = "";
 
   const redis = new Redis({
     port: 6379, // Redis port
