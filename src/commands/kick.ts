@@ -18,7 +18,7 @@ const command: Command = {
       message,
       "kick",
       `${message.member} (reason)`,
-      [`${message.member}`, `${message.member} huh`]
+      [`${message.member}`, `${message.member} huh`],
     );
 
     if (!args[1] || !args[2]) {
@@ -38,13 +38,13 @@ const command: Command = {
     if (!user)
       return textEmbed(
         message,
-        `${emoji.error} | The user you specified was not found.`
+        `${emoji.error} | The user you specified was not found.`,
       );
 
     if (user.roles.highest.position >= message.member!.roles.highest.position)
       return textEmbed(
         message,
-        `${emoji.error} | You can't kick someone with higher or equal hierarchy than you.`
+        `${emoji.error} | You can't kick someone with higher or equal hierarchy than you.`,
       );
 
     user
@@ -52,7 +52,7 @@ const command: Command = {
       .then(async (user) => {
         textEmbed(
           message,
-          `${emoji.muted} | ${user} has been kicked from the server.`
+          `${emoji.muted} | ${user} has been kicked from the server.`,
         );
 
         let notifEm = new EmbedBuilder()
@@ -66,7 +66,7 @@ const command: Command = {
             [
               "**You have been kicked from this guild.**\n",
               `__Reason__ :: ${reason}`,
-            ].join("\n")
+            ].join("\n"),
           )
           .setTimestamp()
           .setFooter({
@@ -108,19 +108,19 @@ const command: Command = {
           case "Missing Permissions":
             textEmbed(
               message,
-              `${emoji.error} | Due to missing permissions i can't execute this command on ${user}.`
+              `${emoji.error} | Due to missing permissions i can't execute this command on ${user}.`,
             );
             break;
           case "Invalid Form Body":
             textEmbed(
               message,
-              `${emoji.error} | You've malformed the command, try again.`
+              `${emoji.error} | You've malformed the command, try again.`,
             );
             break;
           default:
             textEmbed(
               message,
-              `${emoji.error} | An error occurred while trying to execute this command, try again.. (DiscordAPI: ${e.message})`
+              `${emoji.error} | An error occurred while trying to execute this command, try again.. (DiscordAPI: ${e.message})`,
             );
             console.log(e);
             break;

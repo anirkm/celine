@@ -17,7 +17,7 @@ const command: Command = {
       message,
       "alert",
       `${message.member} (message)`,
-      [`${message.member} uwu`]
+      [`${message.member} uwu`],
     );
 
     if (!args[1] || !args[2]) {
@@ -36,13 +36,13 @@ const command: Command = {
     if (!user)
       return textEmbed(
         message,
-        `${emoji.error} | The user you've specified was not found.`
+        `${emoji.error} | The user you've specified was not found.`,
       );
 
     if (message.attachments.size > 3) {
       return textEmbed(
         message,
-        `${emoji.error} | The maximum allowed attachements limit is 3.`
+        `${emoji.error} | The maximum allowed attachements limit is 3.`,
       );
     }
     let id = genId(6);
@@ -58,7 +58,7 @@ const command: Command = {
           message.member?.permissions.has(PermissionFlagsBits.Administrator)
             ? "Admin"
             : "Staff"
-        }**: ${reason}`
+        }**: ${reason}`,
       )
       .setTimestamp();
 
@@ -77,26 +77,26 @@ const command: Command = {
             .then(() => {
               return textEmbed(
                 message,
-                `${emoji.approve} | ${user} has been successfully alerted.`
+                `${emoji.approve} | ${user} has been successfully alerted.`,
               );
             })
             .catch(() => {
               return textEmbed(
                 message,
-                `${emoji.approve} | ${user} has been successfully alerted. but i couldn't send the attachements`
+                `${emoji.approve} | ${user} has been successfully alerted. but i couldn't send the attachements`,
               );
             });
         } else {
           return textEmbed(
             message,
-            `${emoji.approve} | ${user} has been successfully alerted.`
+            `${emoji.approve} | ${user} has been successfully alerted.`,
           );
         }
       })
       .catch(() => {
         return textEmbed(
           message,
-          `${emoji.error} | Attempt to DM ${user} was unsuccessful _(his dm's are probably closed)_`
+          `${emoji.error} | Attempt to DM ${user} was unsuccessful _(his dm's are probably closed)_`,
         );
       });
   },

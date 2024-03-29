@@ -45,9 +45,9 @@ module.exports = async (client: Client) => {
         "text",
         `🔴 Redis cache connection has been ${color(
           "variable",
-          "established."
-        )}`
-      )
+          "established.",
+        )}`,
+      ),
     );
     client.redisCache = cacheRedis;
 
@@ -60,13 +60,12 @@ module.exports = async (client: Client) => {
         "text",
         `🔴 Redis persisitance connection has been ${color(
           "variable",
-          "established."
-        )}`
-      )
+          "established.",
+        )}`,
+      ),
     );
     client.persistanceRedis = persistanceRedis;
   });
-
 
   randomRedis.on("connect", async () => {
     console.log(
@@ -74,9 +73,9 @@ module.exports = async (client: Client) => {
         "text",
         `🔴 Redis random connection has been ${color(
           "variable",
-          "established."
-        )}`
-      )
+          "established.",
+        )}`,
+      ),
     );
     client.randomRedis = randomRedis;
   });
@@ -86,8 +85,8 @@ module.exports = async (client: Client) => {
     console.log(
       color(
         "text",
-        `🔴 Redis connection has been ${color("variable", "established.")}`
-      )
+        `🔴 Redis connection has been ${color("variable", "established.")}`,
+      ),
     );
     client.redis = redis;
 

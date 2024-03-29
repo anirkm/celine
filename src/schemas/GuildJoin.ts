@@ -12,7 +12,7 @@ const GuildJoinSchema = new Schema<IGuildJoin>(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 const GuildJoinModel = model("guildJoin", GuildJoinSchema);

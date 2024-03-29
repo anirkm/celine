@@ -17,7 +17,7 @@ const command: Command = {
       message,
       "unban",
       `${message.member} (reason)`,
-      [`${message.member}`, `${message.member} reason`]
+      [`${message.member}`, `${message.member} reason`],
     );
 
     if (!args[1]) {
@@ -33,7 +33,7 @@ const command: Command = {
           message,
           `${emojies.confetti} ${
             user ? user : `<@${args[1]}>`
-          } has been unbanned.`
+          } has been unbanned.`,
         );
         await client.redis
           .del(`banqueue_${message.guild?.id}_${user ? user.id : args[1]}`)
@@ -45,13 +45,13 @@ const command: Command = {
           case "Unknown User":
             await textEmbed(
               message,
-              `${emojies.error} | the user you're trying to unban doesn't exist.`
+              `${emojies.error} | the user you're trying to unban doesn't exist.`,
             );
             break;
           case "Unknown Ban":
             await textEmbed(
               message,
-              `${emojies.error} | <@${args[1]}> is not banned from this server.`
+              `${emojies.error} | <@${args[1]}> is not banned from this server.`,
             );
             await client.redis
               .del(`banqueue_${message.guild?.id}_${args[1]}`)
@@ -61,13 +61,13 @@ const command: Command = {
           case "Invalid Form Body":
             await textEmbed(
               message,
-              `${emojies.error} | You've malformed the command, try again.`
+              `${emojies.error} | You've malformed the command, try again.`,
             );
             break;
           default:
             await textEmbed(
               message,
-              `${emojies.error} An error occured while executing this command.`
+              `${emojies.error} An error occured while executing this command.`,
             );
             console.log(e);
             break;

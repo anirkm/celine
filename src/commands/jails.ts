@@ -25,14 +25,14 @@ const command: Command = {
 
     let msg = await textEmbed(
       message,
-      `${emoji.loading} | Fetching active jails..`
+      `${emoji.loading} | Fetching active jails..`,
     );
 
     do {
       const [nextCursor, keys] = await client.redis.scan(
         cursor,
         "MATCH",
-        `jailqueue_${message.guild?.id}_${user?.id || "*"}`
+        `jailqueue_${message.guild?.id}_${user?.id || "*"}`,
       );
       cursor = nextCursor;
       for await (const key of keys) {
@@ -45,7 +45,7 @@ const command: Command = {
         let roles = await client.redis.lrange(
           `jr_${message.guild?.id}_${jailedUser?.id}`,
           0,
-          -1
+          -1,
         );
 
         console.log(roles);
@@ -102,14 +102,14 @@ const command: Command = {
                 jails[i + k].member.id
               })`,
               `**Expires in:** ${ms(
-                Number(jails[i + k].expireTime) - new Date().getTime()
+                Number(jails[i + k].expireTime) - new Date().getTime(),
               )}`,
               jails[i + k].roles.length > 0
                 ? `**Saved roles:** ${jails[i + k].roles.length}\n`
                 : "\n",
             ]
               .filter((v) => v != "")
-              .join("\n")
+              .join("\n"),
           );
         }
 

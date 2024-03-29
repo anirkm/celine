@@ -31,7 +31,7 @@ const command: Command = {
         `${message.member} ${client.user}`,
         `clear ${message.member}`,
         `clear ${message.member} ${client.user}`,
-      ]
+      ],
     );
 
     if (!args[1]) {
@@ -54,13 +54,13 @@ const command: Command = {
       if (!user)
         return textEmbed(
           message,
-          `${emoji.error} | The user you've specified was not found. (provide UserID's only!)`
+          `${emoji.error} | The user you've specified was not found. (provide UserID's only!)`,
         );
 
       let userWarns = await WarnModel.find(
         mod
           ? { guildID: message.guild?.id, userID: user.id, modID: mod.id }
-          : { guildID: message.guild?.id, userID: user.id }
+          : { guildID: message.guild?.id, userID: user.id },
       ).catch((e) => {
         return console.log(e);
       });
@@ -68,7 +68,7 @@ const command: Command = {
       if (!userWarns || userWarns.length <= 0)
         return textEmbed(
           message,
-          `${emoji.error} | No warnings were found with your query.`
+          `${emoji.error} | No warnings were found with your query.`,
         );
 
       let collectorPrompt = await message.reply({
@@ -80,7 +80,7 @@ const command: Command = {
               mod ? `from ${mod}` : ""
             } **_(${
               userWarns.length
-            } warnings)_**. This action is irreversible!`
+            } warnings)_**. This action is irreversible!`,
           ),
         ],
         components: [
@@ -126,13 +126,13 @@ const command: Command = {
             collectorPrompt.edit({
               embeds: [
                 await RtextEmbed(
-                  `${emoji.decline} | Time out! Try being more decisive next time.`
+                  `${emoji.decline} | Time out! Try being more decisive next time.`,
                 ),
               ],
               components: [],
             });
           },
-        }
+        },
       );
 
       if (collectorResult) {
@@ -141,7 +141,7 @@ const command: Command = {
             await collectorPrompt.edit({
               embeds: [
                 await RtextEmbed(
-                  `${emoji.loading} | Please wait while we delete ${user} warnings`
+                  `${emoji.loading} | Please wait while we delete ${user} warnings`,
                 ),
               ],
               components: [],
@@ -150,13 +150,13 @@ const command: Command = {
             WarnModel.deleteMany(
               mod
                 ? { guildID: message.guild?.id, userID: user.id, modID: mod.id }
-                : { guildID: message.guild?.id, userID: user.id }
+                : { guildID: message.guild?.id, userID: user.id },
             )
               .then(async (result) => {
                 await collectorResult!.intr.update({
                   embeds: [
                     await RtextEmbed(
-                      `${emoji.approve} |** A total of ${result.deletedCount} warning(s) have been deleted from ${user} warnings. **`
+                      `${emoji.approve} |** A total of ${result.deletedCount} warning(s) have been deleted from ${user} warnings. **`,
                     ),
                   ],
                   components: [],
@@ -166,7 +166,7 @@ const command: Command = {
                 await collectorResult!.intr.update({
                   embeds: [
                     await RtextEmbed(
-                      `${emoji.error} | An unexpected error occured. please try again`
+                      `${emoji.error} | An unexpected error occured. please try again`,
                     ),
                   ],
                   components: [],
@@ -214,13 +214,13 @@ const command: Command = {
     if (!user)
       return textEmbed(
         message,
-        `${emoji.error} | The user you've specified was not found. (provide UserID's only!)`
+        `${emoji.error} | The user you've specified was not found. (provide UserID's only!)`,
       );
 
     let userWarns = await WarnModel.find(
       mod
         ? { guildID: message.guild?.id, userID: user.id, modID: mod.id }
-        : { guildID: message.guild?.id, userID: user.id }
+        : { guildID: message.guild?.id, userID: user.id },
     ).catch((e) => {
       return console.log(e);
     });
@@ -228,7 +228,7 @@ const command: Command = {
     if (!userWarns || userWarns.length <= 0)
       return textEmbed(
         message,
-        `${emoji.error} | No warnings were found with your query.`
+        `${emoji.error} | No warnings were found with your query.`,
       );
 
     let dataPerPage = 3;
@@ -255,7 +255,7 @@ const command: Command = {
           userWarns[i] ? `↳ **Reason** :: ${userWarns[i].reason}` : "",
           userWarns[i]
             ? `↳ ** Date** :: ${new Date(
-                userWarns[i].startAt
+                userWarns[i].startAt,
               ).toLocaleDateString("fr-FR")}\n`
             : "",
           userWarns[i + 1] ? `↱ **Warn ID :: ${userWarns[i + 1].warnID}**` : "",
@@ -265,7 +265,7 @@ const command: Command = {
           userWarns[i + 1] ? `↳ **Reason** :: ${userWarns[i + 1].reason}` : "",
           userWarns[i + 1]
             ? `↳ ** Date** :: ${new Date(
-                userWarns[i + 1].startAt
+                userWarns[i + 1].startAt,
               ).toLocaleDateString("fr-FR")}\n`
             : "",
           userWarns[i + 2] ? `↱ **Warn ID :: ${userWarns[i + 2].warnID}**` : "",
@@ -275,7 +275,7 @@ const command: Command = {
           userWarns[i + 2] ? `↳ **Reason** :: ${userWarns[i + 2].reason}` : "",
           userWarns[i + 2]
             ? `↳ ** Date** :: ${new Date(
-                userWarns[i + 2].startAt
+                userWarns[i + 2].startAt,
               ).toLocaleDateString("fr-FR")}\n`
             : "",
         ]

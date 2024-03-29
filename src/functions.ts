@@ -36,7 +36,7 @@ export const color = (color: colorType, message: any) => {
 
 export const checkPermissions = (
   member: GuildMember,
-  permissions: Array<PermissionResolvable>
+  permissions: Array<PermissionResolvable>,
 ) => {
   let neededPermissions: PermissionResolvable[] = [];
   permissions.forEach((permission) => {
@@ -56,21 +56,21 @@ export const checkPermissions = (
 export const sendTimedMessage = (
   message: string,
   channel: TextChannel,
-  duration: number
+  duration: number,
 ) => {
   channel
     .send(message)
     .then((m) =>
       setTimeout(
         async () => (await channel.messages.fetch(m)).delete(),
-        duration
-      )
+        duration,
+      ),
     );
   return;
 };
 
 export const fuzzyRoleSearch = (guild: Guild, string: string) => {
-  console.log(string)
+  console.log(string);
   let rolesArr = guild.roles.cache.map((r) => {
     return { name: decancer(r.name).toString(), id: r.id };
   });
@@ -81,14 +81,14 @@ export const fuzzyRoleSearch = (guild: Guild, string: string) => {
     threshold: 0.76,
   });
 
-  if(s.length === 0) return [{id: "1"}]
-  return s
+  if (s.length === 0) return [{ id: "1" }];
+  return s;
 };
 export const getGuildRole = async (guild: Guild, role: string) => {
   let fetchedRole =
     (await guild.roles.fetch(role, { force: true })) ||
     guild.roles.cache.filter(
-      (r) => r.name.toLocaleLowerCase() === role.toLocaleLowerCase()
+      (r) => r.name.toLocaleLowerCase() === role.toLocaleLowerCase(),
     );
 
   if (
@@ -121,7 +121,7 @@ export const genId = (length: number): string => {
 export const setGuildOption = async (
   guild: Guild,
   option: GuildOption,
-  value: any
+  value: any,
 ) => {
   if (mongoose.connection.readyState === 0)
     throw new Error("Database not connected.");
@@ -133,7 +133,7 @@ export const setGuildOption = async (
 
 export const protectionCheck = async (
   guild: Guild,
-  user: GuildMember
+  user: GuildMember,
 ): Promise<boolean> => {
   let guildData = await GuildModel.findOne({ guildID: guild.id });
   if (!guildData || !guildData.protected || guildData.protected.length <= 0)
@@ -185,7 +185,7 @@ export const sendPagination = async (message: any, embeds: EmbedBuilder[]) => {
 export const hasPermission = async (
   client: Client,
   member: GuildMember,
-  permission: string
+  permission: string,
 ): Promise<boolean> => {
   const cacheKey = `permissions:member:${member.id}:${member.guild.id}`;
   const cached = await client.redisCache.get(cacheKey);
@@ -204,7 +204,7 @@ export const hasPermission = async (
     .flat();
 
   const userPermissions = guild.userPermissions.find(
-    (p) => p.userId === member.id
+    (p) => p.userId === member.id,
   );
 
   if (!userPermissions && !roles) {
@@ -216,7 +216,7 @@ export const hasPermission = async (
   if ([...(userPermissions?.permissions || [])].includes(permission)) {
     client.redisCache.set(
       cacheKey,
-      JSON.stringify(userPermissions!.permissions)
+      JSON.stringify(userPermissions!.permissions),
     );
   }
 

@@ -36,7 +36,7 @@ const cachePermissions = async (client: Client, redis: Redis) => {
       {
         removeOnComplete: true,
         removeOnFail: true,
-      }
+      },
     );
 
     for (const user of guild.userPermissions) {
@@ -51,7 +51,7 @@ const cachePermissions = async (client: Client, redis: Redis) => {
         {
           removeOnComplete: true,
           removeOnFail: true,
-        }
+        },
       );
     }
   }
@@ -61,12 +61,12 @@ const cachePermissions = async (client: Client, redis: Redis) => {
     async (job: Job) => {
       redis.set(
         `permroles:${job.data.guildId}`,
-        JSON.stringify(job.data.roles)
+        JSON.stringify(job.data.roles),
       );
     },
     {
       connection: bullMqRedis,
-    }
+    },
   );
 
   const userPermissionsWorker = new Worker(
@@ -74,13 +74,13 @@ const cachePermissions = async (client: Client, redis: Redis) => {
     async (job: Job) => {
       if (job.data.permissions.length === 0) {
         return redis.del(
-          `permissions:member:${job.data.userId}:${job.data.guildId}`
+          `permissions:member:${job.data.userId}:${job.data.guildId}`,
         );
       }
       redis
         .set(
           `permissions:member:${job.data.userId}:${job.data.guildId}`,
-          JSON.stringify(job.data.permissions)
+          JSON.stringify(job.data.permissions),
         )
         .then(() => {
           return "success";
@@ -91,7 +91,7 @@ const cachePermissions = async (client: Client, redis: Redis) => {
     },
     {
       connection: bullMqRedis,
-    }
+    },
   );
 
   const rolePermissionsWorker = new Worker(
@@ -100,7 +100,7 @@ const cachePermissions = async (client: Client, redis: Redis) => {
       redis
         .set(
           `permissions:role:${job.data.roleId}:${job.data.guildId}`,
-          JSON.stringify(job.data.permissions)
+          JSON.stringify(job.data.permissions),
         )
         .then(() => {
           return "success";
@@ -111,7 +111,7 @@ const cachePermissions = async (client: Client, redis: Redis) => {
     },
     {
       connection: bullMqRedis,
-    }
+    },
   );
 
   rolePermissionsWorker.on("error", (e) => {

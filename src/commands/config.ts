@@ -6,7 +6,6 @@ import { Command } from "../types";
 const command: Command = {
   name: "config",
   execute: async (client, message, args) => {
-    
     if (
       !["428692060619407370", "490667823392096268"].includes(message.member!.id)
     )
@@ -24,7 +23,7 @@ const command: Command = {
           async (err: any, doc: any) => {
             if (err) {
               message.reply(
-                ":flushed: - **an error occurred while trying to execute this command, try again.**"
+                ":flushed: - **an error occurred while trying to execute this command, try again.**",
               );
               return console.log(err);
             }
@@ -44,19 +43,19 @@ const command: Command = {
                 })
                 .catch((e) => {
                   message.reply(
-                    ":flushed: - **an error occurred while trying to execute this command, try again.**"
+                    ":flushed: - **an error occurred while trying to execute this command, try again.**",
                   );
                   console.log(e);
                 });
             }
-          }
+          },
         );
         break;
       case "mutedrole":
         let currMutedRole: Role;
         if (!args[2])
           return message.reply(
-            ":rage: - **&config mutedrole [role | roldId | roleName]**"
+            ":rage: - **&config mutedrole [role | roldId | roleName]**",
           );
 
         let mutedRole =
@@ -68,7 +67,7 @@ const command: Command = {
 
         if (mutedRole instanceof Collection && mutedRole.size > 1) {
           return message.reply(
-            ":grimacing: - **too many roles with this name choose a Role using it's ID**"
+            ":grimacing: - **too many roles with this name choose a Role using it's ID**",
           );
         }
 
@@ -84,7 +83,7 @@ const command: Command = {
                   mutedRole instanceof Collection
                     ? `${mutedRole.values().next().value}.**`
                     : `${mutedRole}.**`
-                }`
+                }`,
               );
             }
           })
@@ -96,7 +95,7 @@ const command: Command = {
         let currJailRole: Role;
         if (!args[2])
           return message.reply(
-            ":rage: - **&config jailrole [role | roldId | roleName]**"
+            ":rage: - **&config jailrole [role | roldId | roleName]**",
           );
 
         let jailRole =
@@ -108,7 +107,7 @@ const command: Command = {
 
         if (jailRole instanceof Collection && jailRole.size > 1) {
           return message.reply(
-            ":grimacing: - **too many roles with this name choose a Role using it's ID**"
+            ":grimacing: - **too many roles with this name choose a Role using it's ID**",
           );
         }
 
@@ -126,7 +125,7 @@ const command: Command = {
                   jailRole instanceof Collection
                     ? `${jailRole.values().next().value}.**`
                     : `${jailRole}.**`
-                }`
+                }`,
               );
             }
           })

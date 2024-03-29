@@ -19,7 +19,7 @@ const command: Command = {
       message,
       "history",
       ` ${message.member} ${client.user}`,
-      [` ${message.member}`, `${message.member} ${client.user}`]
+      [` ${message.member}`, `${message.member} ${client.user}`],
     );
 
     if (!args[1] && !message.author.id) {
@@ -41,13 +41,13 @@ const command: Command = {
     if (!user)
       return textEmbed(
         message,
-        `${emoji.error} | The user  you've specified was not found.`
+        `${emoji.error} | The user  you've specified was not found.`,
       );
 
     let userSanctions = await SanctionModel.find(
       mod
         ? { guildID: message.guild?.id, userID: user.id, modID: mod.id }
-        : { guildID: message.guild?.id, userID: user.id }
+        : { guildID: message.guild?.id, userID: user.id },
     ).catch((e) => {
       return console.log(e);
     });
@@ -55,7 +55,7 @@ const command: Command = {
     if (!userSanctions || userSanctions.length <= 0)
       return textEmbed(
         message,
-        `${emoji.error} | No sactions were found with your query.`
+        `${emoji.error} | No sactions were found with your query.`,
       );
 
     let dataPerPage = 3;
@@ -95,13 +95,13 @@ const command: Command = {
             : "",
           userSanctions[i] && userSanctions[i].duration
             ? `↳ **Duration** :: ${ms(
-                ms(userSanctions[i].duration!, { roundUp: true })
+                ms(userSanctions[i].duration!, { roundUp: true }),
               )}`
             : "",
           userSanctions[i] ? `↳ **Reason** :: ${userSanctions[i].reason}` : "",
           userSanctions[i]
             ? `↳ ** Date** :: ${new Date(
-                userSanctions[i].startAt
+                userSanctions[i].startAt,
               ).toLocaleDateString("fr-FR")}\n`
             : "",
           userSanctions[i + 1]
@@ -114,7 +114,7 @@ const command: Command = {
             ? `↳ **Duration** :: ${ms(
                 ms(userSanctions[i + 1].duration!, {
                   roundUp: true,
-                })
+                }),
               )}`
             : "",
           userSanctions[i + 1]
@@ -122,7 +122,7 @@ const command: Command = {
             : "",
           userSanctions[i + 1]
             ? `↳ ** Date** :: ${new Date(
-                userSanctions[i + 1].startAt
+                userSanctions[i + 1].startAt,
               ).toLocaleDateString("fr-FR")}\n`
             : "",
           userSanctions[i + 2]
@@ -135,7 +135,7 @@ const command: Command = {
             ? `↳ **Duration** :: ${ms(
                 ms(userSanctions[i + 2].duration!, {
                   roundUp: true,
-                })
+                }),
               )}`
             : "",
           userSanctions[i + 2]
@@ -143,7 +143,7 @@ const command: Command = {
             : "",
           userSanctions[i + 2]
             ? `↳ ** Date** :: ${new Date(
-                userSanctions[i + 2].startAt
+                userSanctions[i + 2].startAt,
               ).toLocaleDateString("fr-FR")}\n`
             : "",
         ]

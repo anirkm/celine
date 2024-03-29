@@ -7,7 +7,7 @@ const event: BotEvent = {
   execute: async (
     client: Client,
     oldMember: GuildMember,
-    newMember: GuildMember
+    newMember: GuildMember,
   ) => {
     const guild = await GuildModel.findOne({
       guildID: newMember.guild.id,
@@ -16,8 +16,8 @@ const event: BotEvent = {
 
     const roleRemovals = new Map(
       [...oldMember.roles.cache].filter(
-        ([role]) => !newMember.roles.cache.has(role)
-      )
+        ([role]) => !newMember.roles.cache.has(role),
+      ),
     );
 
     const roleAdditions = new Map(
@@ -26,7 +26,7 @@ const event: BotEvent = {
           return false;
         }
         return !oldMember.roles.cache.has(roleId);
-      })
+      }),
     );
 
     if (roleAdditions.size !== 0) {
@@ -34,8 +34,8 @@ const event: BotEvent = {
         newMember.roles
           .remove(
             Array.from(roleAdditions.keys()).filter(
-              (roleId) => roleId !== guild.options.jailRole
-            )
+              (roleId) => roleId !== guild.options.jailRole,
+            ),
           )
           .catch(console.log);
       }
@@ -43,10 +43,10 @@ const event: BotEvent = {
 
     if (roleRemovals.size !== 0) {
       const redisKeys = {
-        [guild.options
-          .muteRole]: `mutequeue_${newMember.guild.id}_${newMember.id}`,
-        [guild.options
-          .jailRole]: `jailqueue_${newMember.guild.id}_${newMember.id}`,
+        [guild.options.muteRole]:
+          `mutequeue_${newMember.guild.id}_${newMember.id}`,
+        [guild.options.jailRole]:
+          `jailqueue_${newMember.guild.id}_${newMember.id}`,
       };
 
       for (const roleId of roleRemovals.keys()) {

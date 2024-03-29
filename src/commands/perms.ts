@@ -41,14 +41,14 @@ const command: Command = {
         .fetch(
           ["edit", "history"].includes(args[1].toLowerCase())
             ? message.mentions.parsedUsers.first() || args[2]
-            : message.mentions.parsedUsers.first() || args[1]
+            : message.mentions.parsedUsers.first() || args[1],
         )
         .catch(() => {})) ||
       (await message.guild?.roles
         .fetch(
           ["edit", "history"].includes(args[1].toLowerCase())
             ? args[2]
-            : args[1]
+            : args[1],
         )
         .catch(() => {}));
 
@@ -61,7 +61,7 @@ const command: Command = {
     if (args[1] === "history") {
       let msg = await textEmbed(
         message,
-        `${emoji.loading} | Fetching permissions history for ${target}...`
+        `${emoji.loading} | Fetching permissions history for ${target}...`,
       );
 
       let permissionHistory = await PermissionHistoryModel.find({
@@ -74,7 +74,7 @@ const command: Command = {
         return msg.edit({
           embeds: [
             await RtextEmbed(
-              `${emoji.error} | No permission history found for ${target}`
+              `${emoji.error} | No permission history found for ${target}`,
             ),
           ],
         });
@@ -113,7 +113,7 @@ const command: Command = {
               [
                 `**Made by** ::: <@${permissionHistory[i + k].changedBy}>`,
                 `**Changed at** ::: ${new Date(
-                  permissionHistory[i + k].createdAt
+                  permissionHistory[i + k].createdAt,
                 ).toLocaleString()}\n`,
                 `${emoji.enter} **New Permissions** ::`,
                 permissionHistory[i + k].currentPermissions.length > 0
@@ -129,7 +129,7 @@ const command: Command = {
                   : "◟None\n",
               ]
                 .filter((v) => v != "")
-                .join("\n")
+                .join("\n"),
             );
           }
 
@@ -153,14 +153,14 @@ const command: Command = {
       console.log(target.id);
 
       let isTimeout = client.timeouts.get(
-        `menuperm_${message.guild?.id}_${target.id}`
+        `menuperm_${message.guild?.id}_${target.id}`,
       );
 
       if (isTimeout) {
         return message.reply({
           embeds: [
             await RtextEmbed(
-              `${emoji.error} | an active menu for ${target} is already open by <@${isTimeout[0].messageMember}>, please wait for it to expire before creating a new one.`
+              `${emoji.error} | an active menu for ${target} is already open by <@${isTimeout[0].messageMember}>, please wait for it to expire before creating a new one.`,
             ),
           ],
         });
@@ -195,12 +195,12 @@ const command: Command = {
       const row = new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
         new StringSelectMenuBuilder()
           .setCustomId(
-            `menuperm_${message.guild?.id}_${message.member?.id}_${target.id}_${type}`
+            `menuperm_${message.guild?.id}_${message.member?.id}_${target.id}_${type}`,
           )
           .setPlaceholder("Edit permissions here")
           .setMinValues(0)
           .setMaxValues(permissions.length)
-          .addOptions(...permissionsArr)
+          .addOptions(...permissionsArr),
       );
 
       let permMenuEmbed = new EmbedBuilder()
@@ -225,7 +225,7 @@ const command: Command = {
             "◟With the menu bellow you can add or remove permissions.",
           ]
             .filter((v) => v != "")
-            .join("\n")
+            .join("\n"),
         );
 
       return await message
@@ -233,12 +233,12 @@ const command: Command = {
         .then((msg) => {
           let timeout = setTimeout(async () => {
             client.timeouts.delete(
-              `menuperm_${message.guild?.id}_${target?.id}`
+              `menuperm_${message.guild?.id}_${target?.id}`,
             );
             await msg.edit({
               embeds: [
                 await RtextEmbed(
-                  `${emoji.cantsee} | This menu has expired due to inactivity, create a new one if nedded`
+                  `${emoji.cantsee} | This menu has expired due to inactivity, create a new one if nedded`,
                 ),
               ],
               components: [],
@@ -257,7 +257,7 @@ const command: Command = {
 
     let msg = await textEmbed(
       message,
-      `${emoji.loading} | Wait while fetching ${target} permissions`
+      `${emoji.loading} | Wait while fetching ${target} permissions`,
     );
 
     const filter = { guildID: message.guild?.id };
@@ -274,7 +274,7 @@ const command: Command = {
           return msg.edit({
             embeds: [
               await RtextEmbed(
-                `${emoji.error} | this guild is not registered in the database, please contact an admin or sum`
+                `${emoji.error} | this guild is not registered in the database, please contact an admin or sum`,
               ),
             ],
           });
@@ -282,14 +282,14 @@ const command: Command = {
         let permissions: Array<string> | undefined;
         if (target instanceof GuildMember) {
           const userPermission = guild.userPermissions.find(
-            (userPermission) => userPermission.userId === target.id
+            (userPermission) => userPermission.userId === target.id,
           );
           if (userPermission) {
             permissions = userPermission.permissions;
           }
         } else {
           const rolePermission = guild.rolePermissions.find(
-            (rolePermission) => rolePermission.roleId === target.id
+            (rolePermission) => rolePermission.roleId === target.id,
           );
           if (rolePermission) {
             permissions = rolePermission.permissions;
@@ -322,7 +322,7 @@ const command: Command = {
                 : "There is no permissions",
             ]
               .filter((v) => v != "")
-              .join("\n")
+              .join("\n"),
           );
 
         await msg.edit({ embeds: [permissionsEmbed] });
@@ -332,7 +332,7 @@ const command: Command = {
         return msg.edit({
           embeds: [
             await RtextEmbed(
-              `${emoji.error} | an error occured while fetching date, please try again`
+              `${emoji.error} | an error occured while fetching date, please try again`,
             ),
           ],
         });

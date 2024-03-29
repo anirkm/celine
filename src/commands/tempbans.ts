@@ -33,7 +33,7 @@ const command: Command = {
         const [nextCursor, keys] = await client.redis.scan(
           cursor,
           "MATCH",
-          `banqueue_${message.guild?.id}_*`
+          `banqueue_${message.guild?.id}_*`,
         );
         cursor = nextCursor;
         for await (const key of keys) {
@@ -45,12 +45,12 @@ const command: Command = {
       if (!banKeys || banKeys.length === 0)
         return textEmbed(
           message,
-          `${emoji.error} | There are no users to unban.`
+          `${emoji.error} | There are no users to unban.`,
         );
       let collectorPrompt = await message.reply({
         embeds: [
           await RtextEmbed(
-            `${emoji.question} |  Are you sure you want to cancel ${banKeys.length} tempbans, this action is irreversible! (reply within 30 seconds)`
+            `${emoji.question} |  Are you sure you want to cancel ${banKeys.length} tempbans, this action is irreversible! (reply within 30 seconds)`,
           ),
         ],
         components: [
@@ -97,13 +97,13 @@ const command: Command = {
               collectorPrompt.edit({
                 embeds: [
                   await RtextEmbed(
-                    `${emoji.decline} | Time out! Try being more decisive next time.`
+                    `${emoji.decline} | Time out! Try being more decisive next time.`,
                   ),
                 ],
                 components: [],
               });
             },
-          }
+          },
         );
 
         if (collectorResult) {
@@ -112,7 +112,7 @@ const command: Command = {
               collectorPrompt.edit({
                 embeds: [
                   await RtextEmbed(
-                    `${emoji.loading} | Wait a moment while I unban all users...`
+                    `${emoji.loading} | Wait a moment while I unban all users...`,
                   ),
                 ],
                 components: [],
@@ -136,7 +136,7 @@ const command: Command = {
               collectorPrompt.edit({
                 embeds: [
                   await RtextEmbed(
-                    `${emoji.approve} | ${success} users were successfully unbanned.`
+                    `${emoji.approve} | ${success} users were successfully unbanned.`,
                   ),
                 ],
                 components: [],
@@ -147,7 +147,7 @@ const command: Command = {
               collectorPrompt.edit({
                 embeds: [
                   await RtextEmbed(
-                    `${emoji.decline} | **Action cancelled**, no users were unbanned.`
+                    `${emoji.decline} | **Action cancelled**, no users were unbanned.`,
                   ),
                 ],
                 components: [],
@@ -170,14 +170,14 @@ const command: Command = {
 
     let msg = await textEmbed(
       message,
-      `${emoji.loading} | Fetching active tempbans..`
+      `${emoji.loading} | Fetching active tempbans..`,
     );
 
     do {
       const [nextCursor, keys] = await client.redis.scan(
         cursor,
         "MATCH",
-        `banqueue_${message.guild?.id}_${user?.id || "*"}`
+        `banqueue_${message.guild?.id}_${user?.id || "*"}`,
       );
       cursor = nextCursor;
       for await (const key of keys) {
@@ -233,11 +233,11 @@ const command: Command = {
             [
               `<@${bans[i + k].member.id}> (${bans[i + k].member.id})`,
               `**Expires in:** ${ms(
-                Number(bans[i + k].expireTime) - new Date().getTime()
+                Number(bans[i + k].expireTime) - new Date().getTime(),
               )} \n`,
             ]
               .filter((v) => v != "")
-              .join("\n")
+              .join("\n"),
           );
         }
 

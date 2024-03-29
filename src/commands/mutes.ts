@@ -25,14 +25,14 @@ const command: Command = {
 
     let msg = await textEmbed(
       message,
-      `${emoji.loading} | Fetching active mutes..`
+      `${emoji.loading} | Fetching active mutes..`,
     );
 
     do {
       const [nextCursor, keys] = await client.redis.scan(
         cursor,
         "MATCH",
-        `mutequeue_${message.guild?.id}_${user?.id || "*"}`
+        `mutequeue_${message.guild?.id}_${user?.id || "*"}`,
       );
       cursor = nextCursor;
       for await (const key of keys) {
@@ -88,11 +88,11 @@ const command: Command = {
             [
               `<@${mutes[i + k].member.id}> (${mutes[i + k].member.id})`,
               `**Expires in:** ${ms(
-                Number(mutes[i + k].expireTime) - new Date().getTime()
+                Number(mutes[i + k].expireTime) - new Date().getTime(),
               )} \n`,
             ]
               .filter((v) => v != "")
-              .join("\n")
+              .join("\n"),
           );
         }
 

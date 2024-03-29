@@ -10,7 +10,7 @@ import {
 export const textEmbed = async (
   message: Message,
   data: string,
-  reply = true
+  reply = true,
 ) => {
   let embed = {
     color: 10031625,
@@ -33,9 +33,8 @@ export const missingArgs = async (
   message: Message,
   cmdName: string,
   syntax: string,
-  examples: string[]
+  examples: string[],
 ) => {
-
   let embed = new EmbedBuilder()
     .setColor(10031625)
     .setTitle(`Command :: __&${cmdName}__`)
@@ -46,7 +45,7 @@ export const missingArgs = async (
         "**Examples** ::",
         ...examples.map((s) => `&${cmdName} ` + s),
         "\n\n",
-      ].join("\n")
+      ].join("\n"),
     )
     .setFooter({ text: `Executed by ${message.member?.user.tag}` })
     .setTimestamp();
@@ -61,7 +60,7 @@ export const countMsg = (client: Client, guild: Guild, user: GuildMember) => {
 export const setLastMsgTimestamp = (
   client: Client,
   guild: Guild,
-  user: GuildMember
+  user: GuildMember,
 ) => {
   client.redis
     .set(`lastmsg_${guild.id}_${user.id}`, Date.now().toString())

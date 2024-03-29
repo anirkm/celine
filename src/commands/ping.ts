@@ -53,7 +53,7 @@ const command: Command = {
       .edit({
         embeds: [
           await RtextEmbed(
-            `${emoji.loading} **Calculating roundtrip latency...**`
+            `${emoji.loading} **Calculating roundtrip latency...**`,
           ),
         ],
       })
@@ -82,7 +82,7 @@ const command: Command = {
                 : "All incidents have been resolved.",
             ]
               .filter((v) => v != "")
-              .join("\n")
+              .join("\n"),
           )
           .setFooter({
             text: `Requested by ${message.member?.user.tag}`,

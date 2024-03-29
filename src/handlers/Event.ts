@@ -16,8 +16,8 @@ module.exports = (client: Client) => {
     console.log(
       color(
         "text",
-        `🌠 Successfully loaded event ${color("variable", event.name)}`
-      )
+        `🌠 Successfully loaded event ${color("variable", event.name)}`,
+      ),
     );
   });
 };

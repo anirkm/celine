@@ -27,7 +27,7 @@ const event: BotEvent = {
 
     if (!command) {
       let commandFromAlias = message.client.commands.find((command) =>
-        command.aliases.includes(args[0])
+        command.aliases.includes(args[0]),
       );
       if (commandFromAlias) command = commandFromAlias;
       else return;

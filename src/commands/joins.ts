@@ -33,12 +33,12 @@ const command: Command = {
     if (!user)
       return textEmbed(
         message,
-        `${emoji.error} | The user you specified was not found.`
+        `${emoji.error} | The user you specified was not found.`,
       );
 
     let msg = await textEmbed(
       message,
-      `${emoji.loading} - Wait while past ${user} joins are being fetched...`
+      `${emoji.loading} - Wait while past ${user} joins are being fetched...`,
     );
 
     let userJoins = await GuildJoinModel.find({
@@ -55,7 +55,7 @@ const command: Command = {
       msg.edit({
         embeds: [
           await RtextEmbed(
-            `${emoji.error} | ** I don't have any data about past ${user} joins. **`
+            `${emoji.error} | ** I don't have any data about past ${user} joins. **`,
           ),
         ],
       });
@@ -63,13 +63,13 @@ const command: Command = {
     }
 
     let userJoinNormal = userJoins.filter(
-      (em: IGuildJoin) => em.type == "normal"
+      (em: IGuildJoin) => em.type == "normal",
     );
     let userJoinVanity = userJoins.filter(
-      (em: IGuildJoin) => em.type == "vanity"
+      (em: IGuildJoin) => em.type == "vanity",
     );
     let userJoinUnknown = userJoins.filter(
-      (em: IGuildJoin) => em.type == "unknown"
+      (em: IGuildJoin) => em.type == "unknown",
     );
 
     let ujnp = (userJoinNormal.length * 100) / userJoins.length;
@@ -145,13 +145,13 @@ const command: Command = {
           desc.push(
             [
               `**${i + k + 1})** At \`${new Date(
-                userJoins[i + k].timestamp
+                userJoins[i + k].timestamp,
               ).toLocaleDateString("fr-FR")} ${new Date(
-                userJoins[i + k].timestamp
+                userJoins[i + k].timestamp,
               ).toLocaleTimeString("fr-FR")}\` ${emDesc} `,
             ]
               .filter((v) => v != "")
-              .join("\n")
+              .join("\n"),
           );
         }
 

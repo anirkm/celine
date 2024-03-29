@@ -17,7 +17,7 @@ const command: Command = {
       message,
       "unvmute",
       `${message.member} (reason)`,
-      [`${message.member} uwu`]
+      [`${message.member} uwu`],
     );
 
     if (!args[1]) {
@@ -33,7 +33,7 @@ const command: Command = {
     if (!user)
       return textEmbed(
         message,
-        `${emoji.error} | The user you specified was not found.`
+        `${emoji.error} | The user you specified was not found.`,
       );
 
     let reason: string = args.slice(2).join(" ") || "no reason was specified";
@@ -45,13 +45,13 @@ const command: Command = {
       .then(() => {
         textEmbed(
           message,
-          `${emoji.muted} | ${user} voice mute has been successfully removed.`
+          `${emoji.muted} | ${user} voice mute has been successfully removed.`,
         );
         if (user?.voice.channel) {
           user.voice
             .setMute(
               false,
-              `${message.author.id} - User unmuted by ${message.member?.user.tag}`
+              `${message.author.id} - User unmuted by ${message.member?.user.tag}`,
             )
             .catch(() => {});
         } else {
@@ -64,7 +64,7 @@ const command: Command = {
         console.log(e);
         textEmbed(
           message,
-          `${emoji.error} | An error occurred why executing this command.`
+          `${emoji.error} | An error occurred why executing this command.`,
         );
       });
   },

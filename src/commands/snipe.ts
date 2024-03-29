@@ -18,7 +18,7 @@ const command: Command = {
     if (!sniped || sniped.length === 0)
       return textEmbed(
         message,
-        `${emojies.error} | Nothing has been sniped in this channel yet!`
+        `${emojies.error} | Nothing has been sniped in this channel yet!`,
       );
 
     let embeds = [];
@@ -45,7 +45,7 @@ const command: Command = {
             `_Sniped ${ms(Date.now() - parseInt(msg.createdAt), {
               roundUp: true,
             })} ago_`,
-          ].join("\n")
+          ].join("\n"),
         )
         .setTimestamp(new Date(msg.createdAt));
       embeds.push(embed);

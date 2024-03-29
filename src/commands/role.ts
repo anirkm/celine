@@ -1,8 +1,5 @@
 import { PermissionFlagsBits } from "discord.js";
-import {
-  fuzzyRoleSearch,
-  hasPermission,
-} from "../functions";
+import { fuzzyRoleSearch, hasPermission } from "../functions";
 import emoji from "../data/emojies.json";
 import { Command } from "../types";
 import { missingArgs, textEmbed } from "../utils/msgUtils";
@@ -24,7 +21,7 @@ const command: Command = {
       [
         `${message.member} ${message.member?.roles.highest}`,
         `${message.member} ${message.member?.roles.highest.name}`,
-      ]
+      ],
     );
 
     if (args.length < 2) {
@@ -47,33 +44,33 @@ const command: Command = {
           args
             .slice(2, args.length)
             .filter((x) => x !== undefined)
-            .join("")
-        )[0].id
+            .join(""),
+        )[0].id,
       );
 
     if (!user)
       return textEmbed(
         message,
-        `${emoji.error} | The user you've specified was not found.`
+        `${emoji.error} | The user you've specified was not found.`,
       );
 
     if (!role)
       return textEmbed(
         message,
-        `${emoji.error} | The role you've specified was not found.`
+        `${emoji.error} | The role you've specified was not found.`,
       );
 
     if (role.managed) {
       return textEmbed(
         message,
-        `${emoji.error} | ${role} is managed and therefore cannot be assigned or removed.`
+        `${emoji.error} | ${role} is managed and therefore cannot be assigned or removed.`,
       );
     }
 
     if (message.member?.roles.highest.position! <= role.position) {
       return textEmbed(
         message,
-        `${emoji.error} | You can't perform this action due to hierarchy issues`
+        `${emoji.error} | You can't perform this action due to hierarchy issues`,
       );
     }
 
@@ -83,7 +80,7 @@ const command: Command = {
         .then(() => {
           textEmbed(
             message,
-            `${emoji.leave} | ${role} has been removed from ${user}`
+            `${emoji.leave} | ${role} has been removed from ${user}`,
           );
         })
         .catch((e) => {
@@ -94,19 +91,19 @@ const command: Command = {
             case "Missing Permissions":
               textEmbed(
                 message,
-                `${emoji.error} | Due to missing permissions i can't execute this command on ${user}.`
+                `${emoji.error} | Due to missing permissions i can't execute this command on ${user}.`,
               );
               break;
             case "Invalid Form Body":
               textEmbed(
                 message,
-                `${emoji.error} | You've malformed the command, try again.`
+                `${emoji.error} | You've malformed the command, try again.`,
               );
               break;
             default:
               textEmbed(
                 message,
-                `${emoji.error} | An error occurred while trying to execute this command, try again.. (DiscordAPI: ${e.message})`
+                `${emoji.error} | An error occurred while trying to execute this command, try again.. (DiscordAPI: ${e.message})`,
               );
               console.log(e);
               break;
@@ -118,7 +115,7 @@ const command: Command = {
         .then(() => {
           textEmbed(
             message,
-            `${emoji.enter} | ${role} has been given to ${user}`
+            `${emoji.enter} | ${role} has been given to ${user}`,
           );
         })
         .catch((e) => {
@@ -129,19 +126,19 @@ const command: Command = {
             case "Missing Permissions":
               textEmbed(
                 message,
-                `${emoji.error} | Due to missing permissions i can't execute this command on ${user}.`
+                `${emoji.error} | Due to missing permissions i can't execute this command on ${user}.`,
               );
               break;
             case "Invalid Form Body":
               textEmbed(
                 message,
-                `${emoji.error} | You've malformed the command, try again.`
+                `${emoji.error} | You've malformed the command, try again.`,
               );
               break;
             default:
               textEmbed(
                 message,
-                `${emoji.error} | An error occurred while trying to execute this command, try again.. (DiscordAPI: ${e.message})`
+                `${emoji.error} | An error occurred while trying to execute this command, try again.. (DiscordAPI: ${e.message})`,
               );
               console.log(e);
               break;
