@@ -38,7 +38,7 @@ const event: BotEvent = {
           return await interaction.message.edit({
             embeds: [
               await RtextEmbed(
-                `${emoji.cantsee} | This menu has expired due to inactivity, create a new one if nedded (your changes aren't saved)`
+                `${emoji.cantsee} | This menu has expired due to inactivity, create a new one if nedded (your changes aren't saved)`,
               ),
             ],
             components: [],
@@ -49,7 +49,7 @@ const event: BotEvent = {
           return await interaction.reply({
             embeds: [
               await RtextEmbed(
-                ":grimacing: | This menu is not for you so don't touch it ever again."
+                ":grimacing: | This menu is not for you so don't touch it ever again.",
               ),
             ],
             ephemeral: true,
@@ -64,7 +64,7 @@ const event: BotEvent = {
             await interaction.message.edit({
               embeds: [
                 await RtextEmbed(
-                  `${emoji.cantsee} | This menu has expired due to inactivity, create a new one if nedded`
+                  `${emoji.cantsee} | This menu has expired due to inactivity, create a new one if nedded`,
                 ),
               ],
               components: [],
@@ -89,9 +89,9 @@ const event: BotEvent = {
             deletedPermsArr.push(
               `◟ ${
                 permissions.find(
-                  (perm) => perm.permission === value.split("-")[1]
+                  (perm) => perm.permission === value.split("-")[1],
                 )?.permission
-              }`
+              }`,
             );
           }
         });
@@ -101,9 +101,9 @@ const event: BotEvent = {
             addedPermsArr.push(
               `◟ ${
                 permissions.find(
-                  (perm) => perm.permission === value.split("-")[1]
+                  (perm) => perm.permission === value.split("-")[1],
                 )?.permission
-              }`
+              }`,
             );
           }
         });
@@ -114,11 +114,11 @@ const event: BotEvent = {
           const perm = rawPerms[index];
           newOpts.push({
             default: enabledPermsValues.includes(
-              `menuperm_${perm.cmd}_cmd-${perm.permission}`
+              `menuperm_${perm.cmd}_cmd-${perm.permission}`,
             ),
             label: `&${perm.cmd.toLowerCase()}`,
             description: `Permission for the &${perm.permFor.join(
-              " &"
+              " &",
             )} command`,
             value: `menuperm_${perm.cmd}_cmd-${perm.permission}`,
           });
@@ -127,8 +127,8 @@ const event: BotEvent = {
         const updatedRow =
           new ActionRowBuilder<StringSelectMenuBuilder>().addComponents(
             StringSelectMenuBuilder.from(interaction.component).setOptions(
-              ...newOpts
-            )
+              ...newOpts,
+            ),
           );
 
         interaction.deferUpdate().then(async () => {
@@ -184,7 +184,7 @@ const event: BotEvent = {
               let updated = false;
               if (type === "member") {
                 const index = guild.userPermissions.findIndex(
-                  (userPermission) => userPermission.userId === target
+                  (userPermission) => userPermission.userId === target,
                 );
                 if (index !== -1) {
                   guild.userPermissions[index].permissions = interaction.values;
@@ -192,7 +192,7 @@ const event: BotEvent = {
                 }
               } else {
                 const index = guild.rolePermissions.findIndex(
-                  (rolePermission) => rolePermission.roleId === target
+                  (rolePermission) => rolePermission.roleId === target,
                 );
                 if (index !== -1) {
                   guild.rolePermissions[index].permissions = interaction.values;
@@ -207,18 +207,17 @@ const event: BotEvent = {
                   changedBy: ogMessageAuhtorId,
                   previousPermissions: prevPermsArr.map((value) => {
                     return permissions.find(
-                      (perm) => perm.permission === value.split("-")[1]
+                      (perm) => perm.permission === value.split("-")[1],
                     )?.permission;
                   }),
                   currentPermissions: interaction.values.map((value) => {
                     return permissions.find(
-                      (perm) => perm.permission === value.split("-")[1]
+                      (perm) => perm.permission === value.split("-")[1],
                     )?.permission;
                   }),
                 });
                 permissionHistory.save().then(() => {
                   console.log("saved");
-                  
                 });
 
                 return GuildModel.findOneAndUpdate(filter, setUpdate, {
@@ -234,7 +233,7 @@ const event: BotEvent = {
             .then(async (updatedGuild: IGuild | null) => {
               if (updatedGuild) {
                 let updateEmbed = EmbedBuilder.from(
-                  interaction.message.embeds[0]
+                  interaction.message.embeds[0],
                 ).setDescription(
                   [
                     `**» Permission manager for ${type} :: <@${target}>**`,
@@ -249,7 +248,7 @@ const event: BotEvent = {
                       : "◟None\n",
                   ]
                     .filter((v) => v != "")
-                    .join("\n")
+                    .join("\n"),
                 );
 
                 await interaction.message.edit({
@@ -261,8 +260,8 @@ const event: BotEvent = {
                   .set(
                     `permroles:${updatedGuild.guildID}`,
                     JSON.stringify(
-                      updatedGuild.rolePermissions.map((role) => role.roleId)
-                    )
+                      updatedGuild.rolePermissions.map((role) => role.roleId),
+                    ),
                   )
                   .catch((error: Error) => {
                     console.log("redis perm role caching very bad", error);
@@ -287,7 +286,7 @@ const event: BotEvent = {
                 }
               } else {
                 interaction.message.reply(
-                  "nothing has been updated which is weird, contact an admin"
+                  "nothing has been updated which is weird, contact an admin",
                 );
               }
             })

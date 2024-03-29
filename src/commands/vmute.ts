@@ -18,7 +18,7 @@ const command: Command = {
       message,
       "vmute",
       `${message.member} [duration] (reason)`,
-      [`${message.member} 1337s`, `${message.member} 1337s reason`]
+      [`${message.member} 1337s`, `${message.member} 1337s reason`],
     );
 
     if (!args[1] || !args[2]) {
@@ -35,13 +35,13 @@ const command: Command = {
     if (!user)
       return textEmbed(
         message,
-        `${emoji.error} | The user you specified was not found.`
+        `${emoji.error} | The user you specified was not found.`,
       );
 
     if (user.permissions.has(PermissionFlagsBits.Administrator))
       return textEmbed(
         message,
-        `${emoji.error} | Voice mutes can't be executed on administrators.`
+        `${emoji.error} | Voice mutes can't be executed on administrators.`,
       );
 
     let reason: string = args.slice(3).join(" ") || "no reason was specified";
@@ -49,7 +49,7 @@ const command: Command = {
     if (!parseInt(args[2]) || !ms(args[2])) {
       return textEmbed(
         message,
-        `${emoji.huh} | The duration you've specified is invalid`
+        `${emoji.huh} | The duration you've specified is invalid`,
       );
     }
 
@@ -57,7 +57,7 @@ const command: Command = {
       if (ms(args[2]) < ms("10s") || ms(args[2]) > ms("1month")) {
         return textEmbed(
           message,
-          `${emoji.error} | The duration should be between 10 seconds and 1 month.`
+          `${emoji.error} | The duration should be between 10 seconds and 1 month.`,
         );
       }
     }
@@ -69,7 +69,7 @@ const command: Command = {
     await client.redis
       .set(
         `vmutequeue_${message.guild?.id}_${user.id}`,
-        new Date().getTime() + duration
+        new Date().getTime() + duration,
       )
       .then(() => {
         if (user!.voice.channel)
@@ -78,7 +78,7 @@ const command: Command = {
           message,
           `${emoji.muted} | ${user} has been voice-muted for ${ms(duration, {
             roundUp: false,
-          })}.`
+          })}.`,
         );
 
         let notifEm = new EmbedBuilder()
@@ -96,7 +96,7 @@ const command: Command = {
               `__Duration__ :: ${ms(duration, {
                 roundUp: false,
               })}`,
-            ].join("\n")
+            ].join("\n"),
           )
           .setTimestamp()
           .setFooter({
@@ -116,7 +116,7 @@ const command: Command = {
         console.log("set mute redis err", e);
         textEmbed(
           message,
-          `${emoji.error} | An error occurred while voice muting the user.`
+          `${emoji.error} | An error occurred while voice muting the user.`,
         );
       });
   },

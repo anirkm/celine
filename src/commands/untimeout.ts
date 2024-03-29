@@ -17,7 +17,7 @@ const command: Command = {
       message,
       "untimeout",
       `${message.member} (reason)`,
-      [`${message.member} expired`]
+      [`${message.member} expired`],
     );
 
     if (!args[1]) {
@@ -36,19 +36,19 @@ const command: Command = {
     if (!user)
       return textEmbed(
         message,
-        `${emoji.error} | The user you specified was not found.`
+        `${emoji.error} | The user you specified was not found.`,
       );
     if (!user.isCommunicationDisabled())
       return textEmbed(
         message,
-        `${emoji.error} | ${user} is not timed out at the moment.`
+        `${emoji.error} | ${user} is not timed out at the moment.`,
       );
     return user
       .timeout(null, `${message.member?.user.tag} - timeout end`)
       .then(async (user) => {
         textEmbed(
           message,
-          `${emoji.muted} | ${user} timeout has been successfully removed.`
+          `${emoji.muted} | ${user} timeout has been successfully removed.`,
         );
       })
       .catch((e) => {
@@ -59,19 +59,19 @@ const command: Command = {
           case "Missing Permissions":
             textEmbed(
               message,
-              `${emoji.error} | Due to missing permissions i can't execute this command on ${user}.`
+              `${emoji.error} | Due to missing permissions i can't execute this command on ${user}.`,
             );
             break;
           case "Invalid Form Body":
             textEmbed(
               message,
-              `${emoji.error} | You've malformed the command, try again.`
+              `${emoji.error} | You've malformed the command, try again.`,
             );
             break;
           default:
             textEmbed(
               message,
-              `${emoji.error} | An error occurred while trying to execute this command, try again.. (DiscordAPI: ${e.message})`
+              `${emoji.error} | An error occurred while trying to execute this command, try again.. (DiscordAPI: ${e.message})`,
             );
             console.log(e);
             break;

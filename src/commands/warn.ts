@@ -18,7 +18,7 @@ const command: Command = {
       message,
       "warn",
       `${message.member} (reason)`,
-      [`${message.member} reason`, "remove 1337"]
+      [`${message.member} reason`, "remove 1337"],
     );
 
     if (!args[1]) return message.reply({ embeds: [argsEmbed] });
@@ -28,7 +28,7 @@ const command: Command = {
         message,
         "warn remove",
         "remove (warnid)",
-        ["remove 1337"]
+        ["remove 1337"],
       );
       if (!args[2]) {
         return message.reply({ embeds: [argsEmbed2] });
@@ -37,7 +37,7 @@ const command: Command = {
       let msg = await message.reply({
         embeds: [
           await RtextEmbed(
-            `${emoji.loading} | **Please wait while we're fetching your warn.**`
+            `${emoji.loading} | **Please wait while we're fetching your warn.**`,
           ),
         ],
       });
@@ -49,7 +49,7 @@ const command: Command = {
         return msg.edit({
           embeds: [
             await RtextEmbed(
-              `${emoji.error} | **Error while fetching warn, try again.**`
+              `${emoji.error} | **Error while fetching warn, try again.**`,
             ),
           ],
         });
@@ -59,7 +59,7 @@ const command: Command = {
         return msg.edit({
           embeds: [
             await RtextEmbed(
-              `${emoji.decline} | **No warn was found with the Warn ID you've specified.**`
+              `${emoji.decline} | **No warn was found with the Warn ID you've specified.**`,
             ),
           ],
         });
@@ -73,7 +73,7 @@ const command: Command = {
             return msg.edit({
               embeds: [
                 await RtextEmbed(
-                  `${emoji.approve} | **Warn (\`#${args[2]}\`) has been deleted.**`
+                  `${emoji.approve} | **Warn (\`#${args[2]}\`) has been deleted.**`,
                 ),
               ],
             });
@@ -81,7 +81,7 @@ const command: Command = {
             return msg.edit({
               embeds: [
                 await RtextEmbed(
-                  `${emoji.decline} | **No warn was found with the WarnID you've specified.**`
+                  `${emoji.decline} | **No warn was found with the WarnID you've specified.**`,
                 ),
               ],
             });
@@ -91,7 +91,7 @@ const command: Command = {
           msg.edit({
             embeds: [
               await RtextEmbed(
-                `${emoji.error} | **An unexpected error occured, please try again.**`
+                `${emoji.error} | **An unexpected error occured, please try again.**`,
               ),
             ],
           });
@@ -116,7 +116,7 @@ const command: Command = {
     if (!user)
       return textEmbed(
         message,
-        `${emoji.error} | The user you specified was not found.`
+        `${emoji.error} | The user you specified was not found.`,
       );
 
     let newWarn = new WarnModel({
@@ -139,21 +139,21 @@ const command: Command = {
                 }** for ` +
                   "`" +
                   `${reason}` +
-                  "`."
+                  "`.",
               ),
             ],
           })
           .then(() => {
             return textEmbed(
               message,
-              `${emoji.warning} | \`#${doc.warnID}\` ${user} has been warned successfully.`
+              `${emoji.warning} | \`#${doc.warnID}\` ${user} has been warned successfully.`,
             );
           })
           .catch((e) => {
             if (e.code === 50007) {
               return textEmbed(
                 message,
-                `${emoji.warning} | \`#${doc.warnID}\` ${user} has been warned but i couldn't DM him the warn.`
+                `${emoji.warning} | \`#${doc.warnID}\` ${user} has been warned but i couldn't DM him the warn.`,
               );
             }
           });
@@ -161,7 +161,7 @@ const command: Command = {
       .catch((e) => {
         textEmbed(
           message,
-          `${emoji.error} | An unexpected error occured, please try again.`
+          `${emoji.error} | An unexpected error occured, please try again.`,
         );
 
         return console.log("error insert warn", e);

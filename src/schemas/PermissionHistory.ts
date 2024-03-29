@@ -12,12 +12,12 @@ const PermissionHistorySchema = new Schema<PermissionHistory>(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 const PermissionHistoryModel = model<PermissionHistory>(
   "PermissionHistory",
-  PermissionHistorySchema
+  PermissionHistorySchema,
 );
 
 export default PermissionHistoryModel;

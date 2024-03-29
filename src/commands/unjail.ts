@@ -42,7 +42,7 @@ const command: Command = {
     if (!user)
       return textEmbed(
         message,
-        `${emoji.error} | The user you've specified was not found.`
+        `${emoji.error} | The user you've specified was not found.`,
       );
 
     let guild = await GuildModel.findOne({ guildID: message.guild?.id });
@@ -50,13 +50,13 @@ const command: Command = {
     if (!guild)
       return textEmbed(
         message,
-        `${emoji.error} | This guild isn't correctly setup. run __&cfg sg__.`
+        `${emoji.error} | This guild isn't correctly setup. run __&cfg sg__.`,
       );
 
     if (guild && !guild.options.jailRole)
       return textEmbed(
         message,
-        `${emoji.error} | Jail role for this guild isn't correctly setup. run __&cfg jailrole__.`
+        `${emoji.error} | Jail role for this guild isn't correctly setup. run __&cfg jailrole__.`,
       );
 
     let jailRole = await message.guild?.roles.fetch(guild.options.jailRole, {
@@ -66,13 +66,13 @@ const command: Command = {
     if (!jailRole)
       return textEmbed(
         message,
-        `${emoji.error} | Jail role for this guild is invalid setup. run __&cfg jailrole__.`
+        `${emoji.error} | Jail role for this guild is invalid setup. run __&cfg jailrole__.`,
       );
 
     if (!user.roles.cache.has(jailRole.id))
       return textEmbed(
         message,
-        `${emoji.huh} | ${user} isn't currently jailed.`
+        `${emoji.huh} | ${user} isn't currently jailed.`,
       );
 
     return user.roles
@@ -86,7 +86,7 @@ const command: Command = {
           let collectorPrompt = await message.reply({
             embeds: [
               await RtextEmbed(
-                `${emoji.yay} | ${user} **Jail removed with success**. _Do you want to restore removed roles? (${resotredRoles.length} roles will be restored)_`
+                `${emoji.yay} | ${user} **Jail removed with success**. _Do you want to restore removed roles? (${resotredRoles.length} roles will be restored)_`,
               ),
             ],
             components: [
@@ -124,13 +124,13 @@ const command: Command = {
                 collectorPrompt.edit({
                   embeds: [
                     await RtextEmbed(
-                      `${emoji.yay} | ${user} **jail has been successfully removed**.`
+                      `${emoji.yay} | ${user} **jail has been successfully removed**.`,
                     ),
                   ],
                   components: [],
                 });
               },
-            }
+            },
           );
 
           if (collectorResult) {
@@ -142,7 +142,7 @@ const command: Command = {
                 collectorPrompt.edit({
                   embeds: [
                     await RtextEmbed(
-                      `${emoji.loading} | Wait while we restore ${resotredRoles.length} of ${user} roles... `
+                      `${emoji.loading} | Wait while we restore ${resotredRoles.length} of ${user} roles... `,
                     ),
                   ],
                   components: [],
@@ -159,7 +159,7 @@ const command: Command = {
                           await collectorPrompt.edit({
                             embeds: [
                               await RtextEmbed(
-                                `${emoji.loading} | Wait while restoring ${resotredRoles?.length} of ${user} roles... (${success}/${resotredRoles?.length} - ${failed} failed)`
+                                `${emoji.loading} | Wait while restoring ${resotredRoles?.length} of ${user} roles... (${success}/${resotredRoles?.length} - ${failed} failed)`,
                               ),
                             ],
                             components: [],
@@ -170,13 +170,13 @@ const command: Command = {
                           await collectorPrompt.edit({
                             embeds: [
                               await RtextEmbed(
-                                `${emoji.loading} | Wait while restoring ${resotredRoles?.length} of ${user} roles... (${success}/${resotredRoles?.length} - ${failed} failed)`
+                                `${emoji.loading} | Wait while restoring ${resotredRoles?.length} of ${user} roles... (${success}/${resotredRoles?.length} - ${failed} failed)`,
                               ),
                             ],
                             components: [],
                           });
                         });
-                    })
+                    }),
                   );
                 };
 
@@ -189,7 +189,7 @@ const command: Command = {
                       await RtextEmbed(
                         `${emoji.approve} | ${success}/${
                           resotredRoles!.length
-                        } roles have been restored while ${failed} have failed.`
+                        } roles have been restored while ${failed} have failed.`,
                       ),
                     ],
                     components: [],
@@ -205,7 +205,7 @@ const command: Command = {
           await message.reply({
             embeds: [
               await RtextEmbed(
-                `${emoji.yay} | ${user} **jail has been successfully removed**.`
+                `${emoji.yay} | ${user} **jail has been successfully removed**.`,
               ),
             ],
           });
@@ -218,7 +218,7 @@ const command: Command = {
                 await RtextEmbed(
                   `${emoji.sherta} | Your jail has expired in **${
                     message.guild?.name || "Failed to fetch guild name"
-                  }**`
+                  }**`,
                 ),
               ],
             })
@@ -244,25 +244,25 @@ const command: Command = {
           case "Unknown User":
             textEmbed(
               message,
-              `${emoji.error} | The user you've specified is invalid, try again.`
+              `${emoji.error} | The user you've specified is invalid, try again.`,
             );
             break;
           case "Missing Permissions":
             textEmbed(
               message,
-              `${emoji.error} | Due to missing permissions i can't execute this command on ${user}.`
+              `${emoji.error} | Due to missing permissions i can't execute this command on ${user}.`,
             );
             break;
           case "Invalid Form Body":
             textEmbed(
               message,
-              `${emoji.error} | You've malformed the command, try again.`
+              `${emoji.error} | You've malformed the command, try again.`,
             );
             break;
           default:
             textEmbed(
               message,
-              `${emoji.error} | An error occurred while trying to execute this command, try again.. (DiscordAPI: ${e.message})`
+              `${emoji.error} | An error occurred while trying to execute this command, try again.. (DiscordAPI: ${e.message})`,
             );
             console.log(e);
             break;

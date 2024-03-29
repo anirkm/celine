@@ -30,7 +30,7 @@ const command: Command = {
         `${message.member}`,
         `${message.member} reason`,
         `${message.member} 1337d reason`,
-      ]
+      ],
     );
 
     if (!args[1]) {
@@ -39,10 +39,10 @@ const command: Command = {
 
     const userToBan =
       (await message.guild?.members.fetch(
-        message.mentions.parsedUsers.first() || args[1]
+        message.mentions.parsedUsers.first() || args[1],
       )) ||
       (await client.users.fetch(
-        message.mentions.parsedUsers.first() || args[1]
+        message.mentions.parsedUsers.first() || args[1],
       ));
 
     if (!userToBan) {
@@ -56,7 +56,7 @@ const command: Command = {
     const reason =
       args
         .slice(
-          args.length >= 4 && Number(args[2]) && ms(args[2]) !== null ? 3 : 2
+          args.length >= 4 && Number(args[2]) && ms(args[2]) !== null ? 3 : 2,
         )
         .join(" ") || "no reason specified";
 
@@ -66,17 +66,16 @@ const command: Command = {
     ) {
       return textEmbed(
         message,
-        `${emoji.error} | The duration should be between 10 minutes and 1 year.`
+        `${emoji.error} | The duration should be between 10 minutes and 1 year.`,
       );
     }
 
     if (userToBan && userToBan instanceof GuildMember && !userToBan.bannable) {
       return textEmbed(
         message,
-        `${emoji.error} | Due to role hierarchy i can't execute this command on ${userToBan}.`
+        `${emoji.error} | Due to role hierarchy i can't execute this command on ${userToBan}.`,
       );
     }
-
 
     if (userToBan && userToBan instanceof GuildMember) {
       if (
@@ -85,7 +84,7 @@ const command: Command = {
       )
         return textEmbed(
           message,
-          `${emoji.error} | You cannot ban someone with higher or equal hierarchy than you.`
+          `${emoji.error} | You cannot ban someone with higher or equal hierarchy than you.`,
         );
     }
 
@@ -107,7 +106,7 @@ const command: Command = {
             `__Duration__ :: ${
               duration === "lifetime" ? "permanant" : `${ms(ms(args[2]))}`
             }`,
-          ].join("\n")
+          ].join("\n"),
         )
         .setTimestamp()
         .setFooter({
@@ -135,7 +134,7 @@ const command: Command = {
                 duration !== "lifetime" && duration
                   ? ` for the next ${ms(Number(duration), { roundUp: true })}.`
                   : "."
-              }**`
+              }**`,
             ),
           ],
         });
@@ -160,7 +159,7 @@ const command: Command = {
                   `banqueue_${message.guild?.id}_${
                     userToBan ? userToBan.id : args[1]
                   }`,
-                  new Date().getTime() + ms(args[2])
+                  new Date().getTime() + ms(args[2]),
                 )
                 .catch((e) => {
                   console.log("save redis ban err", e);
@@ -170,7 +169,7 @@ const command: Command = {
                 .del(
                   `banqueue_${message.guild?.id}_${
                     userToBan ? userToBan.id : args[1]
-                  }`
+                  }`,
                 )
                 .catch((e) => {
                   console.log("redis delete ban keys err", e);
@@ -192,7 +191,7 @@ const command: Command = {
           default:
             textEmbed(
               message,
-              `${emoji.error} | An error occurred while trying to execute this command, try again.. (DiscordAPI: ${e.message})`
+              `${emoji.error} | An error occurred while trying to execute this command, try again.. (DiscordAPI: ${e.message})`,
             );
             console.log(e);
             break;

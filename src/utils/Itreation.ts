@@ -20,7 +20,7 @@ module.exports = async (client: Client, redis: Redis) => {
       let dbGuild = await GuildModel.findOne({ guildID: guild!.id }).catch(
         (e) => {
           console.log("dbguild irreation", e);
-        }
+        },
       );
 
       if (!guild || !dbGuild) {
@@ -61,7 +61,7 @@ module.exports = async (client: Client, redis: Redis) => {
                   .send({
                     embeds: [
                       await RtextEmbed(
-                        `${emoji.confetti} | Your text-mute has expired in ${user.guild.name}`
+                        `${emoji.confetti} | Your text-mute has expired in ${user.guild.name}`,
                       ),
                     ],
                   })
@@ -94,7 +94,7 @@ module.exports = async (client: Client, redis: Redis) => {
                     await RtextEmbed(
                       `${emoji.confetti} | Your voice-mute has expired in ${
                         user!.guild.name
-                      }`
+                      }`,
                     ),
                   ],
                 });
@@ -127,7 +127,7 @@ module.exports = async (client: Client, redis: Redis) => {
                           emoji.confetti
                         } | Your jail sanction has expired in ${
                           user!.guild.name
-                        }`
+                        }`,
                       ),
                     ],
                   })

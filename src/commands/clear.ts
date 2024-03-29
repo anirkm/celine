@@ -25,21 +25,21 @@ const command: Command = {
     if (isNaN(Number(args[1]))) {
       return textEmbed(
         message,
-        `${emoji.wyd} | Amount must be a numerical value.`
+        `${emoji.wyd} | Amount must be a numerical value.`,
       );
     }
 
     if (Number(args[1]) > 69) {
       return textEmbed(
         message,
-        `${emoji.wyd} | Amount should have a max value of 69 messages.`
+        `${emoji.wyd} | Amount should have a max value of 69 messages.`,
       );
     }
 
     if (Number(args[1]) <= 0) {
       return textEmbed(
         message,
-        `${emoji.wyd} | Amount should have a min value of 1 messages.`
+        `${emoji.wyd} | Amount should have a min value of 1 messages.`,
       );
     }
 
@@ -47,7 +47,7 @@ const command: Command = {
 
     let msg = await textEmbed(
       message,
-      `${emoji.loading} | Fetching ${amount} messages, please wait.`
+      `${emoji.loading} | Fetching ${amount} messages, please wait.`,
     );
 
     let currChan = <TextChannel>message.channel;
@@ -61,7 +61,7 @@ const command: Command = {
         msg.edit({
           embeds: [
             await RtextEmbed(
-              `${emoji.error} | Failed to fetch messages, please try again.`
+              `${emoji.error} | Failed to fetch messages, please try again.`,
             ),
           ],
         });
@@ -71,7 +71,7 @@ const command: Command = {
     if (!messages || messages.size === 0) {
       return textEmbed(
         message,
-        `${emoji.wyd} | There is nothing to fetch && delete.`
+        `${emoji.wyd} | There is nothing to fetch && delete.`,
       );
     }
 
@@ -85,7 +85,7 @@ const command: Command = {
       if (!user)
         return textEmbed(
           message,
-          `${emoji.error} | The user you've specified was not found.`
+          `${emoji.error} | The user you've specified was not found.`,
         );
 
       let i = 0;
@@ -99,13 +99,13 @@ const command: Command = {
             filtered.push(msg);
             i++;
           }
-        })
+        }),
       );
 
       if (!filtered || filtered.length === 0) {
         return textEmbed(
           message,
-          `${emoji.wyd} | There is nothing to fetch && delete.`
+          `${emoji.wyd} | There is nothing to fetch && delete.`,
         );
       }
 
@@ -117,7 +117,7 @@ const command: Command = {
                 .edit({
                   embeds: [
                     await RtextEmbed(
-                      `${emoji.yay} | Successfully deleted **${messages.size}** messages from ${user}`
+                      `${emoji.yay} | Successfully deleted **${messages.size}** messages from ${user}`,
                     ),
                   ],
                 })
@@ -125,7 +125,7 @@ const command: Command = {
             : textEmbed(
                 message,
                 `${emoji.yay} | Successfully deleted **${messages.size}** messages from ${user}`,
-                false
+                false,
               ).then((m) => setTimeout(() => m.delete().catch(() => {}), 3000));
         })
         .catch(async (e) => {
@@ -135,7 +135,7 @@ const command: Command = {
                 .edit({
                   embeds: [
                     await RtextEmbed(
-                      `${emoji.yay} | Failed to delete **${messages.size}** messages from ${user}`
+                      `${emoji.yay} | Failed to delete **${messages.size}** messages from ${user}`,
                     ),
                   ],
                 })
@@ -143,7 +143,7 @@ const command: Command = {
             : textEmbed(
                 message,
                 `${emoji.yay} | Failed to deleted **${messages.size}** messages from ${user}`,
-                false
+                false,
               );
         });
     }
@@ -158,7 +158,7 @@ const command: Command = {
               .edit({
                 embeds: [
                   await RtextEmbed(
-                    `${emoji.yay} | Successfully deleted **${messages.size}** messages.`
+                    `${emoji.yay} | Successfully deleted **${messages.size}** messages.`,
                   ),
                 ],
               })
@@ -166,7 +166,7 @@ const command: Command = {
           : textEmbed(
               message,
               `${emoji.yay} | Successfully deleted **${messages.size}** messages.`,
-              false
+              false,
             ).then((m) => setTimeout(() => m.delete().catch(() => {}), 3000));
       })
       .catch(async (e) => {
@@ -176,14 +176,14 @@ const command: Command = {
           ? msg.edit({
               embeds: [
                 await RtextEmbed(
-                  `${emoji.yay} | Failed to deleted **${messages.size}** messages.`
+                  `${emoji.yay} | Failed to deleted **${messages.size}** messages.`,
                 ),
               ],
             })
           : textEmbed(
               message,
               `${emoji.yay} | Failed to deleted **${messages.size}** messages.`,
-              false
+              false,
             );
       });
   },

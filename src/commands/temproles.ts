@@ -37,7 +37,7 @@ const command: Command = {
         const [nextCursor, keys] = await client.redis.scan(
           cursor,
           "MATCH",
-          `tr_${message.guild?.id}_*`
+          `tr_${message.guild?.id}_*`,
         );
         cursor = nextCursor;
         for await (const key of keys) {
@@ -48,12 +48,12 @@ const command: Command = {
       if (!trKeys || trKeys.length === 0)
         return textEmbed(
           message,
-          `${emoji.error} | There are no users with temporary roles with your query.`
+          `${emoji.error} | There are no users with temporary roles with your query.`,
         );
       let collectorPrompt = await message.reply({
         embeds: [
           await RtextEmbed(
-            `${emoji.question} |  Are you sure you want to cancel ${trKeys.length} temporary roles, this action is irreversible and will remove the roles from the users! (reply within 30 seconds)`
+            `${emoji.question} |  Are you sure you want to cancel ${trKeys.length} temporary roles, this action is irreversible and will remove the roles from the users! (reply within 30 seconds)`,
           ),
         ],
         components: [
@@ -100,13 +100,13 @@ const command: Command = {
               collectorPrompt.edit({
                 embeds: [
                   await RtextEmbed(
-                    `${emoji.decline} | Time out! Try being more decisive next time.`
+                    `${emoji.decline} | Time out! Try being more decisive next time.`,
                   ),
                 ],
                 components: [],
               });
             },
-          }
+          },
         );
 
         if (collectorResult) {
@@ -115,7 +115,7 @@ const command: Command = {
               collectorPrompt.edit({
                 embeds: [
                   await RtextEmbed(
-                    `${emoji.loading} | Wait a moment while I remove the roles from users...`
+                    `${emoji.loading} | Wait a moment while I remove the roles from users...`,
                   ),
                 ],
                 components: [],
@@ -123,7 +123,7 @@ const command: Command = {
 
               for await (const key of trKeys) {
                 const user = await message.guild?.members.fetch(
-                  key.split("_")[2]
+                  key.split("_")[2],
                 );
                 const role = await message.guild?.roles
                   .fetch(key.split("_")[3])
@@ -147,7 +147,7 @@ const command: Command = {
               collectorPrompt.edit({
                 embeds: [
                   await RtextEmbed(
-                    `${emoji.approve} | ${success} temporary roles were successfully canceled, while have ${failed} failed.`
+                    `${emoji.approve} | ${success} temporary roles were successfully canceled, while have ${failed} failed.`,
                   ),
                 ],
                 components: [],
@@ -158,7 +158,7 @@ const command: Command = {
               collectorPrompt.edit({
                 embeds: [
                   await RtextEmbed(
-                    `${emoji.decline} | **Action cancelled**, no temporary roles were canceled.`
+                    `${emoji.decline} | **Action cancelled**, no temporary roles were canceled.`,
                   ),
                 ],
                 components: [],
@@ -183,7 +183,7 @@ const command: Command = {
 
     let msg = await textEmbed(
       message,
-      `${emoji.loading} | Fetching active temporary roles..`
+      `${emoji.loading} | Fetching active temporary roles..`,
     );
 
     do {
@@ -192,7 +192,7 @@ const command: Command = {
         "MATCH",
         `tr_${message.guild?.id}_${arg instanceof GuildMember ? arg.id : "*"}_${
           arg instanceof Role ? arg.id : "*"
-        }`
+        }`,
       );
       cursor = nextCursor;
       for await (const key of keys) {
@@ -229,7 +229,7 @@ const command: Command = {
       return msg.edit({
         embeds: [
           await RtextEmbed(
-            `${emoji.error} | **No temporary roles were found with your query**.`
+            `${emoji.error} | **No temporary roles were found with your query**.`,
           ),
         ],
       });
@@ -276,11 +276,11 @@ const command: Command = {
                 temproles[i + k].role.id
               })`,
               `**Expires in:** ${ms(
-                Number(temproles[i + k].expireTime) - new Date().getTime()
+                Number(temproles[i + k].expireTime) - new Date().getTime(),
               )} \n`,
             ]
               .filter((v) => v != "")
-              .join("\n")
+              .join("\n"),
           );
         }
 

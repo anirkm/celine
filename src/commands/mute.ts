@@ -21,7 +21,7 @@ const command: Command = {
       message,
       "mute",
       `${message.member} [duration] (reason)`,
-      [`${message.member} 1337s`, `${message.member} 1337s reason`]
+      [`${message.member} 1337s`, `${message.member} 1337s reason`],
     );
 
     if (!args[1] || !args[2]) {
@@ -33,18 +33,18 @@ const command: Command = {
         user: message.mentions.parsedUsers.first() || args[1],
         cache: true,
       })
-      .catch(() => {})
+      .catch(() => {});
 
     if (!user)
       return textEmbed(
         message,
-        `${emoji.error} | The user you specified was not found.`
+        `${emoji.error} | The user you specified was not found.`,
       );
 
     if (user.permissions.has(PermissionFlagsBits.Administrator))
       return textEmbed(
         message,
-        `${emoji.error} | Text mutes can't be executed on administrators.`
+        `${emoji.error} | Text mutes can't be executed on administrators.`,
       );
 
     let reason: string = args.slice(3).join(" ") || "no reason was specified";
@@ -53,7 +53,7 @@ const command: Command = {
     if (!parseInt(args[2]) || !ms(args[2])) {
       return textEmbed(
         message,
-        `${emoji.huh} | The duration you've specified is invalid`
+        `${emoji.huh} | The duration you've specified is invalid`,
       );
     }
 
@@ -61,7 +61,7 @@ const command: Command = {
       if (ms(args[2]) < ms("10s") || ms(args[2]) > ms("1month")) {
         return textEmbed(
           message,
-          `${emoji.error} | The duration should be between 10 seconds and 1 month.`
+          `${emoji.error} | The duration should be between 10 seconds and 1 month.`,
         );
       }
     }
@@ -73,20 +73,20 @@ const command: Command = {
     if (!guild)
       return textEmbed(
         message,
-        `${emoji.error} | This guild isn't correctly setup. run __&cfg sg__.`
+        `${emoji.error} | This guild isn't correctly setup. run __&cfg sg__.`,
       );
 
     if (guild && !guild.options.jailRole)
       return textEmbed(
         message,
-        `${emoji.error} | Mute role for this guild isn't correctly setup. run __&cfg muterole__.`
+        `${emoji.error} | Mute role for this guild isn't correctly setup. run __&cfg muterole__.`,
       );
     muteRole = await message.guild?.roles.fetch(guild.options.muteRole);
 
     if (!muteRole)
       return textEmbed(
         message,
-        `${emoji.error} | Mute role for this guild is invalid setup. run __&cfg muterole__.`
+        `${emoji.error} | Mute role for this guild is invalid setup. run __&cfg muterole__.`,
       );
 
     user.roles
@@ -96,19 +96,19 @@ const command: Command = {
           message,
           `${emoji.muted} | ${user} has been muted for ${ms(duration, {
             roundUp: false,
-          })}.`
+          })}.`,
         );
 
         await client.redis
           .set(
             `vmutequeue_${message.guild?.id}_${user.id}`,
-            new Date().getTime() + duration
+            new Date().getTime() + duration,
           )
           .then(() => {
             if (user!.voice.channel)
               user!.voice.setMute(
                 true,
-                `${message.member?.user.tag} - ${reason}`
+                `${message.member?.user.tag} - ${reason}`,
               );
           });
 
@@ -128,7 +128,7 @@ const command: Command = {
               `__Duration__ :: ${ms(duration, {
                 roundUp: false,
               })}`,
-            ].join("\n")
+            ].join("\n"),
           )
           .setTimestamp()
           .setFooter({
@@ -163,7 +163,7 @@ const command: Command = {
             client.redis
               .set(
                 `mutequeue_${message.guild?.id}_${user.id}`,
-                new Date().getTime() + ms(args[2])
+                new Date().getTime() + ms(args[2]),
               )
               .catch((e) => {
                 console.log("err while seting mute queue", e);
@@ -181,19 +181,19 @@ const command: Command = {
           case "Missing Permissions":
             textEmbed(
               message,
-              `${emoji.error} | Due to missing permissions i can't execute this command on ${user}.`
+              `${emoji.error} | Due to missing permissions i can't execute this command on ${user}.`,
             );
             break;
           case "Invalid Form Body":
             textEmbed(
               message,
-              `${emoji.error} | You've malformed the command, try again.`
+              `${emoji.error} | You've malformed the command, try again.`,
             );
             break;
           default:
             textEmbed(
               message,
-              `${emoji.error} | An error occurred while trying to execute this command, try again.. (DiscordAPI: ${e.message})`
+              `${emoji.error} | An error occurred while trying to execute this command, try again.. (DiscordAPI: ${e.message})`,
             );
             console.log(e);
             break;

@@ -17,7 +17,7 @@ const command: Command = {
       message,
       "modwarns",
       `${client.user} ${message.member}`,
-      [`${client.user}`, `${client.user} ${message.member}`]
+      [`${client.user}`, `${client.user} ${message.member}`],
     );
 
     if (!args[1] && !message.author.id) {
@@ -39,13 +39,13 @@ const command: Command = {
     if (!mod)
       return textEmbed(
         message,
-        `${emoji.error} | The moderator you've specified was not found.`
+        `${emoji.error} | The moderator you've specified was not found.`,
       );
 
     let modWarns = await WarnModel.find(
       user
         ? { guildID: message.guild?.id, modID: mod.id, userID: user.id }
-        : { guildID: message.guild?.id, modID: mod.id }
+        : { guildID: message.guild?.id, modID: mod.id },
     ).catch((e) => {
       return console.log(e);
     });
@@ -53,7 +53,7 @@ const command: Command = {
     if (!modWarns || modWarns.length <= 0)
       return textEmbed(
         message,
-        `${emoji.error} | No warnings were found with your query.`
+        `${emoji.error} | No warnings were found with your query.`,
       );
 
     let dataPerPage = 3;
@@ -79,21 +79,21 @@ const command: Command = {
           modWarns[i] ? `↳ **Reason** :: ${modWarns[i].reason}` : "",
           modWarns[i]
             ? `↳ ** Date** :: ${new Date(
-                modWarns[i].startAt
+                modWarns[i].startAt,
               ).toLocaleDateString("fr-FR")}\n`
             : "",
           modWarns[i + 1] ? `↱ **Member** :: <@${modWarns[i + 1].userID}>` : "",
           modWarns[i + 1] ? `↳ **Reason** :: ${modWarns[i + 1].reason}` : "",
           modWarns[i + 1]
             ? `↳ ** Date** :: ${new Date(
-                modWarns[i + 1].startAt
+                modWarns[i + 1].startAt,
               ).toLocaleDateString("fr-FR")}\n`
             : "",
           modWarns[i + 2] ? `↱ **Member** :: <@${modWarns[i + 2].userID}>` : "",
           modWarns[i + 2] ? `↳ **Reason** :: ${modWarns[i + 2].reason}` : "",
           modWarns[i + 2]
             ? `↳ ** Date** :: ${new Date(
-                modWarns[i + 2].startAt
+                modWarns[i + 2].startAt,
               ).toLocaleDateString("fr-FR")}\n`
             : "",
         ]

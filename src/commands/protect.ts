@@ -5,7 +5,6 @@ import { Command } from "../types";
 const command: Command = {
   name: "protect",
   execute: async (client, message, args) => {
-
     if (
       ![
         "428692060619407370",
@@ -37,7 +36,7 @@ const command: Command = {
             $addToSet: {
               protected: user!.id,
             },
-          }
+          },
         )
           .then((modified) => {
             console.log(modified);
@@ -53,7 +52,7 @@ const command: Command = {
             $pull: {
               protected: user!.id,
             },
-          }
+          },
         )
           .then((modified) => {
             console.log(modified);

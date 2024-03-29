@@ -15,7 +15,7 @@ const command: Command = {
     if (!user)
       return textEmbed(
         message,
-        `${emoji.error} | The user you specified was not found.`
+        `${emoji.error} | The user you specified was not found.`,
       );
 
     if (
@@ -25,7 +25,7 @@ const command: Command = {
     )
       return textEmbed(
         message,
-        `${emoji.error} | You can't run this command on administrators.`
+        `${emoji.error} | You can't run this command on administrators.`,
       );
 
     if (!user.voice.channel)
@@ -33,7 +33,7 @@ const command: Command = {
         message,
         `${emoji.error} | ${
           user.id === message.author.id ? "You're not" : `${user} is not`
-        }  in a voice channel.`
+        }  in a voice channel.`,
       );
 
     await client.channels
@@ -54,13 +54,13 @@ const command: Command = {
             message.author.id !== "490667823392096268"
               ? "(_**#l7adi menghir rbi 9ewad**_)"
               : ""
-          } `
+          } `,
         );
       })
       .catch(() => {
         textEmbed(
           message,
-          `${emoji.error} | An error occurred while fetching the channel, try again`
+          `${emoji.error} | An error occurred while fetching the channel, try again`,
         );
       });
   },

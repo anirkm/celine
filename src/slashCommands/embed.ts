@@ -32,7 +32,7 @@ const command: SlashCommand = {
       return option
         .setName("color")
         .setDescription(
-          "Select an option or type an hex color, for example: #000000"
+          "Select an option or type an hex color, for example: #000000",
         )
         .setRequired(true)
         .setAutocomplete(true);
@@ -103,7 +103,7 @@ const command: SlashCommand = {
           iconURL: interaction.client.user?.avatarURL() || undefined,
         });
       let selectedTextChannel = interaction.channel?.client.channels.cache.get(
-        options.channel.toString()
+        options.channel.toString(),
       ) as TextChannel;
       selectedTextChannel.send({ embeds: [embed] });
       return interaction.editReply({

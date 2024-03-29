@@ -17,7 +17,7 @@ module.exports = (client: Client) => {
     async (member: GuildMember, type: JoinType, invite: any) => {
       let guildJoin: IGuildJoin;
 
-      console.log("new join")
+      console.log("new join");
 
       console.log(member.id, type, invite);
 
@@ -42,6 +42,6 @@ module.exports = (client: Client) => {
       await guildJoin.save().catch((e) => {
         console.log("couldn't save new join", e);
       });
-    }
+    },
   );
 };

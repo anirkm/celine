@@ -1,9 +1,6 @@
 import { Collection, EmbedBuilder, PermissionFlagsBits } from "discord.js";
 import ms from "enhanced-ms";
-import {
-  fuzzyRoleSearch,
-  hasPermission,
-} from "../functions";
+import { fuzzyRoleSearch, hasPermission } from "../functions";
 import emoji from "../data/emojies.json";
 import GuildModel from "../schemas/Guild";
 import { Command } from "../types";
@@ -21,7 +18,7 @@ const command: Command = {
       message,
       "temprole",
       `${message.member} [role | role id | role name] [duration]`,
-      [`${message.member} ${message.member?.roles.highest} 1337d`]
+      [`${message.member} ${message.member?.roles.highest} 1337d`],
     );
 
     if (args.length < 3) {
@@ -44,26 +41,26 @@ const command: Command = {
           args
             .slice(2, args.length - 1)
             .filter((x) => x !== undefined)
-            .join("")
-        )[0].id
+            .join(""),
+        )[0].id,
       );
 
     if (!user)
       return textEmbed(
         message,
-        `${emoji.error} | The user you've specified was not found.`
+        `${emoji.error} | The user you've specified was not found.`,
       );
 
     if (!role)
       return textEmbed(
         message,
-        `${emoji.error} | The role you've specified was not found.`
+        `${emoji.error} | The role you've specified was not found.`,
       );
 
     if (role.managed) {
       return textEmbed(
         message,
-        `${emoji.error} | ${role} is managed and therefore cannot be assigned or removed.`
+        `${emoji.error} | ${role} is managed and therefore cannot be assigned or removed.`,
       );
     }
 
@@ -74,38 +71,38 @@ const command: Command = {
     if (role.id === dbGuild?.options.jailRole)
       return textEmbed(
         message,
-        `${emoji.warning} | i'd rather use the jail command for this...`
+        `${emoji.warning} | i'd rather use the jail command for this...`,
       );
 
     if (role.id === dbGuild?.options.muteRole)
       return textEmbed(
         message,
-        `${emoji.warning} | i'd rather use the mute command for this...`
+        `${emoji.warning} | i'd rather use the mute command for this...`,
       );
 
     if (role instanceof Collection && role.size > 1) {
       return textEmbed(
         message,
-        `${emoji.huh} | Too many roles with this name choose a role using it's role identifier.`
+        `${emoji.huh} | Too many roles with this name choose a role using it's role identifier.`,
       );
     }
 
     if (!parseInt(args[args.length - 1]) || ms(args[args.length - 1]) === null)
       return textEmbed(
         message,
-        `${emoji.error} | The duration you've specified is invalid.`
+        `${emoji.error} | The duration you've specified is invalid.`,
       );
 
     if (ms(args[args.length - 1]) < ms("1m"))
       return textEmbed(
         message,
-        `${emoji.huh} | Minimum duration of 1 minute is not reached.`
+        `${emoji.huh} | Minimum duration of 1 minute is not reached.`,
       );
 
     if (ms(args[args.length - 1]) > ms("30d"))
       return textEmbed(
         message,
-        `${emoji.huh} | Maximum duration of 30 days is execed.`
+        `${emoji.huh} | Maximum duration of 30 days is execed.`,
       );
 
     let duration = ms(args[args.length - 1]);
@@ -113,7 +110,7 @@ const command: Command = {
     if (message.member?.roles.highest.position! <= role.position) {
       return textEmbed(
         message,
-        `${emoji.error} | You can't perform this action due to hierarchy issues`
+        `${emoji.error} | You can't perform this action due to hierarchy issues`,
       );
     }
 
@@ -130,8 +127,8 @@ const command: Command = {
           })
           .setDescription(
             `${user} has been temporarily granted ${role} for the next ${ms(
-              duration
-            )}`
+              duration,
+            )}`,
           )
           .setFooter({ text: `Executed by ${message.member?.user.tag}` })
           .setTimestamp();
@@ -143,7 +140,7 @@ const command: Command = {
                 ? role.values().next().value.id
                 : role!.id
             }`,
-            new Date().getTime() + duration
+            new Date().getTime() + duration,
           )
           .then(async () => {
             await message.reply({ embeds: [trEmbed] });
@@ -155,7 +152,7 @@ const command: Command = {
             await message.reply({
               embeds: [
                 await RtextEmbed(
-                  `${emoji.error} | An error occurred while trying to execute this command, try again.. (Code: Redis)`
+                  `${emoji.error} | An error occurred while trying to execute this command, try again.. (Code: Redis)`,
                 ),
               ],
             });
@@ -170,19 +167,19 @@ const command: Command = {
           case "Missing Permissions":
             textEmbed(
               message,
-              `${emoji.error} | Due to missing permissions i can't execute this command on ${user}.`
+              `${emoji.error} | Due to missing permissions i can't execute this command on ${user}.`,
             );
             break;
           case "Invalid Form Body":
             textEmbed(
               message,
-              `${emoji.error} | You've malformed the command, try again.`
+              `${emoji.error} | You've malformed the command, try again.`,
             );
             break;
           default:
             textEmbed(
               message,
-              `${emoji.error} | An error occurred while trying to execute this command, try again.. (DiscordAPI: ${e.message})`
+              `${emoji.error} | An error occurred while trying to execute this command, try again.. (DiscordAPI: ${e.message})`,
             );
             console.log(e);
             break;

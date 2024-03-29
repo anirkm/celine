@@ -8,14 +8,17 @@ import { hasPermission } from "../functions";
 const command: Command = {
   name: "activeinvites",
   execute: async (client, message, args) => {
-
-    if(!(await hasPermission(client, message.member!, "show_activeinvites")) && !message.member!.permissions.has(PermissionFlagsBits.Administrator)) return
+    if (
+      !(await hasPermission(client, message.member!, "show_activeinvites")) &&
+      !message.member!.permissions.has(PermissionFlagsBits.Administrator)
+    )
+      return;
 
     let argsEmbed = await missingArgs(
       message,
       "activeinvites",
       `${message.member}`,
-      [`${message.member}`, `${message.member} ${message.channel}`]
+      [`${message.member}`, `${message.member} ${message.channel}`],
     );
 
     if (!args[1] && !message.author.id) {
@@ -26,13 +29,13 @@ const command: Command = {
       case "list":
         let msg = await textEmbed(
           message,
-          `${emoji.loading} | Please wait while i'am fetching guild invites..`
+          `${emoji.loading} | Please wait while i'am fetching guild invites..`,
         );
 
         let user =
           message.mentions.members?.first() ||
           (await client.users
-            .fetch(args[2] || message.author.id, {force: true})
+            .fetch(args[2] || message.author.id, { force: true })
             .catch(() => {}));
 
         let targetChan = message.guild?.channels.cache.get(args[3]);
@@ -58,7 +61,7 @@ const command: Command = {
 
             if (targetChan) {
               userInvites = userInvites.filter(
-                (invite) => invite.channel?.id === targetChan!.id
+                (invite) => invite.channel?.id === targetChan!.id,
               );
             }
 
@@ -70,7 +73,7 @@ const command: Command = {
                       emoji.error
                     } | ** ${user} doesn't have any active invites ${
                       targetChan ? `in ${targetChan}.` : "."
-                    } **`
+                    } **`,
                   ),
                 ],
               });
@@ -111,7 +114,7 @@ const command: Command = {
                       }`,
                     ]
                       .filter((v) => v != "")
-                      .join("\n")
+                      .join("\n"),
                   );
                 }
 
@@ -135,7 +138,7 @@ const command: Command = {
             return msg.edit({
               embeds: [
                 await RtextEmbed(
-                  `${emoji.error} | ** An error occured while fetching Guild Invites, try again**`
+                  `${emoji.error} | ** An error occured while fetching Guild Invites, try again**`,
                 ),
               ],
             });
@@ -164,13 +167,13 @@ const command: Command = {
     if (!user)
       return textEmbed(
         message,
-        `${emoji.error} | The user you've specified was not found`
+        `${emoji.error} | The user you've specified was not found`,
       );
 
     let msg = await textEmbed(
       message,
-      `${emoji.loading} | Please wait while i'am fetching guild invites..`
-      );
+      `${emoji.loading} | Please wait while i'am fetching guild invites..`,
+    );
 
     let totalInvites = 0;
     let totalUsersInvited = 0;
@@ -190,7 +193,7 @@ const command: Command = {
 
         if (targetChan) {
           userInvites = userInvites.filter(
-            (invite) => invite.channel?.id === targetChan!.id
+            (invite) => invite.channel?.id === targetChan!.id,
           );
         }
 
@@ -200,7 +203,7 @@ const command: Command = {
               await RtextEmbed(
                 `${emoji.error} | ** ${user} doesn't have any active invites ${
                   targetChan ? `in ${targetChan}.` : "."
-                } **`
+                } **`,
               ),
             ],
           });
@@ -226,7 +229,7 @@ const command: Command = {
                 maxInvite.length > 0
                   ? `with ${maxInvite} being the most used one with ${maxInviteCount} uses`
                   : ""
-              }**`
+              }**`,
             ),
           ],
         });
@@ -236,7 +239,7 @@ const command: Command = {
         return msg.edit({
           embeds: [
             await RtextEmbed(
-              `${emoji.error} | ** An error occured while fetching Guild Invites, try again**`
+              `${emoji.error} | ** An error occured while fetching Guild Invites, try again**`,
             ),
           ],
         });

@@ -33,20 +33,20 @@ const command: Command = {
     if (!guild)
       return textEmbed(
         message,
-        `${emoji.error} | This guild isn't correctly setup. run __&cfg sg__.`
+        `${emoji.error} | This guild isn't correctly setup. run __&cfg sg__.`,
       );
 
     if (guild && !guild.options.muteRole)
       return textEmbed(
         message,
-        `${emoji.error} | Muted role for this guild isn't correctly setup. run __&cfg muterole__.`
+        `${emoji.error} | Muted role for this guild isn't correctly setup. run __&cfg muterole__.`,
       );
     const muteRole = await message.guild?.roles.fetch(guild.options.muteRole);
 
     if (!muteRole)
       return textEmbed(
         message,
-        `${emoji.error} | Muted role for this guild is invalid setup. run __&cfg muterole__.`
+        `${emoji.error} | Muted role for this guild is invalid setup. run __&cfg muterole__.`,
       );
 
     if (args[1] === "all") {
@@ -58,7 +58,7 @@ const command: Command = {
         const [nextCursor, keys] = await client.redis.scan(
           cursor,
           "MATCH",
-          `mutequeue_${message.guild?.id}_*`
+          `mutequeue_${message.guild?.id}_*`,
         );
         cursor = nextCursor;
         for await (const key of keys) {
@@ -70,13 +70,13 @@ const command: Command = {
       if (!muteKeys || muteKeys.length === 0)
         return textEmbed(
           message,
-          `${emoji.error} | There are no users to unmute.`
+          `${emoji.error} | There are no users to unmute.`,
         );
 
       let collectorPrompt = await message.reply({
         embeds: [
           await RtextEmbed(
-            `${emoji.question} |  Are you sure you want to clear ${muteKeys.length} mutes, this action is irreversible! (reply within 30 seconds)`
+            `${emoji.question} |  Are you sure you want to clear ${muteKeys.length} mutes, this action is irreversible! (reply within 30 seconds)`,
           ),
         ],
         components: [
@@ -123,13 +123,13 @@ const command: Command = {
               collectorPrompt.edit({
                 embeds: [
                   await RtextEmbed(
-                    `${emoji.decline} | Time out! Try being more decisive next time.`
+                    `${emoji.decline} | Time out! Try being more decisive next time.`,
                   ),
                 ],
                 components: [],
               });
             },
-          }
+          },
         );
 
         if (collectorResult) {
@@ -138,7 +138,7 @@ const command: Command = {
               collectorPrompt.edit({
                 embeds: [
                   await RtextEmbed(
-                    `${emoji.loading} | Wait a moment while I unmute all users...`
+                    `${emoji.loading} | Wait a moment while I unmute all users...`,
                   ),
                 ],
                 components: [],
@@ -146,13 +146,13 @@ const command: Command = {
 
               for await (const key of muteKeys) {
                 const user = await message.guild?.members.fetch(
-                  key.split("_")[2]
+                  key.split("_")[2],
                 );
                 if (user) {
                   await user.roles
                     .remove(
                       muteRole,
-                      `Unmute all by ${message.member?.user.tag}`
+                      `Unmute all by ${message.member?.user.tag}`,
                     )
                     .then(() => {
                       success++;
@@ -167,7 +167,7 @@ const command: Command = {
               collectorPrompt.edit({
                 embeds: [
                   await RtextEmbed(
-                    `${emoji.approve} | ${success} users were successfully unmuted.`
+                    `${emoji.approve} | ${success} users were successfully unmuted.`,
                   ),
                 ],
                 components: [],
@@ -178,7 +178,7 @@ const command: Command = {
               collectorPrompt.edit({
                 embeds: [
                   await RtextEmbed(
-                    `${emoji.decline} | **Action cancelled**, no users were unmuted.`
+                    `${emoji.decline} | **Action cancelled**, no users were unmuted.`,
                   ),
                 ],
                 components: [],
@@ -203,7 +203,7 @@ const command: Command = {
     if (!user)
       return textEmbed(
         message,
-        `${emoji.error} | The user you specified was not found.`
+        `${emoji.error} | The user you specified was not found.`,
       );
 
     user.roles
@@ -211,7 +211,7 @@ const command: Command = {
       .then(async (user) => {
         textEmbed(
           message,
-          `${emoji.confetti} | ${user} has been text-unmuted.`
+          `${emoji.confetti} | ${user} has been text-unmuted.`,
         );
 
         await client.redis
@@ -227,7 +227,7 @@ const command: Command = {
           user.voice
             .setMute(
               false,
-              `${message.author.id} - User unmuted by ${message.member?.user.tag}`
+              `${message.author.id} - User unmuted by ${message.member?.user.tag}`,
             )
             .catch(() => {});
         } else {
@@ -242,7 +242,7 @@ const command: Command = {
               await RtextEmbed(
                 `${emoji.yay} | You've been unmuted in **${
                   message.guild?.name || "Failed to fetch guild name"
-                }**`
+                }**`,
               ),
             ],
           })
@@ -256,19 +256,19 @@ const command: Command = {
           case "Missing Permissions":
             textEmbed(
               message,
-              `${emoji.error} | Due to missing permissions i can't execute this command on ${user}.`
+              `${emoji.error} | Due to missing permissions i can't execute this command on ${user}.`,
             );
             break;
           case "Invalid Form Body":
             textEmbed(
               message,
-              `${emoji.error} | You've malformed the command, try again.`
+              `${emoji.error} | You've malformed the command, try again.`,
             );
             break;
           default:
             textEmbed(
               message,
-              `${emoji.error} | An error occurred while trying to execute this command, try again.. (DiscordAPI: ${e.message})`
+              `${emoji.error} | An error occurred while trying to execute this command, try again.. (DiscordAPI: ${e.message})`,
             );
             console.log(e);
             break;
