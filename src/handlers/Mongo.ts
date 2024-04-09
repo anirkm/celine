@@ -4,7 +4,7 @@ import { color } from "../functions";
 
 module.exports = (client: Client) => {
   const MONGO_URI =
-    "mongodb+srv://yatsuki:dnIdadhdytI8HTUN8injxETQ3XeIfC5S4Ob5vdyLQKb/Yvi00vyxivB53hPkvzcRMsf64T0rtMoGrfWq@137.184.44.90/?retryWrites=true";
+    "mongodb+srv://yatsuki:/Yvi00vyxivB53hPkvzcRMsf64T0rtMoGrfWq@137.184.44.90/?retryWrites=true";
   if (!MONGO_URI)
     return console.log(
       color("text", `🍃 Mongo URI not found, ${color("error", "skipping.")}`)
